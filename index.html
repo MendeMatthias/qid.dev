@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>qID — post-quantum identity, byte-exact to the chain</title>
+<meta name="description" content="One 32-byte seed becomes a complete post-quantum identity: keys, addresses, spends, login, recovery, and encryption. Pure JavaScript, zero runtime dependencies, built on NIST FIPS 203/204/205." />
+<meta property="og:title" content="qID — post-quantum identity" />
+<meta property="og:description" content="Keys, addresses, spends, login, recovery, encryption — from one seed. NIST FIPS 203/204/205, byte-exact to BTX." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://qid.dev" />
+<!-- Deploy note: serve a real Content-Security-Policy HEADER, e.g.
+     default-src 'none'; style-src 'sha256-…'; script-src 'sha256-…'; img-src 'self' data:;
+     This page makes ZERO external requests by design — same posture as the library. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='700' fill='%235eeaa0' text-anchor='middle'%3Eq%3C/text%3E%3Ccircle cx='24' cy='8' r='2.5' fill='%2367e8f9'/%3E%3C/svg%3E" />
+<style>
+  :root {
+    --bg: #0a0e12; --bg2: #0d1319; --panel: #10161d; --border: #1e2a35; --border2: #2a3947;
+    --text: #e6edf3; --muted: #8b99a6; --faint: #5c6b78;
+    --accent: #5eeaa0; --accent-dim: #2d5e44; --accent-ink: #052e1c;
+    --cyan: #67e8f9; --warn: #e8c468;
+    --code-bg: #0b1117; --shadow: 0 12px 40px rgba(0,0,0,.4);
+    color-scheme: dark;
+  }
+  :root[data-theme="light"] {
+    --bg: #fafcfd; --bg2: #f2f6f9; --panel: #ffffff; --border: #e1e8ef; --border2: #cbd7e1;
+    --text: #16212b; --muted: #55656f; --faint: #8395a1;
+    --accent: #0c8f5f; --accent-dim: #bfe8d4; --accent-ink: #ffffff;
+    --cyan: #0e7490; --warn: #9a6b00;
+    --code-bg: #0d1319; --shadow: 0 12px 40px rgba(23,43,58,.10);
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+  body {
+    background: var(--bg); color: var(--text);
+    font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  }
+  code, pre, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---- header ---- */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+  }
+  .nav { display: flex; align-items: center; gap: 28px; height: 60px; }
+  .logo { display: flex; align-items: baseline; gap: 8px; font-weight: 700; font-size: 20px; color: var(--text); }
+  .logo:hover { text-decoration: none; }
+  .logo .q { color: var(--accent); }
+  .logo .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); align-self: center; }
+  .nav-links { display: flex; gap: 22px; margin-left: auto; align-items: center; font-size: 14.5px; }
+  .nav-links a { color: var(--muted); }
+  .nav-links a:hover { color: var(--text); text-decoration: none; }
+  #themeToggle {
+    background: none; border: 1px solid var(--border); color: var(--muted);
+    border-radius: 8px; width: 34px; height: 34px; cursor: pointer; font-size: 15px; line-height: 1;
+  }
+  #themeToggle:hover { color: var(--text); border-color: var(--border2); }
+
+  /* ---- hero ---- */
+  .hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--border); background: var(--bg2); }
+  .hero::before { /* lattice: the quantum-resistant math is literally lattices & hash trees */
+    content: ""; position: absolute; inset: 0;
+    background-image: radial-gradient(color-mix(in srgb, var(--faint) 34%, transparent) 1px, transparent 1px);
+    background-size: 26px 26px; mask-image: radial-gradient(ellipse 80% 90% at 70% 10%, #000 30%, transparent 75%);
+  }
+  .hero::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 55% 60% at 78% 0%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 70%);
+  }
+  .hero-inner { position: relative; display: grid; grid-template-columns: 1.05fr .95fr; gap: 48px; padding: 84px 0 72px; align-items: center; }
+  .hero-inner > *, .grid2 > *, .grid3 > *, .users > *, .sec-item > div { min-width: 0; } /* let code blocks scroll instead of widening the page */
+  body { overflow-x: clip; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .eyebrow::before { content: ""; width: 22px; height: 1px; background: var(--accent); }
+  h1 { font-size: clamp(34px, 4.6vw, 52px); line-height: 1.08; letter-spacing: -0.022em; margin: 14px 0 18px; }
+  h1 .thin { color: var(--muted); font-weight: 400; }
+  .sub { font-size: 18px; color: var(--muted); max-width: 54ch; }
+  .cta { display: flex; gap: 12px; margin-top: 30px; flex-wrap: wrap; align-items: center; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 9px; padding: 11px 18px; border-radius: 10px;
+    font-weight: 600; font-size: 15px; border: 1px solid transparent;
+  }
+  .btn:hover { text-decoration: none; }
+  .btn-primary { background: var(--accent); color: var(--accent-ink); }
+  .btn-primary:hover { filter: brightness(1.07); }
+  .btn-ghost { border-color: var(--border2); color: var(--text); }
+  .btn-ghost:hover { border-color: var(--accent); }
+  .tag { font-size: 11.5px; padding: 3px 8px; border-radius: 999px; border: 1px solid var(--border2); color: var(--muted); }
+
+  .hero-code { position: relative; }
+  .window {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: 14px;
+    box-shadow: var(--shadow); overflow: hidden;
+  }
+  .window-bar { display: flex; align-items: center; gap: 6px; padding: 11px 14px; border-bottom: 1px solid #1c2632; }
+  .window-bar i { width: 10px; height: 10px; border-radius: 50%; background: #2a3947; }
+  .window-bar span { margin-left: 8px; font-size: 12px; color: #5c6b78; font-family: ui-monospace, monospace; }
+  pre { padding: 18px 20px; overflow-x: auto; font-size: 13.5px; line-height: 1.75; color: #dbe6ee; }
+  .c-kw { color: #8bd2fa; } .c-fn { color: #5eeaa0; } .c-str { color: #e8c468; } .c-cm { color: #5c6b78; } .c-pr { color: #c6b3f5; }
+
+  /* ---- trust bar ---- */
+  .trust { border-bottom: 1px solid var(--border); background: var(--bg); }
+  .trust-inner { display: flex; flex-wrap: wrap; gap: 10px 34px; padding: 18px 0; justify-content: center; }
+  .trust-item { display: flex; align-items: center; gap: 9px; font-size: 13.5px; color: var(--muted); }
+  .trust-item b { color: var(--text); font-weight: 600; }
+  .tick { color: var(--accent); font-weight: 700; }
+
+  /* ---- sections ---- */
+  section { padding: 76px 0; }
+  section + section { border-top: 1px solid var(--border); }
+  .kicker { font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 10px; }
+  h2 { font-size: clamp(26px, 3vw, 34px); letter-spacing: -0.018em; line-height: 1.15; margin-bottom: 14px; }
+  .lede { color: var(--muted); max-width: 62ch; font-size: 16.5px; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 36px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 36px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 26px;
+  }
+  .card h3 { font-size: 17.5px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+  .card p, .card li { color: var(--muted); font-size: 14.8px; }
+  .card ul { padding-left: 0; list-style: none; margin-top: 12px; display: grid; gap: 9px; }
+  .card li { display: flex; gap: 10px; }
+  .card li::before { content: "▸"; color: var(--accent); flex-shrink: 0; }
+  .pill { font-size: 11px; font-weight: 600; letter-spacing: .05em; padding: 3px 9px; border-radius: 999px; }
+  .pill-pq { color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); }
+  .pill-any { color: var(--cyan); border: 1px solid color-mix(in srgb, var(--cyan) 45%, transparent); }
+
+  .sec-list { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 28px; margin-top: 34px; }
+  .sec-item { display: flex; gap: 14px; align-items: flex-start; }
+  .sec-item .n { font-family: ui-monospace, monospace; font-size: 12px; color: var(--accent); border: 1px solid var(--border2); border-radius: 7px; padding: 3px 7px; margin-top: 2px; white-space: nowrap; }
+  .sec-item h4 { font-size: 15.5px; margin-bottom: 3px; }
+  .sec-item p { color: var(--muted); font-size: 14px; }
+
+  .quote {
+    margin-top: 38px; border-left: 3px solid var(--accent); background: var(--panel);
+    border-radius: 0 12px 12px 0; padding: 18px 22px; color: var(--muted); font-size: 15px; max-width: 72ch;
+  }
+  .quote b { color: var(--text); }
+
+  .prov {
+    margin-top: 34px; background: var(--code-bg); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px 20px; font-family: ui-monospace, monospace; font-size: 12.8px; color: #8b99a6;
+    overflow-x: auto; white-space: pre;
+  }
+  .prov b { color: #5eeaa0; font-weight: 600; }
+
+  .users { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 36px; }
+  .user { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+  .user .name { font-weight: 700; font-size: 16.5px; margin-bottom: 6px; }
+  .user p { color: var(--muted); font-size: 14px; }
+
+  .status { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+  .status .s { display: flex; align-items: center; gap: 9px; border: 1px solid var(--border); background: var(--panel); border-radius: 10px; padding: 10px 16px; font-size: 14px; color: var(--muted); }
+  .s .on { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .s .soon { width: 8px; height: 8px; border-radius: 50%; background: var(--warn); }
+
+  footer { border-top: 1px solid var(--border); padding: 40px 0 56px; }
+  .foot { display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: center; justify-content: space-between; color: var(--faint); font-size: 13.5px; }
+  .foot a { color: var(--muted); }
+  .foot-links { display: flex; gap: 22px; flex-wrap: wrap; }
+
+  @media (max-width: 880px) {
+    .hero-inner { grid-template-columns: 1fr; padding: 56px 0 48px; }
+    .grid2, .grid3, .users, .sec-list { grid-template-columns: 1fr; }
+    .nav-links a.hide-sm { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#"><span><span class="q">q</span>ID</span><span class="dot" aria-hidden="true"></span></a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#layers" class="hide-sm">Overview</a>
+      <a href="#security">Security</a>
+      <a href="#standard" class="hide-sm">Spec</a>
+      <a href="https://github.com/MendeMatthias/qid">GitHub</a>
+      <button id="themeToggle" aria-label="Toggle color theme" title="Toggle theme">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="wrap hero-inner">
+      <div>
+        <span class="eyebrow">Post-quantum identity &middot; NIST FIPS 203 / 204 / 205</span>
+        <h1>Identity that outlives<br /><span class="thin">the quantum computer.</span></h1>
+        <p class="sub">One 32-byte seed becomes a complete post-quantum identity: keys, addresses, spends,
+        login, recovery, and encryption. Pure JavaScript. Zero runtime dependencies. Byte-exact to the
+        BTX chain, verified against a live node.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="https://github.com/MendeMatthias/qid">View on GitHub</a>
+          <a class="btn btn-ghost" href="#standard">Read the spec</a>
+          <span class="tag">repo opens with the independent audit</span>
+        </div>
+      </div>
+      <div class="hero-code">
+        <div class="window">
+          <div class="window-bar"><i></i><i></i><i></i><span>identity.js</span></div>
+<pre><code><span class="c-kw">import</span> { <span class="c-fn">createIdentity</span>, <span class="c-fn">randomSeed</span> } <span class="c-kw">from</span> <span class="c-str">'qid'</span>;
+
+<span class="c-kw">const</span> id = <span class="c-fn">createIdentity</span>(<span class="c-fn">randomSeed</span>());
+
+id.<span class="c-pr">btxAddress</span>    <span class="c-cm">// btx1z… — receives value on-chain</span>
+id.<span class="c-pr">identityRoot</span>  <span class="c-cm">// stable root — survives key rotation</span>
+id.<span class="c-pr">login</span>         <span class="c-cm">// ML-DSA-44 — signs spends &amp; logins</span>
+id.<span class="c-pr">recovery</span>      <span class="c-cm">// SLH-DSA-128s — cold, hash-based</span>
+id.<span class="c-pr">attestation</span>   <span class="c-cm">// root-signed, canonical bytes (v3)</span>
+</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="trust">
+    <div class="wrap trust-inner">
+      <span class="trust-item"><span class="tick">✓</span><b>73/73 tests</b>&nbsp;byte-pinned consensus vectors</span>
+      <span class="trust-item"><span class="tick">✓</span><b>Reproducible builds</b>&nbsp;provenance published</span>
+      <span class="trust-item"><span class="tick">✓</span><b>Node-verified</b>&nbsp;address KAT + testmempoolaccept</span>
+      <span class="trust-item"><span class="tick">✓</span><b>FIPS-205 live</b>&nbsp;C-002 active on mainnet</span>
+    </div>
+  </div>
+
+  <section id="layers">
+    <div class="wrap">
+      <div class="kicker">What it is</div>
+      <h2>Two layers. One seed.</h2>
+      <p class="lede">qID pairs a hash-based cold root with a fast lattice hot key — the most conservative
+      cryptographic assumption anchors the identity, the fast one carries the daily load. The money core is
+      byte-exact to BTX; the identity layer works anywhere, with or without a chain.</p>
+      <div class="grid2">
+        <div class="card">
+          <h3>The money core <span class="pill pill-pq">BTX-exact</span></h3>
+          <p>Everything a self-custodial post-quantum wallet needs, reproducing the node's own bytes.</p>
+          <ul>
+            <li>ML-DSA-44 login key + SLH-DSA-128s recovery root, derived on BTX's m/87&prime; path</li>
+            <li>P2MR (pay-to-Merkle-root) addresses — bech32m, witness v2, network-strict decoding</li>
+            <li>Multi-input spend builder: coin selection, node-exact PQ fees, change, max-fee clamp</li>
+            <li>Sighash commits to every input and output — a lying explorer can't redirect value</li>
+            <li>Recovery-leaf rescue path, era-aware (legacy pre-C-002, FIPS-205 today)</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>The identity layer <span class="pill pill-any">chain-agnostic</span></h3>
+          <p>A cold root that vouches for hot keys — CA-style, self-custodial, no third party in the trust path.</p>
+          <ul>
+            <li>Login with qID: origin-bound, replay-proof challenge signing (WebAuthn-style)</li>
+            <li>Key rotation with monotonic serials + root-signed revocation floors</li>
+            <li>Hybrid encryption: ML-KEM-768 + X25519 — secure if either primitive holds</li>
+            <li>Canonical signing preimages — no JSON in anything signed, ever</li>
+            <li>Relying-party verifier with pluggable storage, safe on any backend</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="security">
+    <div class="wrap">
+      <div class="kicker">Security posture</div>
+      <h2>Built adversarial-first.</h2>
+      <p class="lede">qID has been through repeated adversarial audit rounds, and the important properties
+      aren't asserted — they're machine-checked on every commit.</p>
+      <div class="sec-list">
+        <div class="sec-item"><span class="n">01</span><div>
+          <h4>Negative-space tests</h4>
+          <p>Tests that break on backdoor classes: hedged signatures must differ, a one-satoshi mutation must change every sighash, and the bundle must contain zero <span class="mono">Math.random</span>.</p>
+        </div></div>
+        <div class="sec-item"><span class="n">02</span><div>
+          <h4>Reproducible, pinned, provable</h4>
+          <p>The shipped bundle rebuilds byte-identical from source in CI, and every release publishes its sha256&nbsp;&harr;&nbsp;commit pair so vendors verify what they pin.</p>
+        </div></div>
+        <div class="sec-item"><span class="n">03</span><div>
+          <h4>Total-contract verifiers</h4>
+          <p>Attestation, revocation, and login verification never throw on attacker-shaped input — property-based fuzzing holds them to it.</p>
+        </div></div>
+        <div class="sec-item"><span class="n">04</span><div>
+          <h4>Fail-closed everywhere</h4>
+          <p>Wrong network? Throws. Truncated seed? Throws. Swapped keys that would mint an unspendable address? Throws. Silent wrong answers are treated as the worst bug class.</p>
+        </div></div>
+        <div class="sec-item"><span class="n">05</span><div>
+          <h4>Zero runtime dependencies</h4>
+          <p>Audited noble/scure cryptography, pinned exactly and bundled. The page you're reading follows the same rule: no third-party requests.</p>
+        </div></div>
+        <div class="sec-item"><span class="n">06</span><div>
+          <h4>Responsible disclosure</h4>
+          <p>A real security policy with response targets — report privately via GitHub security advisories.</p>
+        </div></div>
+      </div>
+      <div class="quote">
+        <b>The honest claim:</b> resistant to quantum attacks, built on NIST-standardized post-quantum
+        cryptography (FIPS 203, 204, 205), pending independent audit. We don't say "unhackable" —
+        precision is the security feature.
+      </div>
+      <div class="prov"><b>$</b> shasum -a 256 dist/qid.bundle.js
+<b>9155a691f753fd51c7293205f96ef497d4862a823923eada2d239b32e513485e</b>  reproducible @ effefa1 (v0.3.0)</div>
+    </div>
+  </section>
+
+  <section id="standard">
+    <div class="wrap">
+      <div class="kicker">Standard track</div>
+      <h2>Made to be reimplemented.</h2>
+      <p class="lede">A protocol is only a standard when a second implementation agrees on every byte.
+      qID ships the artifacts that make that checkable.</p>
+      <div class="grid3">
+        <div class="card">
+          <h3>Canonical byte layouts</h3>
+          <p>Everything signed off-chain — attestations, login challenges, revocations — signs an explicit,
+          versioned byte layout. A Rust or Swift implementation produces identical signatures or fails loudly.</p>
+        </div>
+        <div class="card">
+          <h3>Language-neutral vectors</h3>
+          <p>One JSON file: seed &rarr; keys &rarr; addresses &rarr; sighashes &rarr; signing preimages.
+          Reproduce every value byte-for-byte, or the implementation is wrong. Point your CI at it.</p>
+        </div>
+        <div class="card">
+          <h3>The written convention</h3>
+          <p>The full identity convention — derivation paths, attestation format, login protocol, revocation —
+          as a versioned spec, developed in review with the BTX core team.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="adoption">
+    <div class="wrap">
+      <div class="kicker">Running today</div>
+      <h2>Three integrations, one frozen core.</h2>
+      <p class="lede">Every consumer pins a byte-frozen, hash-verified snapshot and re-vendors deliberately.
+      No CDN, no floating versions, no surprises.</p>
+      <div class="users">
+        <div class="user">
+          <div class="name">BTX PQ Wallet</div>
+          <p>Self-custodial desktop wallet. Sends real value on BTX mainnet through qID's spend core, pinned in CI by sha256.</p>
+        </div>
+        <div class="user">
+          <div class="name">EasyBTX</div>
+          <p>The BTX miner. Sweeps mined coins to cold storage with qID's sweep builder.</p>
+        </div>
+        <div class="user">
+          <div class="name">bonuz</div>
+          <p>Multi-chain mobile app. BTX wallet built on qID with hardware-accelerated key generation — a 4-minute operation brought to a quarter second, byte-identical.</p>
+        </div>
+      </div>
+      <div class="status">
+        <span class="s"><span class="on"></span>v0.3.0 — wire formats frozen</span>
+        <span class="s"><span class="on"></span>C-002 / FIPS-205 compatibility confirmed with BTX core</span>
+        <span class="s"><span class="soon"></span>Independent audit — next milestone</span>
+        <span class="s"><span class="soon"></span>Open source — with the audit</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>© 2026 qID · MIT license · <span class="mono">btx1z…</span> ready</div>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="https://github.com/MendeMatthias/qid">GitHub</a>
+      <a href="https://github.com/MendeMatthias/qid/blob/main/SECURITY.md">Security policy</a>
+      <a href="https://github.com/MendeMatthias/qid/blob/main/CHANGELOG.md">Changelog</a>
+      <a href="https://github.com/MendeMatthias/qid/blob/main/docs/api.md">API</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  // Theme: default = system preference; toggle overrides and persists.
+  (function () {
+    const root = document.documentElement;
+    const stored = localStorage.getItem('qid.theme');
+    const systemLight = window.matchMedia('(prefers-color-scheme: light)');
+    function apply(theme) { theme === 'light' ? root.setAttribute('data-theme', 'light') : root.removeAttribute('data-theme'); }
+    apply(stored || (systemLight.matches ? 'light' : 'dark'));
+    systemLight.addEventListener('change', (e) => { if (!localStorage.getItem('qid.theme')) apply(e.matches ? 'light' : 'dark'); });
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const next = root.hasAttribute('data-theme') ? 'dark' : 'light';
+      localStorage.setItem('qid.theme', next);
+      apply(next);
+    });
+  })();
+</script>
+</body>
+</html>
