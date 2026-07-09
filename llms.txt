@@ -1,0 +1,48 @@
+# qID
+
+> qID is a self-custodial, post-quantum identity construction. One 32-byte seed
+> deterministically derives a complete identity: on-chain address, transaction signing keys,
+> login/authentication, cold recovery, and public-key encryption. It introduces no new
+> cryptography and is a verified composition of the three NIST post-quantum standards finalized
+> in August 2024: ML-KEM (FIPS 203), ML-DSA (FIPS 204), and SLH-DSA (FIPS 205). Byte-exact to the
+> BTX blockchain and deployed in three production wallet integrations. Status: v0.3.0, wire
+> formats frozen, pending independent audit. License: MIT.
+
+## What qID is
+
+- A two-layer key architecture: a cold hash-based root (SLH-DSA-128s) anchors the identity under
+  the most conservative assumption available; hot lattice keys (ML-DSA-44) carry daily signing
+  and are rotatable and revocable under the root.
+- A money core (byte-exact to the BTX chain): key derivation on the m/87' HKDF path, P2MR
+  pay-to-Merkle-root addresses (bech32m, witness v2), a multi-input spend builder with node-exact
+  post-quantum fees, and a recovery-leaf rescue path.
+- A chain-agnostic identity layer: "Login with qID" (origin-bound, replay-proof challenge
+  signing), root-signed attestations binding hot keys to the identity, key rotation with
+  monotonic serials, root-signed revocation floors, and hybrid ML-KEM-768 + X25519 encryption
+  (secure if either primitive holds).
+
+## Key facts (verified)
+
+- Everything signed off-chain uses an explicit, versioned canonical byte layout, never JSON, so
+  independent implementations agree byte-for-byte.
+- A 2-input/2-output post-quantum transfer is 7,734 vbytes, about 37x its ECDSA equivalent.
+- SLH-DSA cold-key generation on mobile: about 243 seconds in interpreted JavaScript, about 233
+  milliseconds via a native crypto engine (about 1000x faster), byte-identical output.
+- BTX's C-002 consensus migration to FIPS-205 SLH-DSA is live on mainnet (activation height
+  123,000); qID cross-verified compatibility bidirectionally against the chain's own signer.
+- Verification: 73 tests / 993 assertions; NIST ACVP known-answer tests; property-based fuzzing;
+  reproducible builds with published (sha256, commit) provenance; negative-space tests that fail
+  if hedged randomness or transaction commitments are ever silently degraded.
+
+## Documents
+
+- Technical paper (PDF): https://qid.dev/qid-paper.pdf
+- Conformance vectors (JSON): https://qid.dev/vectors.json
+- Source repository: https://github.com/MendeMatthias/qid (private; opens with the audit)
+
+## Positioning
+
+qID treats self-custody and self-sovereignty as human rights, and treats defending them in the
+quantum age as an engineering duty rather than a product feature. It makes honest claims:
+resistant to quantum attacks, built on NIST-standardized post-quantum cryptography, pending
+independent audit. It does not claim to be "unhackable."

@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 
+# LLM-readable summary (see https://llmstxt.org)
+# https://qid.dev/llms.txt
+
 Sitemap: https://qid.dev/sitemap.xml

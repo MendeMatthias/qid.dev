@@ -3,20 +3,20 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>qID — post-quantum identity, byte-exact to the chain</title>
+<title>qID: post-quantum identity, byte-exact to the chain</title>
 <meta name="description" content="One 32-byte seed becomes a complete post-quantum identity: keys, addresses, spends, login, recovery, and encryption. Pure JavaScript, zero runtime dependencies, built on NIST FIPS 203/204/205." />
-<meta property="og:title" content="qID — post-quantum identity" />
-<meta property="og:description" content="Keys, addresses, spends, login, recovery, encryption — from one seed. NIST FIPS 203/204/205, byte-exact to BTX." />
+<meta property="og:title" content="qID: post-quantum identity" />
+<meta property="og:description" content="Keys, addresses, spends, login, recovery, and encryption, all from one seed. NIST FIPS 203/204/205, byte-exact to BTX." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://qid.dev/" />
 <meta property="og:site_name" content="qID" />
 <meta property="og:image" content="https://qid.dev/og.png?v=2" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="qID — Identity that outlives the quantum computer. FIPS 203/204/205." />
+<meta property="og:image:alt" content="qID. Identity that outlives the quantum computer. FIPS 203/204/205." />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="qID — post-quantum identity" />
-<meta name="twitter:description" content="Keys, addresses, spends, login, recovery, encryption — from one seed. NIST FIPS 203/204/205." />
+<meta name="twitter:title" content="qID: post-quantum identity" />
+<meta name="twitter:description" content="Keys, addresses, spends, login, recovery, and encryption, all from one seed. NIST FIPS 203/204/205." />
 <meta name="twitter:image" content="https://qid.dev/og.png?v=2" />
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0e12" />
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafcfd" />
@@ -41,15 +41,26 @@
       "codeRepository": "https://github.com/MendeMatthias/qid",
       "programmingLanguage": "JavaScript",
       "license": "https://opensource.org/licenses/MIT",
+      "author": { "@type": "Person", "name": "Mende Matthias" },
       "description": "Post-quantum identity library built on NIST FIPS 203 (ML-KEM), FIPS 204 (ML-DSA), and FIPS 205 (SLH-DSA). Byte-exact to the BTX chain; chain-agnostic login, attestation, revocation, and hybrid encryption.",
-      "keywords": "post-quantum cryptography, PQC, ML-DSA, SLH-DSA, ML-KEM, FIPS 204, FIPS 205, FIPS 203, identity, BTX, quantum-resistant"
+      "keywords": "post-quantum cryptography, PQC, ML-DSA, SLH-DSA, ML-KEM, FIPS 204, FIPS 205, FIPS 203, identity, BTX, quantum-resistant, self-custody, self-sovereignty"
+    },
+    {
+      "@type": "ScholarlyArticle",
+      "@id": "https://qid.dev/qid-paper.pdf",
+      "headline": "qID: A Post-Quantum Identity Construction from NIST-Standardized Primitives",
+      "author": { "@type": "Person", "name": "Mende Matthias" },
+      "datePublished": "2026-07",
+      "url": "https://qid.dev/qid-paper.pdf",
+      "about": "post-quantum identity, self-custody, NIST FIPS 203/204/205",
+      "isPartOf": { "@id": "https://qid.dev/#website" }
     }
   ]
 }
 </script>
 <!-- Deploy note: serve a real Content-Security-Policy HEADER, e.g.
      default-src 'none'; style-src 'sha256-…'; script-src 'sha256-…'; img-src 'self' data:;
-     This page makes ZERO external requests by design — same posture as the library. -->
+     This page makes ZERO external requests by design, same posture as the library. -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='700' fill='%235eeaa0' text-anchor='middle'%3Eq%3C/text%3E%3Ccircle cx='24' cy='8' r='2.5' fill='%2367e8f9'/%3E%3C/svg%3E" />
 <style>
   :root {
@@ -153,6 +164,22 @@
   /* ---- sections ---- */
   section { padding: 76px 0; }
   section + section { border-top: 1px solid var(--border); }
+
+  /* ---- manifesto / founder quote ---- */
+  .manifesto { padding: 66px 0; background: var(--bg2); position: relative; overflow: hidden; }
+  .manifesto::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 50% 120% at 50% 50%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 70%);
+  }
+  .manifesto blockquote { position: relative; max-width: 900px; margin: 0 auto; text-align: center; }
+  .manifesto p {
+    font-size: clamp(22px, 2.7vw, 31px); line-height: 1.32; letter-spacing: -0.015em;
+    font-weight: 500; color: var(--text);
+  }
+  .manifesto cite {
+    display: block; margin-top: 20px; font-style: normal; font-size: 14px;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600;
+  }
   .kicker { font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 10px; }
   h2 { font-size: clamp(26px, 3vw, 34px); letter-spacing: -0.018em; line-height: 1.15; margin-bottom: 14px; }
   .lede { color: var(--muted); max-width: 62ch; font-size: 16.5px; }
@@ -250,10 +277,10 @@
 
 <span class="c-kw">const</span> id = <span class="c-fn">createIdentity</span>(<span class="c-fn">randomSeed</span>());
 
-id.<span class="c-pr">btxAddress</span>    <span class="c-cm">// btx1z… — receives value on-chain</span>
-id.<span class="c-pr">identityRoot</span>  <span class="c-cm">// stable root — survives key rotation</span>
-id.<span class="c-pr">login</span>         <span class="c-cm">// ML-DSA-44 — signs spends &amp; logins</span>
-id.<span class="c-pr">recovery</span>      <span class="c-cm">// SLH-DSA-128s — cold, hash-based</span>
+id.<span class="c-pr">btxAddress</span>    <span class="c-cm">// btx1z… receives value on-chain</span>
+id.<span class="c-pr">identityRoot</span>  <span class="c-cm">// stable root, survives key rotation</span>
+id.<span class="c-pr">login</span>         <span class="c-cm">// ML-DSA-44 signs spends &amp; logins</span>
+id.<span class="c-pr">recovery</span>      <span class="c-cm">// SLH-DSA-128s cold, hash-based</span>
 id.<span class="c-pr">attestation</span>   <span class="c-cm">// root-signed, canonical bytes (v3)</span>
 </code></pre>
         </div>
@@ -270,12 +297,22 @@ id.<span class="c-pr">attestation</span>   <span class="c-cm">// root-signed, ca
     </div>
   </div>
 
+  <section class="manifesto">
+    <div class="wrap">
+      <blockquote>
+        <p>&ldquo;Self-custody and self-sovereignty are human rights. In the quantum age,
+        defending them is an engineering duty, not a feature.&rdquo;</p>
+        <cite>Mende Matthias, founder</cite>
+      </blockquote>
+    </div>
+  </section>
+
   <section id="layers">
     <div class="wrap">
       <div class="kicker">What it is</div>
       <h2>Two layers. One seed.</h2>
-      <p class="lede">qID pairs a hash-based cold root with a fast lattice hot key — the most conservative
-      cryptographic assumption anchors the identity, the fast one carries the daily load. The money core is
+      <p class="lede">qID pairs a hash-based cold root with a fast lattice hot key. The most conservative
+      cryptographic assumption anchors the identity, and the fast one carries the daily load. The money core is
       byte-exact to BTX; the identity layer works anywhere, with or without a chain.</p>
       <div class="grid2">
         <div class="card">
@@ -283,20 +320,20 @@ id.<span class="c-pr">attestation</span>   <span class="c-cm">// root-signed, ca
           <p>Everything a self-custodial post-quantum wallet needs, reproducing the node's own bytes.</p>
           <ul>
             <li>ML-DSA-44 login key + SLH-DSA-128s recovery root, derived on BTX's m/87&prime; path</li>
-            <li>P2MR (pay-to-Merkle-root) addresses — bech32m, witness v2, network-strict decoding</li>
+            <li>P2MR (pay-to-Merkle-root) addresses: bech32m, witness v2, network-strict decoding</li>
             <li>Multi-input spend builder: coin selection, node-exact PQ fees, change, max-fee clamp</li>
-            <li>Sighash commits to every input and output — a lying explorer can't redirect value</li>
+            <li>Sighash commits to every input and output, so a lying explorer can't redirect value</li>
             <li>Recovery-leaf rescue path, era-aware (legacy pre-C-002, FIPS-205 today)</li>
           </ul>
         </div>
         <div class="card">
           <h3>The identity layer <span class="pill pill-any">chain-agnostic</span></h3>
-          <p>A cold root that vouches for hot keys — CA-style, self-custodial, no third party in the trust path.</p>
+          <p>A cold root that vouches for hot keys, CA-style: self-custodial, no third party in the trust path.</p>
           <ul>
             <li>Login with qID: origin-bound, replay-proof challenge signing (WebAuthn-style)</li>
             <li>Key rotation with monotonic serials + root-signed revocation floors</li>
-            <li>Hybrid encryption: ML-KEM-768 + X25519 — secure if either primitive holds</li>
-            <li>Canonical signing preimages — no JSON in anything signed, ever</li>
+            <li>Hybrid encryption: ML-KEM-768 + X25519, secure if either primitive holds</li>
+            <li>Canonical signing preimages, so nothing signed is ever JSON</li>
             <li>Relying-party verifier with pluggable storage, safe on any backend</li>
           </ul>
         </div>
@@ -309,7 +346,7 @@ id.<span class="c-pr">attestation</span>   <span class="c-cm">// root-signed, ca
       <div class="kicker">Security posture</div>
       <h2>Built adversarial-first.</h2>
       <p class="lede">qID has been through repeated adversarial audit rounds, and the important properties
-      aren't asserted — they're machine-checked on every commit.</p>
+      aren't asserted. They're machine-checked on every commit.</p>
       <div class="sec-list">
         <div class="sec-item"><span class="n">01</span><div>
           <h4>Negative-space tests</h4>
@@ -321,7 +358,7 @@ id.<span class="c-pr">attestation</span>   <span class="c-cm">// root-signed, ca
         </div></div>
         <div class="sec-item"><span class="n">03</span><div>
           <h4>Total-contract verifiers</h4>
-          <p>Attestation, revocation, and login verification never throw on attacker-shaped input — property-based fuzzing holds them to it.</p>
+          <p>Attestation, revocation, and login verification never throw on attacker-shaped input, and property-based fuzzing holds them to it.</p>
         </div></div>
         <div class="sec-item"><span class="n">04</span><div>
           <h4>Fail-closed everywhere</h4>
@@ -333,13 +370,13 @@ id.<span class="c-pr">attestation</span>   <span class="c-cm">// root-signed, ca
         </div></div>
         <div class="sec-item"><span class="n">06</span><div>
           <h4>Responsible disclosure</h4>
-          <p>A real security policy with response targets — report privately via GitHub security advisories.</p>
+          <p>A real security policy with response targets. Report privately via GitHub security advisories.</p>
         </div></div>
       </div>
       <div class="quote">
         <b>The honest claim:</b> resistant to quantum attacks, built on NIST-standardized post-quantum
-        cryptography (FIPS 203, 204, 205), pending independent audit. We don't say "unhackable" —
-        precision is the security feature.
+        cryptography (FIPS 203, 204, 205), pending independent audit. We don't say "unhackable."
+        Precision is the security feature.
       </div>
       <div class="prov"><b>$</b> shasum -a 256 dist/qid.bundle.js
 <b>9155a691f753fd51c7293205f96ef497d4862a823923eada2d239b32e513485e</b>  reproducible @ effefa1 (v0.3.0)</div>
@@ -355,7 +392,7 @@ id.<span class="c-pr">attestation</span>   <span class="c-cm">// root-signed, ca
       <div class="grid3">
         <div class="card">
           <h3>Canonical byte layouts</h3>
-          <p>Everything signed off-chain — attestations, login challenges, revocations — signs an explicit,
+          <p>Everything signed off-chain (attestations, login challenges, revocations) signs an explicit,
           versioned byte layout. A Rust or Swift implementation produces identical signatures or fails loudly.</p>
         </div>
         <div class="card">
@@ -365,7 +402,7 @@ id.<span class="c-pr">attestation</span>   <span class="c-cm">// root-signed, ca
         </div>
         <div class="card">
           <h3>The written convention</h3>
-          <p>The full identity convention — derivation paths, attestation format, login protocol, revocation —
+          <p>The full identity convention (derivation paths, attestation format, login protocol, revocation)
           as a versioned spec, developed in review with the BTX core team.</p>
         </div>
       </div>
@@ -389,14 +426,14 @@ id.<span class="c-pr">attestation</span>   <span class="c-cm">// root-signed, ca
         </div>
         <div class="user">
           <div class="name">bonuz</div>
-          <p>Multi-chain mobile app. BTX wallet built on qID with hardware-accelerated key generation — a 4-minute operation brought to a quarter second, byte-identical.</p>
+          <p>Multi-chain mobile app. BTX wallet built on qID with hardware-accelerated key generation that brings a 4-minute operation down to a quarter second, byte-identical.</p>
         </div>
       </div>
       <div class="status">
-        <span class="s"><span class="on"></span>v0.3.0 — wire formats frozen</span>
+        <span class="s"><span class="on"></span>v0.3.0 · wire formats frozen</span>
         <span class="s"><span class="on"></span>C-002 / FIPS-205 compatibility confirmed with BTX core</span>
-        <span class="s"><span class="soon"></span>Independent audit — next milestone</span>
-        <span class="s"><span class="soon"></span>Open source — with the audit</span>
+        <span class="s"><span class="soon"></span>Independent audit · next milestone</span>
+        <span class="s"><span class="soon"></span>Open source · with the audit</span>
       </div>
     </div>
   </section>
