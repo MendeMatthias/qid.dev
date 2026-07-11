@@ -47,6 +47,8 @@
   .ghost{background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;font:600 13px/1 ui-monospace,monospace;padding:10px 16px;cursor:pointer}
   .foot{color:var(--muted);font-size:11.5px;margin-top:22px;border-top:1px solid var(--border);padding-top:14px}
   .foot a{text-decoration:none}
+  .demowarn{margin:2px 0 16px;padding:11px 13px;border:1px dashed #e9b949;border-radius:9px;background:rgba(233,185,73,.08);color:#f2d489;font-size:12px;line-height:1.5}
+  .demowarn b{color:#f4c752}
   /* the demo-wallet control lives INSIDE the dialog so it is always reachable
      above the overlay. Injected after the dialog opens. */
   .demo-inline{display:flex;flex-direction:column;gap:6px;margin:2px 0 16px;padding:12px 14px;border:1px dashed var(--accent);border-radius:11px;background:rgba(52,211,153,.07)}
@@ -68,7 +70,8 @@
         <b>How this demo works.</b> In a real app the challenge and the check happen on
         the site's server, and you sign in your own wallet. Here your browser plays all
         three, so you can try the exact flow with no wallet installed. The verification
-        is the real qID verifier; nothing is faked.
+        is the real qID verifier; nothing is faked. The demo signs with a
+        <b>random throwaway address</b> generated in your browser, never your real wallet.
       </div>
 
       <div id="signin"></div>
@@ -79,6 +82,11 @@
     <div class="member" id="member">
       <p class="hello" id="hello">Signed in</p>
       <p class="since" id="since"></p>
+      <div class="demowarn">
+        <b>Heads up: this is a throwaway demo address.</b> It was generated at random in
+        your browser just now and is not one of your real wallets. Nothing on your device
+        was touched. In a real app, this is where your own wallet would sign.
+      </div>
       <div class="addr" id="addr"></div>
       <button class="ghost" id="logout">Sign out and try again</button>
     </div>
@@ -269,10 +277,10 @@
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "demo-inline-btn";
-    btn.textContent = "Sign with a demo wallet";
+    btn.textContent = "Sign with a throwaway demo wallet";
     const hint = document.createElement("span");
     hint.className = "demo-inline-hint";
-    hint.textContent = "no wallet needed, a throwaway signer plays your phone";
+    hint.textContent = "generates a random test address in your browser. your real wallet is never touched.";
     wrap.append(btn, hint);
     sub.after(wrap);
     btn.onclick = () => signWithDemoWallet(btn);
@@ -293,10 +301,9 @@
   function showMember(session) {
     $("anon").classList.add("off");
     $("member").classList.add("on");
+    $("hello").textContent = "Signed in with a throwaway demo wallet";
     $("addr").textContent = session.address;
-    $("since").textContent = session.account?.createdAt
-      ? `account created just now from your first sign-in`
-      : "";
+    $("since").textContent = "the random address below was created just now for this demo";
   }
 
   mountQidConnect($("signin"), {
