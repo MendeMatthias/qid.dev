@@ -34,14 +34,10 @@
   .tag{color:var(--muted);font-size:13px;margin-bottom:22px}
   .how{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:22px;font-size:12.5px;color:var(--muted)}
   .how b{color:var(--mint)}
-  #signin{margin:8px 0 14px}
+  #signin{margin:8px 0 6px}
   #signin .qidc-btn{font-size:16px;padding:.8em 1.4em}
-  .demowallet{border:1px dashed var(--border);border-radius:12px;padding:14px 16px;margin-top:6px}
-  .demowallet .lbl{color:var(--accent);font-size:11px;letter-spacing:1px;font-weight:700}
-  .demowallet p{color:var(--muted);font-size:12.5px;margin:6px 0 12px}
-  .demowallet button{background:transparent;border:1px solid var(--accent);color:var(--accent);border-radius:9px;font:600 13px/1 ui-monospace,monospace;padding:10px 16px;cursor:pointer}
-  .demowallet button:hover{background:rgba(52,211,153,.1)}
-  .demowallet button:disabled{opacity:.4;cursor:default}
+  .hint{color:var(--muted);font-size:12px;margin-top:8px}
+  .hint b{color:var(--mint)}
   .member{display:none}
   .member.on{display:block}
   .anon.off{display:none}
@@ -51,6 +47,13 @@
   .ghost{background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;font:600 13px/1 ui-monospace,monospace;padding:10px 16px;cursor:pointer}
   .foot{color:var(--muted);font-size:11.5px;margin-top:22px;border-top:1px solid var(--border);padding-top:14px}
   .foot a{text-decoration:none}
+  /* the demo-wallet control lives INSIDE the dialog so it is always reachable
+     above the overlay. Injected after the dialog opens. */
+  .demo-inline{display:flex;flex-direction:column;gap:6px;margin:2px 0 16px;padding:12px 14px;border:1px dashed var(--accent);border-radius:11px;background:rgba(52,211,153,.07)}
+  .demo-inline-btn{background:var(--accent);color:#04120c;border:none;border-radius:9px;padding:11px;font:700 13.5px/1 ui-monospace,monospace;cursor:pointer;transition:filter .12s}
+  .demo-inline-btn:hover{filter:brightness(1.08)}
+  .demo-inline-btn:disabled{opacity:.55;cursor:default}
+  .demo-inline-hint{color:var(--muted);font-size:11px;text-align:center}
 </style>
 </head>
 <body>
@@ -69,13 +72,8 @@
       </div>
 
       <div id="signin"></div>
-
-      <div class="demowallet">
-        <span class="lbl">NO WALLET?</span>
-        <p>Once the dialog is open, tap here and a throwaway demo wallet signs the
-          request for you, exactly as a real phone or desktop wallet would.</p>
-        <button id="demoSign" disabled>Sign with a demo wallet</button>
-      </div>
+      <p class="hint">No wallet? Click the button, then use the <b>demo wallet</b> that
+        appears at the top of the dialog. It signs for you like a real phone would.</p>
     </div>
 
     <div class="member" id="member">
@@ -167,7 +165,6 @@
   // durable store and the cookie; here it lives in memory in the tab.
   const ORIGIN = location.origin;
   const nonces = new Map();   // nonce -> { used, secret, address }
-  const sessions = new Map(); // token -> { address, createdAt }
   let lastRequest = null;     // so the demo wallet can sign the open challenge
 
   async function accountsGetOrCreate(address) {
@@ -187,7 +184,7 @@
   const realFetch = window.fetch.bind(window);
   window.fetch = async (input, init = {}) => {
     const url = typeof input === "string" ? input : input.url;
-    const path = url.startsWith("/") ? url : (() => { try { return new URL(url).pathname + new URL(url).search; } catch { return url; } })();
+    const path = url.startsWith("/") ? url : (() => { try { const u = new URL(url); return u.pathname + u.search; } catch { return url; } })();
     const method = (init.method || "GET").toUpperCase();
 
     if (path.startsWith("/qid/")) {
@@ -200,11 +197,9 @@
         const secret = crypto.getRandomValues(new Uint8Array(16)).reduce((s, b) => s + b.toString(16).padStart(2, "0"), "");
         nonces.set(ch.nonce, { used: false, secret, address: null });
         lastRequest = { v: 1, type: "signin", challenge: ch, proof_url: `${ORIGIN}/qid/proof` };
-        $("demoSign").disabled = false;
         return jsonResponse(200, { challenge: ch, request: lastRequest, pollSecret: secret });
       }
 
-      // shared verify used by paste (/verify) and phone (/proof)
       const runVerify = (proof) => {
         const rec = nonces.get(proof?.challenge?.nonce);
         if (!rec || rec.used) return { ok: false, reason: "nonce_unknown" };
@@ -219,16 +214,13 @@
         const r = runVerify(body.proof || body);
         if (!r.ok) return jsonResponse(401, r);
         const account = await accountsGetOrCreate(r.address);
-        const token = "demo-" + r.address;
-        sessions.set(token, account);
-        return jsonResponse(200, { ok: true, address: r.address, account }, { "Set-Cookie": `qid_session=${token}` });
+        return jsonResponse(200, { ok: true, address: r.address, account });
       }
 
       if (route === "/qid/proof" && method === "POST") {
         const r = runVerify(body.proof || body);
         if (!r.ok) return jsonResponse(401, r);
-        const rec = nonces.get((body.proof || body).challenge.nonce);
-        rec.address = r.address; // park it for the poller
+        nonces.get((body.proof || body).challenge.nonce).address = r.address;
         return jsonResponse(200, { ok: true, address: r.address });
       }
 
@@ -248,22 +240,54 @@
     return realFetch(input, init);
   };
 
-  // ---- the demo wallet: plays the phone, signs the open challenge -------
-  $("demoSign").onclick = async () => {
+  // ---- the demo wallet, INSIDE the dialog -------------------------------
+  // The widget's overlay covers the page, so a control outside the dialog is
+  // unclickable once it opens. We inject the demo-wallet button into the
+  // dialog itself (after its subtitle, which survives tab switches). It plays
+  // the phone: signs the open challenge and posts the proof, and the widget's
+  // own polling then completes the sign-in.
+  async function signWithDemoWallet(btn) {
     if (!lastRequest) return;
-    $("demoSign").disabled = true;
-    $("demoSign").textContent = "Signing";
+    btn.disabled = true;
+    btn.textContent = "Signing with demo wallet";
     const seed = crypto.getRandomValues(new Uint8Array(32));
     const proof = buildProof(seed, lastRequest.challenge);
-    // deliver it the way a scanned phone would: POST to the proof endpoint
     await window.fetch("/qid/proof", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ proof }),
     });
-    // the open widget dialog is polling and will complete on its own
-    setTimeout(() => { $("demoSign").textContent = "Sign with a demo wallet"; }, 1500);
-  };
+    // the widget dialog is polling and completes + closes on its own
+  }
+
+  function injectDemoWallet(modal) {
+    if (!modal || modal.querySelector(".demo-inline")) return;
+    const sub = modal.querySelector(".qidc-sub");
+    if (!sub) return;
+    const wrap = document.createElement("div");
+    wrap.className = "demo-inline";
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "demo-inline-btn";
+    btn.textContent = "Sign with a demo wallet";
+    const hint = document.createElement("span");
+    hint.className = "demo-inline-hint";
+    hint.textContent = "no wallet needed, a throwaway signer plays your phone";
+    wrap.append(btn, hint);
+    sub.after(wrap);
+    btn.onclick = () => signWithDemoWallet(btn);
+  }
+
+  // Watch for the dialog opening and inject the button into it.
+  new MutationObserver((muts) => {
+    for (const m of muts) {
+      for (const node of m.addedNodes) {
+        if (node.nodeType === 1 && node.classList && node.classList.contains("qidc-overlay")) {
+          injectDemoWallet(node.querySelector(".qidc-modal"));
+        }
+      }
+    }
+  }).observe(document.body, { childList: true });
 
   // ---- the page ---------------------------------------------------------
   function showMember(session) {
@@ -285,7 +309,6 @@
   $("logout").onclick = () => {
     $("member").classList.remove("on");
     $("anon").classList.remove("off");
-    $("demoSign").disabled = true;
     lastRequest = null;
   };
 })();
