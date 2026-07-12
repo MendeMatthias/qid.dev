@@ -152,3 +152,40 @@ export function validateSpecCore(s) {
 export function buildMintRequest(specCore, qidProof) {
   return { v: 1, kind: REQUEST_KIND, spec_core: specCore, qid_proof: qidProof };
 }
+
+/* ── quantum sigil (deterministic art, byte-identical to the wallet + btxscan) ────────────── */
+export function quantumSigil(commitmentHex) {
+  const bytes = fromHex(commitmentHex);
+  const b = (i) => (bytes.length ? bytes[i % bytes.length] : 0);
+  const f = (i) => b(i) / 255;
+  const r1 = (x) => Math.round(x * 10) / 10;
+  const S = 100, c = S / 2;
+  const h1 = Math.floor((b(0) / 256) * 360);
+  const h2 = (h1 + 40 + Math.floor(f(1) * 140)) % 360;
+  const rings = [];
+  for (let r = 0; r < 3; r++) {
+    const rot = Math.floor(f(4 + r) * 180);
+    const rx = 30 + Math.floor(f(7 + r) * 16);
+    const ry = 12 + Math.floor(f(10 + r) * 16);
+    const ea = f(13 + r) * Math.PI * 2;
+    const ox = Math.cos(ea) * rx, oy = Math.sin(ea) * ry;
+    const rr = (rot * Math.PI) / 180;
+    rings.push({ rx, ry, rot, ex: r1(c + ox * Math.cos(rr) - oy * Math.sin(rr)), ey: r1(c + ox * Math.sin(rr) + oy * Math.cos(rr)) });
+  }
+  const n = 3 + (b(2) % 6);
+  const rad = 9 + Math.floor(f(3) * 7);
+  const core = [];
+  for (let k = 0; k < n; k++) {
+    const a = (k / n) * Math.PI * 2 + f(16) * Math.PI;
+    const rr2 = rad * (0.55 + f(17 + (k % 6)) * 0.45);
+    core.push([r1(c + Math.cos(a) * rr2), r1(c + Math.sin(a) * rr2)]);
+  }
+  const dotsN = 6 + (b(14) % 10);
+  const lattice = [];
+  for (let k = 0; k < dotsN; k++) {
+    if (((b(20 + (k % 12)) >> (k % 8)) & 1) !== 1) continue;
+    const a = (k / dotsN) * Math.PI * 2;
+    lattice.push([r1(c + Math.cos(a) * 42), r1(c + Math.sin(a) * 42)]);
+  }
+  return { size: S, center: c, h1, h2, rings, core, lattice };
+}

@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>BTX Mint Lab</title>
+<style>
+  :root{
+    --bg:#0a0a0a; --panel:#141414; --panel-2:#181818; --bg-3:#1a1a1a;
+    --text:#fafafa; --muted:rgba(250,250,250,.7); --faint:rgba(250,250,250,.5);
+    --border:rgba(250,250,250,.12); --border-2:rgba(250,250,250,.2);
+    --accent:#2bc98a; --accent-soft:rgba(43,201,138,.14);
+    --value:#f7931a; --value-soft:rgba(247,147,26,.13); --neg:#f2555a;
+    --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --radius:12px; --radius-sm:8px;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none !important}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--mono);font-size:14px;line-height:1.55}
+  a{color:var(--accent)}
+  .wrap{max-width:1120px;margin:0 auto;padding:28px 20px 80px}
+  h1{font-size:26px;margin:0 0 4px;letter-spacing:.02em}
+  h2{font-size:15px;margin:0 0 14px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
+  .sub{color:var(--muted);margin:0 0 22px}
+  .panel{border:1px solid var(--border);border-radius:var(--radius);background:var(--panel);padding:20px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:860px){.grid{grid-template-columns:1fr}}
+  label{display:block;font-size:12px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em;margin:14px 0 5px}
+  input[type=text],input[type=number],textarea,select{
+    width:100%;background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius-sm);
+    color:var(--text);font-family:var(--mono);font-size:14px;padding:10px 12px;outline:none
+  }
+  input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+  textarea{resize:vertical;min-height:64px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .btn{font-family:var(--mono);font-size:14px;font-weight:600;padding:11px 18px;border-radius:var(--radius-sm);
+    border:1px solid var(--border-2);background:var(--panel-2);color:var(--text);cursor:pointer}
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:var(--accent);color:#04120c;border-color:var(--accent)}
+  .btn.primary:disabled{opacity:.4;cursor:not-allowed}
+  .btn.small{padding:6px 11px;font-size:12px}
+  .seg{display:inline-flex;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+  .seg button{background:transparent;border:0;color:var(--muted);font-family:var(--mono);font-size:13px;padding:8px 14px;cursor:pointer}
+  .seg button.on{background:var(--accent-soft);color:var(--accent)}
+  .toggle{display:inline-flex;align-items:center;gap:9px;cursor:pointer;user-select:none}
+  .toggle input{position:absolute;opacity:0}
+  .track{width:40px;height:22px;border-radius:11px;background:var(--bg-3);border:1px solid var(--border);position:relative;transition:.15s}
+  .knob{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--muted);transition:.15s}
+  .toggle input:checked + .track{background:var(--accent-soft);border-color:var(--accent)}
+  .toggle input:checked + .track .knob{left:20px;background:var(--accent)}
+  .badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;border:1px solid var(--border-2);color:var(--muted);background:var(--bg-3)}
+  .badge.artifact{color:var(--value);border-color:var(--value-soft);background:var(--value-soft)}
+  .badge.pos{color:var(--accent);border-color:var(--accent-soft);background:var(--accent-soft)}
+  .mono-block{font-family:var(--mono);font-size:12.5px;background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;word-break:break-all;white-space:pre-wrap;color:var(--muted)}
+  .mono-block .set{color:var(--accent)}
+  .mono-block .pend{color:var(--value)}
+  .faint{color:var(--faint)}.muted{color:var(--muted)}.tiny{font-size:12px}
+  .err{color:var(--neg);font-size:13px;margin-top:8px}
+  .notice{border-left:3px solid var(--accent);background:var(--panel-2);border:1px solid var(--border);border-left-width:3px;border-radius:var(--radius-sm);padding:12px 14px;color:var(--muted);font-size:13px;margin:14px 0}
+  .notice.warn{border-left-color:var(--value)}
+  .kv{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:13px;margin-top:10px}
+  .kv .k{color:var(--faint)}
+  hr{border:0;border-top:1px solid var(--border);margin:22px 0}
+  .trait-row{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-top:8px}
+  /* glyph editor */
+  .glyph-grid{display:grid;grid-template-columns:repeat(16,1fr);width:256px;max-width:100%;aspect-ratio:1;border:1px solid var(--border-2);border-radius:var(--radius-sm);overflow:hidden;background:hsl(150 45% 9%)}
+  .glyph-grid i{aspect-ratio:1;border-right:1px solid rgba(0,0,0,.25);border-bottom:1px solid rgba(0,0,0,.25);cursor:pointer}
+  .glyph-grid i.on{background:hsl(150 70% 58%)}
+  .art-svg{display:block;border-radius:var(--radius-sm);border:1px solid var(--border-2);background:var(--bg-3)}
+  /* gate */
+  #gate{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px;z-index:10}
+  #gate[hidden]{display:none}
+  #gate .box{max-width:420px;width:100%;text-align:center}
+  #gate h1{font-size:22px}
+  #studio[hidden]{display:none}
+  .copy{cursor:pointer}
+  .step-n{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--accent-soft);color:var(--accent);align-items:center;justify-content:center;font-size:12px;margin-right:8px}
+</style>
+</head>
+<body>
+
+<!-- ───────────────────────── PASSWORD GATE ───────────────────────── -->
+<div id="gate">
+  <div class="box">
+    <h1>BTX Mint Lab</h1>
+    <p class="sub">Private preview. Enter the password to continue.</p>
+    <form id="gateForm" class="row" style="justify-content:center">
+      <input id="gatePass" type="password" placeholder="password" autocomplete="off" style="max-width:240px" />
+      <button class="btn primary" type="submit">Enter</button>
+    </form>
+    <p id="gateErr" class="err" style="text-align:center"></p>
+    <p class="faint tiny" style="margin-top:22px">This gate is obfuscation, not security: its hash ships in the page.
+      The real protection is that minting needs the operator's local mint and issuer keys, which never touch this page.</p>
+  </div>
+</div>
+
+<!-- ───────────────────────── STUDIO ───────────────────────── -->
+<main id="studio" hidden>
+<div class="wrap">
+  <h1>BTX Mint Lab</h1>
+  <p class="sub">Design a BTX Artifact (BZA1), preview the exact on-chain payload, prove your receiving address with qID,
+     and produce a mint request for the operator to fulfil. This page holds no keys and mints nothing.</p>
+
+  <div class="grid">
+    <!-- ── options builder ── -->
+    <section class="panel">
+      <h2>1 · Design the artifact</h2>
+
+      <label>Kind</label>
+      <div class="seg" id="schemaSeg">
+        <button type="button" data-schema="0" class="on">Linked / Generative</button>
+        <button type="button" data-schema="1">Glyph (on-chain pixels)</button>
+      </div>
+
+      <label>Collection tag <span class="faint">(1–8 ASCII, e.g. RELICLAB)</span></label>
+      <input id="collection" type="text" maxlength="8" value="RELICLAB" spellcheck="false" />
+
+      <label>Item number</label>
+      <input id="item" type="number" min="0" step="1" value="1" />
+
+      <div id="linkedFields">
+        <label>Name</label>
+        <input id="name" type="text" value="Relic Lab Collectible" spellcheck="false" />
+
+        <label>Artwork image CID <span class="faint">(ipfs, e.g. bafy… — off-chain)</span></label>
+        <input id="imageCid" type="text" placeholder="bafybei…" spellcheck="false" />
+
+        <label>Traits</label>
+        <div id="traits"></div>
+        <button type="button" class="btn small" id="addTrait" style="margin-top:8px">+ trait</button>
+
+        <label style="margin-top:16px">Chest value <span class="faint">(BTX carried inside the coin)</span></label>
+        <div class="row">
+          <input id="chest" type="number" min="0" step="0.00000001" value="0" style="max-width:180px" />
+          <span class="faint tiny" id="chestNote"></span>
+        </div>
+      </div>
+
+      <div id="glyphFields" hidden>
+        <label>Glyph <span class="faint">(16×16, click to draw — this IS the on-chain art)</span></label>
+        <div class="glyph-grid" id="glyphGrid"></div>
+        <div class="row" style="margin-top:10px">
+          <button type="button" class="btn small" id="glyphClear">Clear</button>
+          <button type="button" class="btn small" id="glyphInvert">Invert</button>
+          <button type="button" class="btn small" id="glyphDiamond">Diamond</button>
+        </div>
+      </div>
+
+      <label class="toggle" style="margin-top:18px">
+        <input id="soulbound" type="checkbox" />
+        <span class="track"><span class="knob"></span></span>
+        <span>Soulbound <span class="faint">(non-transferable; a soulbound coin can never be opened, so its chest is locked to 0)</span></span>
+      </label>
+
+      <p id="specErr" class="err"></p>
+    </section>
+
+    <!-- ── previews ── -->
+    <section class="panel">
+      <h2>2 · Preview</h2>
+      <div class="row" style="gap:18px;align-items:flex-start">
+        <div id="artPreview"></div>
+        <div style="flex:1;min-width:160px">
+          <div class="row" style="gap:6px"><span class="badge artifact" id="pvKind">Linked / Generative</span><span class="badge" id="pvSoul" hidden>Soulbound</span></div>
+          <div class="kv">
+            <div class="k">Collection</div><div id="pvColl">RELICLAB</div>
+            <div class="k">Item</div><div id="pvItem">#001</div>
+            <div class="k">Carrier</div><div id="pvCarrier">0.00100000 BTX</div>
+            <div class="k">Network fee</div><div id="pvFee" class="faint">~0.00008 BTX</div>
+          </div>
+        </div>
+      </div>
+
+      <label style="margin-top:16px">On-chain payload <span class="faint">(52 bytes, the OP_RETURN)</span></label>
+      <div class="mono-block" id="payloadView"></div>
+
+      <div id="recordWrap">
+        <label style="margin-top:14px">Off-chain record <span class="faint">(the operator signs + pins this; its hash becomes the commitment)</span></label>
+        <div class="mono-block" id="recordView"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ── prove + request ── -->
+  <section class="panel" style="margin-top:18px">
+    <h2>3 · Prove your receiving address + build the request</h2>
+    <div class="notice">
+      One signature covers everything. The challenge below binds your exact design to your address:
+      its nonce is the hash of the options above. Change any option and you must sign again — the operator
+      recomputes the same nonce and refuses a mismatch, so nobody can mint a tampered design under your signature.
+    </div>
+
+    <div class="row">
+      <button class="btn primary" id="genChallenge"><span class="step-n">1</span>Generate signing challenge</button>
+      <span class="faint tiny" id="challengeHint"></span>
+    </div>
+    <div id="challengeBox" hidden>
+      <label style="margin-top:14px">Challenge — sign this in your PQ wallet (qID Sign-In), then paste the proof below</label>
+      <div class="mono-block" id="challengeView"></div>
+      <button class="btn small copy" data-copy="challengeView" style="margin-top:8px">Copy challenge</button>
+
+      <label style="margin-top:16px"><span class="step-n">2</span>Paste your signed proof</label>
+      <textarea id="proofIn" rows="4" placeholder='{"v":1,"alg":"ML-DSA-44","address":"btx1z…","challenge":{…},…}' spellcheck="false"></textarea>
+      <div class="row" style="margin-top:8px">
+        <button class="btn primary" id="verifyProof"><span class="step-n">3</span>Verify + build request</button>
+        <span id="proofStatus" class="tiny"></span>
+      </div>
+    </div>
+
+    <div id="requestBox" hidden>
+      <hr />
+      <div class="row"><span class="badge pos">✓ Request ready</span><span class="faint tiny" id="mintToLine"></span></div>
+      <label style="margin-top:12px">Mint request — send this to the operator</label>
+      <textarea id="requestOut" rows="10" readonly spellcheck="false" style="font-size:12px"></textarea>
+      <div class="row" style="margin-top:8px">
+        <button class="btn primary copy" data-copy="requestOut">Copy request</button>
+        <button class="btn small" id="downloadReq">Download .json</button>
+      </div>
+      <p class="faint tiny" style="margin-top:12px">The operator verifies your proof, re-checks the nonce, signs the record with the studio's
+        test issuer key (valid but unofficial), and mints to your address. Nothing here spends coins.</p>
+    </div>
+  </section>
+</div>
+</main>
+
+<script type="module">
+import * as S from "./studio-core.mjs";
+import { verifySignIn } from "./qid-verify.bundle.js";
+
+const GATE_HASH = "018c595102c683481261a4605c5c8aa499b1f1b1533b5a08f539947c3d114833";
+const RP_ORIGIN = "https://qid.dev";
+const DUST_SAT = 100000;
+const $ = (id) => document.getElementById(id);
+
+/* ── gate ── */
+async function sha256hex(s){ const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)); return [...new Uint8Array(d)].map(b=>b.toString(16).padStart(2,"0")).join(""); }
+function openStudio(){ $("gate").hidden = true; $("studio").hidden = false; try{ sessionStorage.setItem("btx-mintlab","1"); }catch{} refresh(); }
+$("gateForm").addEventListener("submit", async (e)=>{ e.preventDefault();
+  const ok = (await sha256hex($("gatePass").value)) === GATE_HASH;
+  if (ok) openStudio(); else { $("gateErr").textContent = "That is not the password."; }
+});
+
+/* ── state ── */
+let schema = 0;
+let glyph = new Uint8Array(32);           // 16×16 bits, MSB-first
+let boundNonce = null;                    // the nonce the current challenge/proof is bound to
+let boundSpecJson = null;                  // canonical spec at challenge time (to detect edits)
+
+/* ── glyph editor ── */
+const grid = $("glyphGrid");
+for (let i=0;i<256;i++){ const cell=document.createElement("i"); cell.dataset.i=i; grid.appendChild(cell); }
+let painting=false, paintOn=true;
+function glyphHex(){ return [...glyph].map(b=>b.toString(16).padStart(2,"0")).join(""); }
+function setBit(i,on){ const byte=i>>3, mask=128>>(i&7); if(on) glyph[byte]|=mask; else glyph[byte]&=~mask; grid.children[i].classList.toggle("on",on); }
+function bitOn(i){ return (glyph[i>>3] & (128>>(i&7)))!==0; }
+grid.addEventListener("mousedown",(e)=>{ if(e.target.dataset.i==null)return; painting=true; const i=+e.target.dataset.i; paintOn=!bitOn(i); setBit(i,paintOn); refresh(); });
+grid.addEventListener("mouseover",(e)=>{ if(painting && e.target.dataset.i!=null){ setBit(+e.target.dataset.i,paintOn); refresh(); } });
+window.addEventListener("mouseup",()=>painting=false);
+$("glyphClear").onclick=()=>{ glyph=new Uint8Array(32); [...grid.children].forEach(c=>c.classList.remove("on")); refresh(); };
+$("glyphInvert").onclick=()=>{ for(let i=0;i<256;i++) setBit(i,!bitOn(i)); refresh(); };
+$("glyphDiamond").onclick=()=>{ glyph=new Uint8Array(32); for(let r=0;r<16;r++)for(let c=0;c<16;c++){ if(Math.abs(c-7.5)+Math.abs(r-7.5)<=7.5) setBit(r*16+c,true); else setBit(r*16+c,false);} refresh(); };
+
+/* ── traits ── */
+function addTrait(k="",v=""){ const row=document.createElement("div"); row.className="trait-row";
+  row.innerHTML=`<input type="text" placeholder="trait" value="${k}"><input type="text" placeholder="value" value="${v}"><button class="btn small" type="button">×</button>`;
+  row.querySelector("button").onclick=()=>{ row.remove(); refresh(); };
+  row.querySelectorAll("input").forEach(inp=>inp.addEventListener("input",refresh));
+  $("traits").appendChild(row);
+}
+$("addTrait").onclick=()=>{ addTrait(); };
+addTrait("edition","1");
+function readTraits(){ return [...$("traits").children].map(r=>{ const [k,v]=r.querySelectorAll("input"); return {trait_type:k.value.trim(), value:v.value.trim()}; }).filter(t=>t.trait_type); }
+
+/* ── schema toggle ── */
+document.querySelectorAll("#schemaSeg button").forEach(b=>b.onclick=()=>{
+  schema=+b.dataset.schema;
+  document.querySelectorAll("#schemaSeg button").forEach(x=>x.classList.toggle("on",x===b));
+  $("linkedFields").hidden = schema!==0; $("glyphFields").hidden = schema!==1; $("recordWrap").hidden = schema!==0;
+  refresh();
+});
+$("soulbound").addEventListener("change",refresh);
+["collection","item","name","imageCid","chest"].forEach(id=>$(id).addEventListener("input",refresh));
+
+/* ── build spec from the form ── */
+function chestSat(){ const btx=Number($("chest").value)||0; return Math.max(0,Math.round(btx*1e8)); }
+function readOptions(){
+  return { collectionSlug:$("collection").value.trim(), collectionName:$("collection").value.trim(),
+    item:$("item").value===""?null:Math.floor(Number($("item").value)),
+    schema, soulbound:$("soulbound").checked,
+    imageCid: schema===0 ? $("imageCid").value.trim() : "",
+    glyphHex: schema===1 ? glyphHex() : "",
+    traits: schema===0 ? readTraits() : [], name: schema===0 ? $("name").value.trim() : "",
+    chestSat: schema===0 ? chestSat() : 0 };
+}
+/** The record body the operator will sign (schema 0). The commitment = sha256 of the FINAL record incl. the
+ *  issuer signature, so this is a faithful preview; the exact commitment is set by the operator at mint. */
+function recordBody(spec, mint_to){
+  return { v:2, collection:spec.collection.slug, collection_id:spec.collection.id_hex, item:spec.item,
+    name:spec.name, type:spec.flags.soulbound?"attestation":"relic", schema:0, soulbound:spec.flags.soulbound,
+    image: spec.art.image_cid ? (spec.art.image_cid.startsWith("ipfs://")?spec.art.image_cid:"ipfs://"+spec.art.image_cid) : "",
+    traits:spec.traits, value:{chest:spec.chest_sat>0, carrier_min_sat:spec.chest_sat, unit:"BTX"},
+    ...(mint_to?{mint_to}:{}) };
+}
+
+/* ── render the quantum sigil (matches wallet + btxscan) ── */
+function sigilSvg(commitmentHex, size){
+  const g=S.quantumSigil(commitmentHex), c=g.center;
+  const dim=`hsl(${g.h1} 60% 42%)`, ink=`hsl(${g.h1} 85% 60%)`, ink2=`hsl(${g.h2} 90% 66%)`;
+  let s=`<svg viewBox="0 0 ${g.size} ${g.size}" width="${size}" height="${size}" class="art-svg">`;
+  s+=`<rect width="${g.size}" height="${g.size}" fill="hsl(${g.h1} 55% 8%)"/>`;
+  for(const r of g.rings){ s+=`<ellipse cx="${c}" cy="${c}" rx="${r.rx}" ry="${r.ry}" fill="none" stroke="${dim}" stroke-width="1" opacity=".55" transform="rotate(${r.rot} ${c} ${c})"/><circle cx="${r.ex}" cy="${r.ey}" r="2.4" fill="${ink2}"/>`; }
+  s+=`<circle cx="${c}" cy="${c}" r="11" fill="${ink}" opacity=".18"/><polygon points="${g.core.map(p=>p.join(",")).join(" ")}" fill="${ink2}" opacity=".95"/><circle cx="${c}" cy="${c}" r="2.2" fill="hsl(${g.h1} 90% 88%)"/>`;
+  for(const d of g.lattice) s+=`<circle cx="${d[0]}" cy="${d[1]}" r="1.3" fill="${ink}" opacity=".8"/>`;
+  return s+"</svg>";
+}
+function glyphSvg(size){
+  let s=`<svg viewBox="0 0 16 16" width="${size}" height="${size}" class="art-svg" style="image-rendering:pixelated">`;
+  s+=`<rect width="16" height="16" fill="hsl(150 45% 9%)"/>`;
+  for(let i=0;i<256;i++) if(bitOn(i)) s+=`<rect x="${i%16}" y="${i>>4}" width="1" height="1" fill="hsl(150 70% 58%)"/>`;
+  return s+"</svg>";
+}
+
+/* ── the live refresh ── */
+let refreshTimer=null;
+async function refresh(){
+  const spec=S.buildSpecCore(readOptions());
+  const errs=S.validateSpecCore(spec);
+  $("specErr").textContent = errs.length ? errs[0] : "";
+  $("genChallenge").disabled = errs.length>0;
+
+  // soulbound locks the chest
+  $("chest").disabled = $("soulbound").checked;
+  if ($("soulbound").checked){ $("chest").value="0"; }
+  $("chestNote").textContent = $("soulbound").checked ? "locked — a soulbound coin can never be opened" : (spec.chest_sat>0?`carrier = ${((DUST_SAT+spec.chest_sat)/1e8).toFixed(8)} BTX`:"");
+
+  // preview meta
+  $("pvKind").textContent = schema===1 ? "Glyph (on-chain pixels)" : (spec.flags.soulbound?"Attestation (soulbound)":"Linked / Generative");
+  $("pvSoul").hidden = !spec.flags.soulbound;
+  $("pvColl").textContent = spec.collection.slug || "—";
+  $("pvItem").textContent = spec.item!=null ? "#"+String(spec.item).padStart(3,"0") : "auto";
+  $("pvCarrier").textContent = ((DUST_SAT+spec.chest_sat)/1e8).toFixed(8)+" BTX";
+
+  // payload preview
+  const collHex=spec.collection.id_hex, itemHex=spec.item!=null?(spec.item>>>0).toString(16).padStart(8,"0"):"????????";
+  const flags=spec.flags.soulbound?"01":"00", schemaHex=schema===1?"01":"00";
+  const head=`<span class="set">425a4131 00 01</span> <span class="set">${collHex}</span> <span class="set">${itemHex}</span> <span class="set">${flags}</span> `;
+  const commit = schema===1 ? `<span class="set">${glyphHex()}</span>` : `<span class="pend">«32-byte record hash — finalized by the issuer at mint»</span>`;
+  $("payloadView").innerHTML = head + commit + ` <span class="set">${schemaHex}</span>`;
+
+  // record body (schema 0)
+  if (schema===0){ $("recordView").textContent = S.canonicalize(recordBody(spec)); }
+
+  // art
+  if (schema===1){ $("artPreview").innerHTML = glyphSvg(132); }
+  else {
+    // provisional sigil from the record body hash (final art is set at mint)
+    const cHex = await S.sha256Hex(S.canonicalize(recordBody(spec)));
+    $("artPreview").innerHTML = sigilSvg(cHex,132) + `<div class="faint tiny" style="text-align:center;margin-top:6px">provisional · final at mint</div>`;
+  }
+
+  // any edit after a challenge was generated invalidates it
+  if (boundSpecJson!=null && S.canonicalize(spec)!==boundSpecJson){
+    boundNonce=null; boundSpecJson=null; $("challengeBox").hidden=true; $("requestBox").hidden=true;
+    $("challengeHint").textContent="options changed — generate a fresh challenge";
+  }
+}
+
+/* ── generate challenge ── */
+$("genChallenge").onclick = async ()=>{
+  const spec=S.buildSpecCore(readOptions());
+  if (S.validateSpecCore(spec).length) return;
+  boundNonce = await S.nonceForSpec(spec);
+  boundSpecJson = S.canonicalize(spec);
+  const challenge = { nonce:boundNonce, rp_origin:RP_ORIGIN, ts:Date.now() };
+  $("challengeView").textContent = JSON.stringify(challenge);
+  $("challengeBox").hidden=false; $("requestBox").hidden=true; $("proofStatus").textContent=""; $("challengeHint").textContent="";
+};
+
+/* ── verify proof + build request ── */
+$("verifyProof").onclick = async ()=>{
+  const status=$("proofStatus"); status.style.color="var(--neg)";
+  let proof; try{ proof=JSON.parse($("proofIn").value.trim()); }catch{ status.textContent="That is not valid JSON."; return; }
+  if (!boundNonce){ status.textContent="Generate a challenge first."; return; }
+  if (proof?.challenge?.nonce !== boundNonce){ status.textContent="This proof does not match the current design. Sign the challenge above."; return; }
+  const v = verifySignIn(proof, { expectedOrigin:RP_ORIGIN, ttlMs:30*60*1000, skewMs:60*1000, now:Date.now() });
+  if (!v.ok){ status.textContent = "Proof rejected: "+v.reason; return; }
+  const spec=S.buildSpecCore(readOptions());
+  const req = S.buildMintRequest(spec, proof);
+  $("requestOut").value = JSON.stringify(req, null, 2);
+  $("mintToLine").textContent = "mints to "+v.address.slice(0,16)+"…"+v.address.slice(-6);
+  $("requestBox").hidden=false;
+  status.style.color="var(--accent)"; status.textContent="✓ verified";
+  $("requestBox").scrollIntoView({behavior:"smooth",block:"nearest"});
+};
+
+/* ── copy + download ── */
+document.querySelectorAll(".copy").forEach(b=>b.addEventListener("click",()=>{
+  const el=$(b.dataset.copy); const t = el.value!=null?el.value:el.textContent;
+  navigator.clipboard.writeText(t); const o=b.textContent; b.textContent="Copied"; setTimeout(()=>b.textContent=o,1200);
+}));
+$("downloadReq").onclick=()=>{ const blob=new Blob([$("requestOut").value],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="btx-mint-request.json"; a.click(); };
+
+/* ── boot: reveal if this session already passed the gate (all state + handlers are defined by now) ── */
+if (sessionStorage.getItem("btx-mintlab")==="1") openStudio();
+</script>
+</body>
+</html>
