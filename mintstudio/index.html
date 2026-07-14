@@ -130,8 +130,8 @@
       <label>Collection tag <span class="faint">(1–8 ASCII, e.g. RELICLAB)</span></label>
       <input id="collection" type="text" maxlength="8" value="RELICLAB" spellcheck="false" />
 
-      <label>Item number</label>
-      <input id="item" type="number" min="0" step="1" value="1" />
+      <label>Item number <span class="faint">(leave blank = operator assigns the next in the collection)</span></label>
+      <input id="item" type="number" min="0" step="1" value="1" placeholder="auto" />
 
       <div id="linkedFields">
         <label>Name</label>
@@ -350,8 +350,7 @@ function glyphSvg(size){
 let refreshTimer=null;
 async function refresh(){
   const spec=S.buildSpecCore(readOptions());
-  const errs=S.validateSpecCore(spec);
-  if (spec.item==null) errs.unshift("Item number is required.");   // the operator worker mints an explicit item
+  const errs=S.validateSpecCore(spec);   // item may be null = the operator auto-assigns the next in the collection
   $("specErr").textContent = errs.length ? errs[0] : "";
   $("genChallenge").disabled = errs.length>0;
 
@@ -368,9 +367,10 @@ async function refresh(){
   $("pvCarrier").textContent = ((DUST_SAT+spec.chest_sat)/1e8).toFixed(8)+" BTX";
 
   // payload preview
-  const collHex=spec.collection.id_hex, itemHex=spec.item!=null?(spec.item>>>0).toString(16).padStart(8,"0"):"????????";
+  const collHex=spec.collection.id_hex;
+  const itemStr = spec.item!=null ? `<span class="set">${(spec.item>>>0).toString(16).padStart(8,"0")}</span>` : `<span class="pend">«item — auto-assigned at mint»</span>`;
   const flags=spec.flags.soulbound?"01":"00", schemaHex=schema===1?"01":"00";
-  const head=`<span class="set">425a4131 00 01</span> <span class="set">${collHex}</span> <span class="set">${itemHex}</span> <span class="set">${flags}</span> `;
+  const head=`<span class="set">425a4131 00 01</span> <span class="set">${collHex}</span> ${itemStr} <span class="set">${flags}</span> `;
   const commit = schema===1 ? `<span class="set">${glyphHex()}</span>` : `<span class="pend">«32-byte record hash — finalized by the issuer at mint»</span>`;
   $("payloadView").innerHTML = head + commit + ` <span class="set">${schemaHex}</span>`;
 
