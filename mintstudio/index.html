@@ -76,6 +76,16 @@
   #studio[hidden]{display:none}
   .copy{cursor:pointer}
   .step-n{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--accent-soft);color:var(--accent);align-items:center;justify-content:center;font-size:12px;margin-right:8px}
+  .guide{margin:12px 0 0;padding-left:20px;color:var(--muted);font-size:13px;line-height:1.7}
+  .guide li{margin:2px 0}
+  .guide b{color:var(--text);font-weight:600}
+  .topnav{display:flex;align-items:center;justify-content:space-between;max-width:1120px;margin:0 auto;padding:16px 20px 0}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:600;letter-spacing:.02em;text-decoration:none;color:var(--text)}
+  .brand .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+  .topnav a.home{color:var(--muted);text-decoration:none;font-size:13px}
+  .topnav a.home:hover{color:var(--accent)}
+  .lab-tag{font-size:11px;color:var(--faint);border:1px solid var(--border);border-radius:6px;padding:2px 8px;margin-left:8px}
+  .foot{max-width:1120px;margin:36px auto 0;padding:20px;border-top:1px solid var(--border);color:var(--faint);font-size:12px;line-height:1.6}
 </style>
 </head>
 <body>
@@ -97,6 +107,10 @@
 
 <!-- ───────────────────────── STUDIO ───────────────────────── -->
 <main id="studio" hidden>
+<nav class="topnav">
+  <a class="brand" href="https://qid.dev"><span>qID</span><span class="dot"></span><span class="lab-tag">MINT LAB</span></a>
+  <a class="home" href="https://qid.dev">← qid.dev</a>
+</nav>
 <div class="wrap">
   <h1>BTX Mint Lab</h1>
   <p class="sub">Design a BTX Artifact (BZA1), preview the exact on-chain payload, prove your receiving address with qID,
@@ -196,14 +210,19 @@
       <span class="faint tiny" id="challengeHint"></span>
     </div>
     <div id="challengeBox" hidden>
-      <label style="margin-top:14px">Challenge — sign this in your PQ wallet (qID Sign-In), then paste the proof below</label>
+      <label style="margin-top:14px"><span class="step-n">2</span>Sign this challenge in your wallet</label>
       <div class="mono-block" id="challengeView"></div>
       <button class="btn small copy" data-copy="challengeView" style="margin-top:8px">Copy challenge</button>
+      <ol class="guide">
+        <li>Open the <a href="https://pq-wallet.com" target="_blank" rel="noopener noreferrer">PQ Wallet</a> (or easyBTX), go to <b>qID Sign-In</b>, and pick the wallet you want the artifact minted to.</li>
+        <li>Paste the challenge above, sign it, and copy the proof it gives back.</li>
+        <li>Paste that proof below.</li>
+      </ol>
 
-      <label style="margin-top:16px"><span class="step-n">2</span>Paste your signed proof</label>
+      <label style="margin-top:16px"><span class="step-n">3</span>Paste your signed proof</label>
       <textarea id="proofIn" rows="4" placeholder='{"v":1,"alg":"ML-DSA-44","address":"btx1z…","challenge":{…},…}' spellcheck="false"></textarea>
       <div class="row" style="margin-top:8px">
-        <button class="btn primary" id="verifyProof"><span class="step-n">3</span>Verify + build request</button>
+        <button class="btn primary" id="verifyProof"><span class="step-n">4</span>Verify + build request</button>
         <span id="proofStatus" class="tiny"></span>
       </div>
     </div>
@@ -222,6 +241,12 @@
     </div>
   </section>
 </div>
+<footer class="foot">
+  BTX Mint Lab · a client-side tool for BTX Artifacts (BZA1). It builds and previews a mint request and
+  proves your address with qID; it holds no keys and mints nothing. Minting is done by the operator, who
+  verifies your proof and signs with keys that never touch this page. Studio artifacts use a dedicated test
+  issuer key, so they verify as valid but unofficial.
+</footer>
 </main>
 
 <script type="module">
@@ -326,6 +351,7 @@ let refreshTimer=null;
 async function refresh(){
   const spec=S.buildSpecCore(readOptions());
   const errs=S.validateSpecCore(spec);
+  if (spec.item==null) errs.unshift("Item number is required.");   // the operator worker mints an explicit item
   $("specErr").textContent = errs.length ? errs[0] : "";
   $("genChallenge").disabled = errs.length>0;
 
