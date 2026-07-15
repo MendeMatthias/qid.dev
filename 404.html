@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>404 · qID</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#080b0f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='700' fill='%235eeaa0' text-anchor='middle'%3Eq%3C/text%3E%3Ccircle cx='24' cy='8' r='2.5' fill='%2367e8f9'/%3E%3C/svg%3E">
+<style>
+  :root{--bg:#080b0f;--ink:#e8eef2;--muted:#8b99a6;--faint:#5c6b78;--accent:#5eeaa0;--cyan:#67e8f9;--violet:#a78bfa;--border:#1a2430}
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);overflow:hidden;min-height:100svh;display:grid;place-items:center;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .stage{position:fixed;inset:0;overflow:hidden}
+  .hero{position:absolute;inset:-5%;background:url(/404-hero.webp) center/cover no-repeat;
+    animation:breathe 22s ease-in-out infinite alternate;will-change:transform,filter}
+  .veil{position:absolute;inset:0;background:
+    radial-gradient(130% 100% at 30% 45%,rgba(8,11,15,.1) 0%,rgba(8,11,15,.66) 55%,rgba(8,11,15,.95) 100%),
+    linear-gradient(90deg,rgba(8,11,15,.7),transparent 45%)}
+  .grid{position:absolute;inset:0;opacity:.16;pointer-events:none;background:
+    linear-gradient(transparent 0 39px,rgba(103,232,249,.14) 39px 40px),
+    linear-gradient(90deg,transparent 0 39px,rgba(167,139,250,.12) 39px 40px);background-size:40px 40px;
+    mask:radial-gradient(70% 60% at 60% 50%,#000,transparent)}
+  .wrap{position:relative;z-index:2;padding:30px;max-width:720px;text-align:left}
+  .bar{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--faint);margin-bottom:20px}
+  .dot{width:11px;height:11px;border-radius:50%}
+  .bar .d1{background:#e0556e}.bar .d2{background:#f7b955}.bar .d3{background:var(--accent)}
+  .bar span{margin-left:6px;letter-spacing:.04em}
+  .eyebrow{font-size:12px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--cyan)}
+  .big{font-weight:800;line-height:.9;font-size:clamp(88px,24vw,220px);margin:4px 0 6px;letter-spacing:-.03em;
+    background:linear-gradient(120deg,var(--accent),var(--cyan) 45%,var(--violet));-webkit-background-clip:text;
+    background-clip:text;color:transparent;filter:drop-shadow(0 0 40px rgba(103,232,249,.35));
+    position:relative;animation:flick 8s steps(1) infinite}
+  h1{font-size:clamp(19px,4.4vw,28px);font-weight:700;margin:8px 0;color:var(--ink)}
+  h1 .g{color:var(--accent)}
+  p{color:var(--muted);font-size:14.5px;line-height:1.75;max-width:56ch;margin:0 0 26px}
+  code{color:var(--cyan)}
+  .btn{display:inline-flex;align-items:center;gap:9px;font-family:inherit;font-weight:600;font-size:14px;text-decoration:none;
+    padding:12px 20px;border-radius:11px;background:var(--accent);color:#04120c;transition:.16s;
+    box-shadow:0 0 0 1px rgba(94,234,160,.35),0 12px 40px -10px rgba(94,234,160,.4)}
+  .btn:hover{transform:translateY(-2px)}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--border);box-shadow:none;margin-left:10px}
+  .btn.ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+  @keyframes breathe{from{transform:scale(1.03);filter:hue-rotate(0deg) saturate(1)}to{transform:scale(1.09);filter:hue-rotate(-12deg) saturate(1.1)}}
+  @keyframes flick{0%,90%,100%{opacity:1}92%{opacity:.72}94%{opacity:.95}96%{opacity:.8}}
+  @media (prefers-reduced-motion:reduce){.hero,.big{animation:none}}
+  @media (max-width:640px){.wrap{text-align:center}.btn.ghost{margin:10px 0 0}}
+</style>
+</head>
+<body>
+  <div class="stage" aria-hidden="true">
+    <div class="hero"></div>
+    <div class="veil"></div>
+    <div class="grid"></div>
+  </div>
+  <main class="wrap">
+    <div class="bar"><i class="dot d1"></i><i class="dot d2"></i><i class="dot d3"></i><span>qid://verify</span></div>
+    <div class="eyebrow">Identity · unverified</div>
+    <div class="big">404</div>
+    <h1>This route could not be <span class="g">proven</span>.</h1>
+    <p>No signature, no session, no page. The address you were looking for is not in the network, or it never signed in. qID only opens doors it can verify, and this one returned <code>no_proof</code>.</p>
+    <a class="btn" href="/">Back to qID</a>
+    <a class="btn ghost" href="/connect">Try qID Connect</a>
+  </main>
+</body>
+</html>
