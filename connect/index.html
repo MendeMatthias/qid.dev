@@ -3,24 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Try qID Connect. Live demo</title>
-<meta name="description" content="Try Sign in with qID live, no wallet needed. Post-quantum wallet login for BTX running in your browser.">
+<title>Try Sign in with qID — live demo, no wallet needed</title>
+<meta name="description" content="Experience post-quantum wallet login live in your browser: click the button, approve, and you are signed in. The address is the account — no email, no password.">
 <meta name="theme-color" content="#050c08">
 <link rel="canonical" href="https://qid.dev/connect">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='700' fill='%235eeaa0' text-anchor='middle'%3Eq%3C/text%3E%3Ccircle cx='24' cy='8' r='2.5' fill='%2367e8f9'/%3E%3C/svg%3E">
 <!-- Open Graph / Twitter. On deploy, make these URLs absolute for your host. -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="qID Connect">
-<meta property="og:title" content="Try qID Connect, live in your browser">
-<meta property="og:description" content="Sign in with qID with no wallet needed. Post-quantum wallet login for BTX, the address is the account.">
+<meta property="og:title" content="Sign in with qID — try it live in 10 seconds">
+<meta property="og:description" content="Post-quantum wallet login for BTX apps, running entirely in your browser. No wallet needed.">
 <meta property="og:url" content="https://qid.dev/connect">
-<meta property="og:image" content="https://qid.dev/og/og-connect.png">
+<meta property="og:image" content="https://qid.dev/og/og-connect.png?v=2">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A bridge of emerald light connecting a phone monolith to a radiant world, a QR constellation midway — Sign in with qID.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Try qID Connect, live in your browser">
-<meta name="twitter:description" content="Sign in with qID, no wallet needed.">
-<meta name="twitter:image" content="https://qid.dev/og/og-connect.png">
+<meta name="twitter:title" content="Sign in with qID — try it live in 10 seconds">
+<meta name="twitter:description" content="Post-quantum wallet login, live in your browser. No wallet needed.">
+<meta name="twitter:image" content="https://qid.dev/og/og-connect.png?v=2">
 <style>
   :root{--bg:#050c08;--panel:#0a1710;--panel2:#101613;--border:#1c3527;--fg:#e7f5ec;--muted:#7fa38e;--accent:#34d399;--mint:#6ee7b7}
   *{box-sizing:border-box;margin:0}
@@ -63,6 +64,20 @@
   .demo-inline-btn:disabled{opacity:.55;cursor:default}
   .demo-inline-hint{color:var(--muted);font-size:11px;text-align:center}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "@id": "https://qid.dev/connect#app",
+  "name": "qID Connect — Sign in with qID (live demo)",
+  "url": "https://qid.dev/connect",
+  "applicationCategory": "SecurityApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Post-quantum wallet login for BTX apps, running entirely in the browser: the real widget, verifier, and reference signer. No wallet needed to try it.",
+  "isPartOf": { "@id": "https://qid.dev/#website" }
+}
+</script>
 </head>
 <body>
 <header class="site-header">
