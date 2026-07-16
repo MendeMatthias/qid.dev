@@ -46,7 +46,7 @@ wallets, and a btxqid:// deep link (v0.27+).
 
 - Live demo (no wallet needed): https://qid.dev/connect
 - Integration guide: https://qid.dev/connect/integrate
-- Source repository: https://github.com/MendeMatthias/qid-connect
+- Source repository: https://github.com/MendeMatthias/qid-connect (private preview; read access on request)
 
 ## Documents
 
