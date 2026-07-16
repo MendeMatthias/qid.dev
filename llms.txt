@@ -34,6 +34,20 @@
   reproducible builds with published (sha256, commit) provenance; negative-space tests that fail
   if hedged randomness or transaction commitments are ever silently degraded.
 
+## qID Connect (Sign in with qID)
+
+qID Connect is the app-facing SDK layer: post-quantum wallet login for BTX apps ("Sign in with
+qID"). One server middleware plus one button; the verified address IS the account. No email, no
+password, no relay server — the app's own backend is the rendezvous. Login proofs sign under the
+BTX-qID/login-v1 domain tag, transactions under TapSighash, so a login proof can never move
+funds. The connector is dynamic: requests rotate with a countdown and superseded nonces are
+burned server-side. Transports: desktop copy-paste (BTX PQ Wallet v0.21+), QR scan for phone
+wallets, and a btxqid:// deep link (v0.27+).
+
+- Live demo (no wallet needed): https://qid.dev/connect
+- Integration guide: https://qid.dev/connect/integrate
+- Source repository: https://github.com/MendeMatthias/qid-connect
+
 ## Documents
 
 - Technical paper (PDF): https://qid.dev/qid-paper.pdf

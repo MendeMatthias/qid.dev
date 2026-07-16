@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Integrate Sign in with qID · qID Connect</title>
+<meta name="description" content="Add post-quantum wallet login to your BTX app in one sitting: one middleware, one button, no email, no password, no relay server.">
+<meta name="theme-color" content="#050c08">
+<link rel="canonical" href="https://qid.dev/connect/integrate">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='700' fill='%235eeaa0' text-anchor='middle'%3Eq%3C/text%3E%3Ccircle cx='24' cy='8' r='2.5' fill='%2367e8f9'/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="qID Connect">
+<meta property="og:title" content="Integrate Sign in with qID">
+<meta property="og:description" content="Post-quantum wallet login for BTX apps: one middleware, one button, no email, no password, no relay.">
+<meta property="og:url" content="https://qid.dev/connect/integrate">
+<meta property="og:image" content="https://qid.dev/og/og-connect.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Integrate Sign in with qID">
+<meta name="twitter:description" content="Wallet login for BTX apps: one middleware, one button. The address is the account.">
+<meta name="twitter:image" content="https://qid.dev/og/og-connect.png">
+<style>
+  :root{--bg:#050c08;--panel:#0a1710;--panel2:#101613;--border:#1c3527;--fg:#e7f5ec;--muted:#7fa38e;--accent:#34d399;--mint:#6ee7b7;--warn:#fbbf24}
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--bg);color:var(--fg);font:16px/1.6 ui-monospace,"SF Mono",Menlo,monospace;min-height:100vh;display:flex;flex-direction:column}
+  a{color:var(--accent)}
+  .site-header{display:flex;align-items:center;justify-content:space-between;padding:15px 22px;border-bottom:1px solid var(--border)}
+  .brand{display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--fg);font-weight:700;font-size:17px;letter-spacing:.5px}
+  .brand .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+  .nav a{color:var(--muted);text-decoration:none;font-size:13px;margin-left:16px}
+  .nav a:hover{color:var(--accent)}
+  .page{flex:1;display:flex;justify-content:center;padding:40px 24px 64px}
+  main{max-width:760px;width:100%}
+  .flag{display:inline-block;border:1px solid var(--border);border-radius:999px;color:var(--mint);font-size:12px;padding:4px 13px;margin-bottom:18px}
+  h1{font-size:30px;letter-spacing:.5px;line-height:1.25;margin-bottom:10px}
+  h1 .q{color:var(--accent)}
+  .lede{color:var(--muted);font-size:15px;margin-bottom:26px;max-width:60ch}
+  .lede b{color:var(--mint)}
+  .cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:44px}
+  .btn{display:inline-block;text-decoration:none;border-radius:10px;padding:11px 20px;font-weight:700;font-size:14.5px}
+  .btn-primary{background:var(--accent);color:#04120c}
+  .btn-primary:hover{filter:brightness(1.08)}
+  .btn-ghost{border:1px solid var(--border);color:var(--fg)}
+  .btn-ghost:hover{border-color:var(--accent)}
+  h2{font-size:19px;margin:44px 0 12px;letter-spacing:.4px}
+  h2 .n{color:var(--accent)}
+  p{margin-bottom:12px}
+  p.muted, li.muted{color:var(--muted);font-size:14px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin:14px 0}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:18px 0 6px}
+  .cell{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:15px 16px;font-size:13.5px;color:var(--muted)}
+  .cell b{display:block;color:var(--fg);margin-bottom:4px;font-size:14px}
+  pre{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;overflow-x:auto;font-size:13px;line-height:1.55;margin:12px 0}
+  code{color:var(--mint)}
+  pre code{color:var(--fg)}
+  pre .c{color:var(--muted)}
+  ol.steps{margin:0 0 8px 0;padding-left:0;counter-reset:step;list-style:none}
+  ol.steps li{position:relative;padding:0 0 18px 44px;counter-increment:step}
+  ol.steps li::before{content:counter(step);position:absolute;left:0;top:1px;width:28px;height:28px;border-radius:50%;background:var(--panel2);border:1px solid var(--border);color:var(--accent);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+  ol.steps b{color:var(--mint)}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+  th,td{text-align:left;border-bottom:1px solid var(--border);padding:8px 10px;vertical-align:top}
+  th{color:var(--muted);font-weight:600}
+  td code{white-space:nowrap}
+  ul.props{margin:8px 0 8px 0;padding-left:0;list-style:none}
+  ul.props li{padding:6px 0 6px 26px;position:relative;font-size:14px;color:var(--muted)}
+  ul.props li::before{content:"✓";position:absolute;left:2px;color:var(--accent);font-weight:700}
+  ul.props b{color:var(--fg)}
+  .callout{border-left:3px solid var(--accent);background:var(--panel);border-radius:0 12px 12px 0;padding:14px 18px;margin:16px 0;font-size:14px;color:var(--muted)}
+  .callout b{color:var(--mint)}
+  .site-footer{border-top:1px solid var(--border);padding:20px 22px;display:flex;gap:18px;flex-wrap:wrap;justify-content:center}
+  .site-footer a{color:var(--muted);text-decoration:none;font-size:13px}
+  .site-footer a:hover{color:var(--accent)}
+  @media (max-width:560px){h1{font-size:24px}.page{padding-top:26px}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="https://qid.dev/"><span class="dot"></span>qID Connect</a>
+  <nav class="nav">
+    <a href="/connect">Live demo</a>
+    <a href="https://github.com/MendeMatthias/qid-connect">GitHub</a>
+    <a href="https://qid.dev/">qid.dev</a>
+  </nav>
+</header>
+
+<div class="page"><main>
+
+<span class="flag">integration guide · phase 1: sign-in</span>
+<h1>Integrate <span class="q">Sign in with qID</span></h1>
+<p class="lede">
+  Post-quantum wallet login for your BTX app in one sitting. One server
+  middleware, one button. The user proves control of a BTX address and that
+  address <b>is</b> their account — no email, no password, no relay server,
+  and a login proof that <b>cannot move funds, by construction</b>.
+</p>
+<div class="cta">
+  <a class="btn btn-primary" href="/connect">Try it live first</a>
+  <a class="btn btn-ghost" href="https://github.com/MendeMatthias/qid-connect">Get the code</a>
+</div>
+
+<h2><span class="n">01</span> · How it works</h2>
+<ol class="steps">
+  <li><b>Your server issues a one-time challenge</b> <code>{nonce, rp_origin, ts}</code> bound to your exact origin.</li>
+  <li><b>The user's wallet shows them your site and signs</b> the challenge with their post-quantum login key (ML-DSA-44) — by QR scan from a phone, copy-paste, or a <code>btxqid://</code> deep link into the installed desktop wallet.</li>
+  <li><b>Your server verifies the proof</b> with the frozen qID Sign-In v1 verifier, rebuilds the address from the proof, and the verified address becomes (or finds) the account. Registration and login are the same action.</li>
+  <li><b>A signed HttpOnly session cookie</b> keeps them signed in. Sessions, logout, and account-by-address are included.</li>
+</ol>
+<p class="muted">
+  There is no relay server anywhere, unlike WalletConnect: your own backend is
+  the rendezvous. The QR carries a proof URL on your server; the phone posts
+  the proof there and the browser that showed the QR claims the session with a
+  secret only it holds.
+</p>
+
+<h2><span class="n">02</span> · Get the code</h2>
+<pre><code>git clone https://github.com/MendeMatthias/qid-connect
+cd qid-connect
+bun install
+bun test packages          <span class="c"># pins, frozen v1 vectors, e2e, QR + rotation flows</span>
+bun examples/express-demo/server.js
+open http://localhost:8788 <span class="c"># a complete working login site, running on your machine</span></code></pre>
+<p class="muted">
+  Everything is MIT. Two pieces matter: <code>packages/server</code>
+  (@qid/connect-server — challenge, verify, accounts, sessions, SQLite stores)
+  and <code>packages/widget</code> (@qid/connect-widget — the button and
+  dialog, one vanilla JS file, zero dependencies). Vendor them or workspace
+  them; the examples show both ends wired.
+</p>
+
+<h2><span class="n">03</span> · Wire your server</h2>
+<p class="muted">Express is one middleware line:</p>
+<pre><code>import express from "express";
+import { createQidConnect } from "@qid/connect-server";
+import { qidMiddleware, requireQidSession } from "@qid/connect-server/express";
+
+const qid = createQidConnect({
+  origin: "https://yourapp.com",                 <span class="c">// your exact web origin</span>
+  sessionSecret: process.env.QID_SESSION_SECRET, <span class="c">// 32+ random chars</span>
+});
+
+const app = express();
+app.use(express.json());
+app.use("/qid", qidMiddleware(qid));             <span class="c">// the whole login system</span>
+
+app.get("/api/me", requireQidSession(qid), (req, res) =&gt; {
+  res.json(req.qidSession);                      <span class="c">// { address, account }</span>
+});</code></pre>
+<p class="muted">Next.js is one catch-all route file (see <code>examples/next-demo/</code>):</p>
+<pre><code><span class="c">// app/api/qid/[action]/route.js</span>
+import { createQidConnect } from "@qid/connect-server";
+import { qidNextHandlers } from "@qid/connect-server/next";
+
+const qid = createQidConnect({
+  origin: process.env.QID_ORIGIN,
+  sessionSecret: process.env.QID_SESSION_SECRET,
+  apiPath: "/api/qid",
+});
+export const { GET, POST } = qidNextHandlers(qid);</code></pre>
+
+<h2><span class="n">04</span> · Mount the button</h2>
+<pre><code>&lt;div id="signin"&gt;&lt;/div&gt;
+&lt;script type="module"&gt;
+  import { mountQidConnect } from "/qid-connect-widget.js";
+  mountQidConnect(document.getElementById("signin"), {
+    api: "/qid",                        <span class="c">// "/api/qid" on Next</span>
+    appName: "Your app",
+    transports: ["paste", "qr", "deeplink"], <span class="c">// tabs + order; first opens active</span>
+    onSignedIn({ address, account }) {
+      location.reload();                <span class="c">// session cookie is already set</span>
+    },
+  });
+&lt;/script&gt;</code></pre>
+<p class="muted">
+  The dialog is dynamic out of the box: every sign-in request shows a
+  countdown, rotates itself before it goes stale, and the server burns the
+  superseded nonce — a screenshotted QR or copied request is worthless minutes
+  later. Nothing to configure.
+</p>
+
+<h2><span class="n">05</span> · Test without a wallet</h2>
+<p class="muted">
+  The repo ships the frozen v1 reference signer as a CLI, so you can fake a
+  wallet during development. Click your button, copy <code>nonce</code> and
+  <code>ts</code> from the shown request, then:
+</p>
+<pre><code>bun tools/signer/btx-sign-ownership.mjs --random \
+  --origin http://localhost:8788 --nonce &lt;nonce&gt; --ts &lt;ts&gt;</code></pre>
+<p class="muted">
+  Paste the printed proof into the dialog's desktop tab — or POST it to
+  <code>/qid/proof</code> to simulate a phone scanning the QR; the open dialog
+  signs itself in within a second or two. With a real
+  <a href="https://pq-wallet.com">BTX PQ Wallet</a> (v0.21+): Settings → qID
+  Sign-In, or one click via the deep link on v0.27+.
+</p>
+
+<h2><span class="n">06</span> · What your server now speaks</h2>
+<table>
+  <tr><th>route</th><th>what it does</th></tr>
+  <tr><td><code>POST /qid/challenge</code></td><td>fresh one-time challenge bound to your origin (+ poll secret for QR); optional <code>{ retire }</code> burns a superseded nonce on rotation</td></tr>
+  <tr><td><code>POST /qid/verify</code></td><td>verifies a pasted proof, creates/finds the account by address, sets the session cookie</td></tr>
+  <tr><td><code>POST /qid/proof</code></td><td>a remote signer (phone wallet) submits its proof; gets ok or a reason, never a session</td></tr>
+  <tr><td><code>GET /qid/poll</code></td><td>the browser that issued the challenge claims the session once the remote proof lands</td></tr>
+  <tr><td><code>GET /qid/session</code></td><td><code>{ address, account, expiresAt }</code> for the current session, else 401</td></tr>
+  <tr><td><code>POST /qid/logout</code></td><td>clears the session cookie</td></tr>
+</table>
+
+<h2><span class="n">07</span> · The security you inherit</h2>
+<ul class="props">
+  <li><b>A login proof can never move funds.</b> Sign-in signs under the <code>BTX-qID/login-v1</code> domain tag; transactions sign under <code>TapSighash</code>. The domains cannot collide. Structural, not policy.</li>
+  <li><b>Origin-bound.</b> The wallet shows the user your origin and signs exactly it; a proof for another site is worthless on yours.</li>
+  <li><b>Single-use, short-lived, rotating.</b> Nonces are consumed atomically, expire in minutes, and rotation burns whatever left the screen.</li>
+  <li><b>Phishing-resistant QR.</b> Conforming signers refuse any request whose proof URL is not the same origin as the site being shown.</li>
+  <li><b>Login-CSRF guarded.</b> A cross-site page cannot plant a session in a visitor's browser; both <code>/verify</code> and <code>/poll</code> check.</li>
+  <li><b>No third-party infrastructure.</b> Nothing to go down, nothing to trust, nothing to subpoena.</li>
+</ul>
+<p class="muted">
+  Claims we make and none we do not: resistant to quantum attacks, built on
+  NIST-standardized post-quantum cryptography (FIPS 204 ML-DSA-44), pending
+  independent audit. Nothing here is "unhackable" and we never say so.
+</p>
+
+<h2><span class="n">08</span> · Wallets your users can bring</h2>
+<div class="grid">
+  <div class="cell"><b>BTX PQ Wallet · desktop</b>available now — copy-paste since v0.21, one-click <code>btxqid://</code> connect since v0.27</div>
+  <div class="cell"><b>Bonuz Wallet · mobile</b>coming soon — scans the QR tab; when it ships, your integration needs zero changes</div>
+</div>
+<div class="callout">
+  <b>Building a wallet?</b> The wallet-side signer SDK (request parsing, the
+  normative signer rules, a reference mobile approval screen) is available to
+  wallet builders — reach out through <a href="https://qid.dev">qid.dev</a>.
+</div>
+
+<h2><span class="n">09</span> · The fine print</h2>
+<p class="muted">
+  The v1 proof format and verifier are frozen; future capability arrives as
+  new versions verified alongside v1, so a login you ship today keeps working
+  forever. Phase 1 is deliberately login-only: no transaction requests, no
+  permissions, no persistent connections — that is what makes it safe to adopt
+  now (later phases are gated behind an independent audit). The code is MIT;
+  the qID name and mark are not — forks take their own name. Keep the button
+  and dialog stock (<code>docs/DESIGN.md</code>) so "Sign in with qID" looks
+  the same on every BTX app, and never proxy or rewrite the challenge.
+</p>
+
+</main></div>
+
+<footer class="site-footer">
+  <a href="/connect">Live demo</a>
+  <a href="https://github.com/MendeMatthias/qid-connect">qID Connect on GitHub</a>
+  <a href="https://qid.dev/">qid.dev</a>
+  <a href="https://qid.dev/qid-paper.pdf">Technical paper</a>
+</footer>
+
+</body>
+</html>
