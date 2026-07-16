@@ -173,17 +173,25 @@ export const { GET, POST } = qidNextHandlers(qid);</code></pre>
   mountQidConnect(document.getElementById("signin"), {
     api: "/qid",                        <span class="c">// "/api/qid" on Next</span>
     appName: "Your app",
-    transports: ["paste", "qr", "deeplink"], <span class="c">// tabs + order; first opens active</span>
     onSignedIn({ address, account }) {
       location.reload();                <span class="c">// session cookie is already set</span>
     },
-  });
+  });                                   <span class="c">// dialog opens QR-first by default</span>
 &lt;/script&gt;</code></pre>
 <p class="muted">
   The dialog is dynamic out of the box: every sign-in request shows a
   countdown, rotates itself before it goes stale, and the server burns the
   superseded nonce — a screenshotted QR or copied request is worthless minutes
-  later. Nothing to configure.
+  later. Nothing to configure. It opens on the QR tab (WalletConnect style);
+  users can switch to desktop copy-paste or one-click "Open in wallet".
+</p>
+<p class="muted">
+  Prefer zero maintenance? Import the hosted widget instead of vendoring it:
+  <code>import { mountQidConnect } from "https://qid.dev/connect/widget.js"</code>
+  — wallet-list and UX updates then reach your users automatically when we
+  deploy, while the signed protocol underneath stays frozen v1. A
+  version-pinned copy (<code>widget-&lt;version&gt;.js</code>) exists for teams
+  that want to review every change first.
 </p>
 
 <h2><span class="n">05</span> · Test without a wallet</h2>
@@ -231,7 +239,7 @@ export const { GET, POST } = qidNextHandlers(qid);</code></pre>
 <h2><span class="n">08</span> · Wallets your users can bring</h2>
 <div class="grid">
   <div class="cell"><b>BTX PQ Wallet · desktop</b>available now — copy-paste since v0.21, one-click <code>btxqid://</code> connect since v0.27</div>
-  <div class="cell"><b>Bonuz Wallet · mobile</b>coming soon — scans the QR tab; when it ships, your integration needs zero changes</div>
+  <div class="cell"><b>bonuz Wallet · mobile</b>coming soon — scans the QR tab; when it ships, your integration needs zero changes</div>
 </div>
 <div class="callout">
   <b>Building a wallet?</b> The wallet-side signer SDK (request parsing, the
