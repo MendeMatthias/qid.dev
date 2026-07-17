@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to connect with qID — scan, paste, or open in wallet</title>
+<meta name="description" content="Three ways to sign in with qID: scan the QR with your phone wallet, copy-paste with the desktop wallet, or open your installed wallet directly. Step by step.">
+<meta name="theme-color" content="#050c08">
+<link rel="canonical" href="https://qid.dev/connect/how">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='700' fill='%235eeaa0' text-anchor='middle'%3Eq%3C/text%3E%3Ccircle cx='24' cy='8' r='2.5' fill='%2367e8f9'/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="qID Connect">
+<meta property="og:title" content="How to connect with qID">
+<meta property="og:description" content="Three ways to sign in with qID: scan with your phone, copy-paste with the desktop wallet, or open your installed wallet directly.">
+<meta property="og:url" content="https://qid.dev/connect/how">
+<meta property="og:image" content="https://qid.dev/og/og-connect.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A phone monolith beams emerald light to a blue world, a QR constellation midway — Sign in with qID.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to connect with qID">
+<meta name="twitter:description" content="Scan, paste, or open in wallet — step by step.">
+<meta name="twitter:image" content="https://qid.dev/og/og-connect.png">
+<style>
+  :root{--bg:#050c08;--panel:#0a1710;--panel2:#101613;--border:#1c3527;--fg:#e7f5ec;--muted:#7fa38e;--accent:#34d399;--mint:#6ee7b7;--warn:#fbbf24}
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--bg);color:var(--fg);font:16px/1.7 ui-monospace,"SF Mono",Menlo,monospace;min-height:100vh;display:flex;flex-direction:column}
+  a{color:var(--accent)}
+  .site-header{display:flex;align-items:center;justify-content:space-between;padding:15px 22px;border-bottom:1px solid var(--border)}
+  .brand{display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--fg);font-weight:700;font-size:17px;letter-spacing:.5px}
+  .brand .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+  .nav a{color:var(--muted);text-decoration:none;font-size:13px;margin-left:16px}
+  .nav a:hover{color:var(--accent)}
+  .page{flex:1;display:flex;justify-content:center;padding:48px 24px 72px}
+  main{max-width:720px;width:100%}
+  .flag{display:inline-block;border:1px solid var(--border);border-radius:999px;color:var(--mint);font-size:12px;padding:4px 13px;margin-bottom:22px}
+  h1{font-size:30px;letter-spacing:.5px;line-height:1.25;margin-bottom:14px}
+  h1 .q{color:var(--accent)}
+  .lede{color:var(--muted);font-size:15px;margin-bottom:14px;max-width:62ch}
+  .lede b{color:var(--mint)}
+  .safe{display:flex;gap:.6em;align-items:flex-start;color:var(--muted);font-size:14px;margin:22px 0 8px;padding:14px 18px;border-left:3px solid var(--accent);background:var(--panel);border-radius:0 12px 12px 0}
+  .safe b{color:var(--mint)}
+  section{margin:56px 0 0;padding:28px 30px;background:var(--panel);border:1px solid var(--border);border-radius:16px}
+  section h2{font-size:21px;letter-spacing:.4px;margin-bottom:6px;display:flex;align-items:center;gap:.5em}
+  section h2 .tag{font:700 11px/1 ui-monospace,monospace;letter-spacing:.5px;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:5px 10px}
+  .sub{color:var(--muted);font-size:14px;margin-bottom:22px}
+  ol{list-style:none;counter-reset:s;padding:0;margin:0}
+  ol li{position:relative;counter-increment:s;padding:0 0 26px 52px;min-height:36px}
+  ol li:last-child{padding-bottom:0}
+  ol li::before{content:counter(s);position:absolute;left:0;top:-2px;width:34px;height:34px;border-radius:50%;background:var(--panel2);border:1px solid var(--border);color:var(--accent);font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center}
+  ol li b{color:var(--fg)}
+  ol li .d{display:block;color:var(--muted);font-size:14px;margin-top:4px}
+  code{color:var(--mint);background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:13.5px}
+  .note{margin-top:22px;padding:16px 18px;border-radius:12px;font-size:14px;line-height:1.65}
+  .note.warn{border:1px solid var(--warn);background:rgba(251,191,36,.06);color:#f4e4b8}
+  .note.warn b{color:var(--warn)}
+  .note.info{border:1px solid var(--border);background:var(--panel2);color:var(--muted)}
+  .note.info b{color:var(--mint)}
+  .foothelp{margin-top:56px;text-align:center;color:var(--muted);font-size:14px}
+  .site-footer{border-top:1px solid var(--border);padding:20px 22px;display:flex;gap:18px;flex-wrap:wrap;justify-content:center}
+  .site-footer a{color:var(--muted);text-decoration:none;font-size:13px}
+  .site-footer a:hover{color:var(--accent)}
+  @media (max-width:560px){h1{font-size:24px}.page{padding-top:30px}section{padding:22px 20px}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="https://qid.dev/"><span class="dot"></span>qID Connect</a>
+  <nav class="nav">
+    <a href="/connect">Live demo</a>
+    <a href="/connect/integrate">Integrate</a>
+    <a href="https://qid.dev/">qid.dev</a>
+  </nav>
+</header>
+
+<div class="page"><main>
+
+<span class="flag">how to connect</span>
+<h1>How to sign in with <span class="q">qID</span></h1>
+<p class="lede">
+  "Sign in with qID" proves you control a BTX address — and that address
+  <b>is</b> your account on the site. No email, no password. There are three
+  ways to do it; pick whichever matches where your wallet is. They all end the
+  same way: you approve in your wallet, and you are signed in.
+</p>
+<div class="safe">
+  <span>🛡️</span>
+  <span><b>A sign-in can never move funds.</b> A qID login is signed in a
+  different cryptographic domain than transactions — the worst any site can
+  ever get from it is a login for itself, never your coins.</span>
+</div>
+
+<section id="scan">
+  <h2><span class="tag">phone</span> Scan with phone</h2>
+  <p class="sub">Your wallet is on your phone. This is the quickest way.</p>
+  <ol>
+    <li><b>Open the dialog on the site</b> and stay on the "Scan with phone" tab. A QR code is shown, with a countdown — it refreshes itself for your security.</li>
+    <li><b>Open your qID mobile wallet</b> and use its scanner. Either the wallet's built-in scanner or its universal QR scanner will recognize a qID code.</li>
+    <li><b>Check the site name and approve.</b> Your wallet shows you which site is asking and which address you'll sign in with. Approve it.</li>
+    <li><b>You're in.</b> The browser you scanned from signs in automatically within a second or two. You can put your phone away.</li>
+  </ol>
+  <div class="note info"><b>Which wallets?</b> The bonuz mobile wallet scans qID codes. Any qID-compatible mobile wallet works the same way — the QR carries everything the wallet needs.</div>
+</section>
+
+<section id="desktop">
+  <h2><span class="tag">desktop</span> Desktop wallet (copy &amp; paste)</h2>
+  <p class="sub">Your wallet is a desktop app on the same computer. This works with every version and needs no special setup.</p>
+  <ol>
+    <li><b>Copy the sign-in request.</b> On the "Desktop wallet" tab, click <code>Copy</code> — it copies the request shown in the box.</li>
+    <li><b>Open your BTX PQ Wallet</b> and go to <b>Settings → qID Sign-In</b>. Paste the request there.</li>
+    <li><b>Review and sign.</b> The wallet shows you the site and the address, and signs with your post-quantum key. It gives you back a <em>proof</em>.</li>
+    <li><b>Paste the proof back</b> into the site's dialog and click <b>Verify and sign in</b>. Done.</li>
+  </ol>
+  <div class="note info"><b>Why copy-paste?</b> It's the most compatible path — nothing to install or register, and it works even on a locked-down machine. Take your time; the desktop tab won't expire the request out from under you mid-signing.</div>
+</section>
+
+<section id="open">
+  <h2><span class="tag">1-click</span> Open in wallet</h2>
+  <p class="sub">Your BTX PQ Wallet is installed on this computer and you want one-click connect — no copying.</p>
+  <ol>
+    <li><b>Click "Open in BTX PQ Wallet".</b> Your browser asks permission to open the wallet app, then launches it with the request.</li>
+    <li><b>Approve in the wallet.</b> Pick which wallet signs, review the site, and sign.</li>
+    <li><b>You're in</b> — the site picks it up automatically, no paste needed.</li>
+  </ol>
+  <div class="note warn"><b>Heads up — this needs the notarized wallet build.</b> One-click "Open in wallet" relies on your operating system knowing which app handles qID links. On macOS this is fully reliable once you're running a notarized release of the BTX PQ Wallet from the App Store or the signed download. If clicking does nothing, or you see a "file can't be found" message, your wallet build isn't registered yet — <b>use "Desktop wallet" (copy &amp; paste) above instead</b>; it always works. This is a wallet-installation matter, not a problem with the site or your account.</div>
+</section>
+
+<p class="foothelp">
+  Still stuck? The safest fallback is always <b>Desktop wallet</b> copy-and-paste — it works everywhere. Try the whole flow with no wallet at all on the <a href="/connect">live demo</a>.
+</p>
+
+</main></div>
+
+<footer class="site-footer">
+  <a href="/connect">Live demo</a>
+  <a href="/connect/integrate">Integration guide</a>
+  <a href="https://qid.dev/">qid.dev</a>
+  <a href="https://pq-wallet.com">Get the wallet</a>
+</footer>
+
+</body>
+</html>
