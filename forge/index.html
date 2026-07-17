@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Relic Forge — the last mint on BTX L1</title>
+<meta name="description" content="Engrave a name, an image, or 256 pixels into BTX L1 before the fork seals the chain forever. Every relic freezes to its wallet by consensus — the last non-financial record BTX will ever carry." />
+<meta property="og:title" content="Relic Forge — the last mint on BTX L1" />
+<meta property="og:description" content="When the fork lands, minting ends and every relic freezes to its wallet forever. Forge yours before the door closes." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://qid.dev/forge/" />
+<meta property="og:site_name" content="qID" />
+<meta property="og:image" content="https://qid.dev/og.png?v=4" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Relic Forge — the last mint on BTX L1" />
+<meta name="twitter:description" content="Engrave yourself into BTX L1. Forever. And never again." />
+<meta name="twitter:image" content="https://qid.dev/og.png?v=4" />
+<meta name="theme-color" content="#0a0e12" />
+<link rel="canonical" href="https://qid.dev/forge/" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='700' fill='%235eeaa0' text-anchor='middle'%3Eq%3C/text%3E%3Ccircle cx='24' cy='8' r='2.5' fill='%23e8c468'/%3E%3C/svg%3E" />
+<!-- This page makes exactly ONE kind of external request: GET tip height from our own node
+     (api.btxscan.io, CORS *) to drive the countdown. No other origins, no trackers. -->
+<style>
+  :root{
+    --bg:#0a0e12; --bg2:#0d1319; --panel:#10161d; --panel2:#131b24;
+    --border:#1e2a35; --border2:#2a3947;
+    --text:#e6edf3; --muted:#8b99a6; --faint:#5c6b78;
+    --accent:#5eeaa0; --accent-soft:rgba(94,234,160,.12); --accent-ink:#052e1c;
+    --cyan:#67e8f9; --warn:#e8c468; --warn-soft:rgba(232,196,104,.12); --neg:#f2555a;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --radius:14px; --radius-sm:9px;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--bg);color:var(--text);font:15px/1.6 var(--mono);-webkit-font-smoothing:antialiased}
+  a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline;text-underline-offset:3px}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 22px 90px}
+  [hidden]{display:none !important}
+
+  /* ── header ── */
+  header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  .nav{max-width:1180px;margin:0 auto;padding:0 22px;display:flex;align-items:center;gap:18px;height:58px}
+  .logo{display:flex;align-items:baseline;gap:8px;font-weight:700;font-size:19px;color:var(--text)}
+  .logo:hover{text-decoration:none}
+  .logo .q{color:var(--accent)} .logo .dot{width:6px;height:6px;border-radius:50%;background:var(--warn);align-self:center}
+  .forge-tag{font-size:11px;color:var(--warn);border:1px solid var(--warn-soft);background:var(--warn-soft);border-radius:6px;padding:3px 9px;letter-spacing:.09em}
+  .nav .right{margin-left:auto;display:flex;gap:18px;align-items:center;font-size:13.5px}
+  .nav .right a{color:var(--muted)} .nav .right a:hover{color:var(--text);text-decoration:none}
+
+  /* ── countdown ── */
+  .count-hero{border-bottom:1px solid var(--border);background:
+    radial-gradient(ellipse 70% 90% at 50% -20%, rgba(232,196,104,.08), transparent 60%), var(--bg2);
+    text-align:center;padding:46px 20px 40px}
+  .count-kicker{font-size:13px;letter-spacing:.22em;color:var(--warn);text-transform:uppercase}
+  .count-big{font-size:clamp(44px,9vw,96px);font-weight:700;letter-spacing:.02em;line-height:1.05;margin:14px 0 4px;font-variant-numeric:tabular-nums}
+  .count-big .unit{font-size:.32em;color:var(--muted);font-weight:400;letter-spacing:.08em}
+  .count-sub{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:14px;font-size:13.5px;color:var(--muted)}
+  .chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border2);border-radius:20px;padding:5px 13px;background:var(--panel);font-variant-numeric:tabular-nums}
+  .chip .d{width:8px;height:8px;border-radius:50%}
+  .d.warn{background:var(--warn);box-shadow:0 0 8px var(--warn);animation:pulse 1.6s infinite}
+  .d.ok{background:var(--accent)}
+  @keyframes pulse{50%{opacity:.35}}
+  .count-truth{margin-top:16px;color:var(--faint);font-size:12.5px;max-width:640px;margin-left:auto;margin-right:auto}
+  .sealed{color:var(--neg);font-size:clamp(30px,6vw,60px)}
+
+  /* ── hero copy ── */
+  .hero{padding:52px 0 8px;text-align:center}
+  .hero h1{font-size:clamp(28px,4.6vw,48px);letter-spacing:.01em;line-height:1.18;font-weight:700}
+  .hero h1 em{font-style:normal;color:var(--accent)}
+  .hero p{max-width:700px;margin:16px auto 0;color:var(--muted);font-size:15.5px}
+  .hero .seal-line{margin-top:13px;color:var(--warn);font-size:13.5px}
+
+  /* ── shop cards ── */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:34px 0 8px}
+  @media(max-width:900px){.cards{grid-template-columns:1fr}}
+  .card{border:1px solid var(--border);border-radius:var(--radius);background:var(--panel);padding:22px;cursor:pointer;transition:border-color .15s;position:relative;text-align:left;font:inherit;color:inherit;width:100%}
+  .card:hover{border-color:var(--border2)}
+  .card.on{border-color:var(--accent);background:linear-gradient(180deg,var(--accent-soft),var(--panel) 55%)}
+  .card h3{font-size:15px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px}
+  .card .price{font-size:28px;font-weight:700;margin:6px 0 2px}
+  .card .price small{font-size:13px;color:var(--muted);font-weight:400}
+  .card ul{margin:10px 0 0;padding:0;list-style:none;color:var(--muted);font-size:12.5px}
+  .card li{margin:5px 0;padding-left:17px;position:relative}
+  .card li::before{content:"◆";position:absolute;left:0;color:var(--accent);font-size:8px;top:5px}
+  .card.free{border-style:dashed;cursor:default}
+  .card.free .price{color:var(--accent)}
+  .card .pick{position:absolute;top:16px;right:16px;font-size:11px;color:var(--accent);opacity:0}
+  .card.on .pick{opacity:1}
+
+  /* ── steps ── */
+  .step{border:1px solid var(--border);border-radius:var(--radius);background:var(--panel);padding:24px;margin-top:18px}
+  .step-h{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .step-n{display:inline-flex;min-width:28px;height:28px;border-radius:50%;background:var(--accent-soft);color:var(--accent);align-items:center;justify-content:center;font-size:14px;font-weight:700}
+  .step-h h2{font-size:16px;letter-spacing:.05em;text-transform:uppercase}
+  .step-h .hint{color:var(--faint);font-size:12.5px;margin-left:auto}
+  label{display:block;font-size:11.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.05em;margin:15px 0 6px}
+  input[type=text],input[type=url],input[type=number],textarea{
+    width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);
+    color:var(--text);font-family:var(--mono);font-size:15px;padding:12px 14px;outline:none}
+  input:focus,textarea:focus{border-color:var(--accent)}
+  textarea{resize:vertical;min-height:64px}
+  .grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:22px}
+  @media(max-width:900px){.grid2{grid-template-columns:1fr}}
+  .seg{display:inline-flex;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;flex-wrap:wrap}
+  .seg button{background:transparent;border:0;color:var(--muted);font-family:var(--mono);font-size:13.5px;padding:11px 16px;cursor:pointer}
+  .seg button.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+  .btn{font-family:var(--mono);font-size:14.5px;font-weight:600;padding:12px 20px;border-radius:var(--radius-sm);
+    border:1px solid var(--border2);background:var(--panel2);color:var(--text);cursor:pointer}
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+  .btn.primary:disabled{opacity:.4;cursor:not-allowed}
+  .btn.small{padding:7px 12px;font-size:12.5px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .fold{margin-top:14px;border-top:1px dashed var(--border);padding-top:2px}
+  .fold summary{cursor:pointer;color:var(--faint);font-size:12.5px;padding:9px 0}
+  .toggle{display:inline-flex;align-items:center;gap:9px;cursor:pointer;user-select:none;font-size:13px;color:var(--muted)}
+  .mono-block{font-size:11.5px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px;word-break:break-all;white-space:pre-wrap;color:var(--muted)}
+  .mono-block .set{color:var(--accent)} .mono-block .pend{color:var(--warn)}
+  .faint{color:var(--faint)} .muted{color:var(--muted)} .tiny{font-size:12px}
+  .err{color:var(--neg);font-size:13px;margin-top:8px}
+  .trait-row{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-top:8px}
+
+  .plate-wrap{display:flex;flex-direction:column;align-items:center;gap:9px}
+  .plate{width:100%;max-width:330px;aspect-ratio:1;border-radius:var(--radius);border:1px solid var(--border2);overflow:hidden;background:#07120d}
+  .plate svg{display:block;width:100%;height:100%}
+  .serial-tag{font-size:12.5px;color:var(--warn);letter-spacing:.12em}
+  .glyph-grid{display:grid;grid-template-columns:repeat(16,1fr);width:288px;max-width:100%;aspect-ratio:1;border:1px solid var(--border2);border-radius:var(--radius-sm);overflow:hidden;background:hsl(150 45% 9%)}
+  .glyph-grid i{aspect-ratio:1;border-right:1px solid rgba(0,0,0,.25);border-bottom:1px solid rgba(0,0,0,.25);cursor:pointer}
+  .glyph-grid i.on{background:hsl(150 70% 58%)}
+
+  .qty{display:inline-flex;align-items:center;border:1px solid var(--border2);border-radius:var(--radius-sm);overflow:hidden}
+  .qty button{width:42px;height:44px;background:var(--panel2);border:0;color:var(--text);font-size:19px;cursor:pointer}
+  .qty input{width:76px;text-align:center;border:0;background:var(--bg2);height:44px;font-size:17px}
+  .total{font-size:24px;font-weight:700;color:var(--warn);font-variant-numeric:tabular-nums}
+
+  .addr-chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--accent);border-radius:20px;padding:7px 15px;background:var(--accent-soft);color:var(--accent);font-size:13.5px;word-break:break-all}
+  .notice{border:1px solid var(--border);border-left:3px solid var(--accent);background:var(--panel2);border-radius:var(--radius-sm);padding:12px 14px;color:var(--muted);font-size:13px;margin:13px 0}
+  .notice.warn{border-left-color:var(--warn)}
+  .guide{margin:10px 0 0;padding-left:20px;color:var(--muted);font-size:13px;line-height:1.7}
+
+  .prelaunch{border:1px dashed var(--warn);border-radius:var(--radius-sm);background:var(--warn-soft);color:var(--warn);padding:16px;text-align:center;font-size:14px}
+  footer{max-width:1180px;margin:40px auto 0;padding:22px;border-top:1px solid var(--border);color:var(--faint);font-size:12.5px;line-height:1.7}
+</style>
+</head>
+<body>
+
+<header><nav class="nav">
+  <a class="logo" href="/"><span><span class="q">q</span>ID</span><span class="dot"></span></a>
+  <span class="forge-tag">RELIC FORGE</span>
+  <div class="right">
+    <a href="https://btx.best/relics">free badge → The Final Mint</a>
+    <a href="/">qid.dev</a>
+  </div>
+</nav></header>
+
+<!-- ── THE COUNTDOWN ── -->
+<section class="count-hero" id="countHero">
+  <div class="count-kicker" id="countKicker">Minting ends at block 165 000</div>
+  <div class="count-big" id="countClock">— <span class="unit">syncing with the chain…</span></div>
+  <div class="count-sub">
+    <span class="chip"><span class="d warn"></span><span id="blocksLeft">—</span>&nbsp;blocks left</span>
+    <span class="chip">chain tip&nbsp;<b id="tipNow">—</b></span>
+    <span class="chip"><span class="d ok"></span>fork: PR #88 — <span id="forkState">OPEN</span></span>
+  </div>
+  <p class="count-truth">Live from the chain: blocks remaining × ~90 s each. Treat it as an estimate with one honest warning —
+     the door can close <b>earlier</b> than the clock, the moment miners adopt the fork. When it shuts, it shuts mid-sentence, forever.</p>
+</section>
+
+<div class="wrap">
+
+<section class="hero">
+  <h1>Engrave yourself into BTX&nbsp;L1.<br/><em>Forever. And never again.</em></h1>
+  <p>When the fork lands, minting ends and every relic freezes to its wallet — by chain law, not by policy.
+     What you forge before the door closes becomes the only non-financial record BTX L1 will ever carry.</p>
+  <div class="seal-line">◆ your name · your serial · issuer-signed · sealed by consensus ◆</div>
+</section>
+
+<!-- ── SHOP ── -->
+<section class="cards">
+  <button class="card on" id="cardSingle">
+    <span class="pick">✓ SELECTED</span>
+    <h3>Single Relic</h3>
+    <div class="price">0.1 <small>BTX</small></div>
+    <ul>
+      <li>your word, image or pixel glyph</li>
+      <li>engraved name + Forge serial</li>
+      <li>artwork pinned to IPFS for you</li>
+      <li>minted straight into your wallet</li>
+    </ul>
+  </button>
+  <button class="card" id="cardMulti">
+    <span class="pick">✓ SELECTED</span>
+    <h3>Multi-Mint</h3>
+    <div class="price">0.08 <small>BTX each · 10+</small></div>
+    <ul>
+      <li>2–100 relics in one order</li>
+      <li>numbered editions of your design</li>
+      <li>0.1 each under 10 · 0.08 from 10 up</li>
+      <li>each one engraved with its own serial</li>
+    </ul>
+  </button>
+  <button class="card" id="cardColl">
+    <span class="pick">✓ SELECTED</span>
+    <h3>Own Collection</h3>
+    <div class="price">1.0 <small>BTX</small></div>
+    <ul>
+      <li>your own 1–8 letter collection tag</li>
+      <li>exclusive in the registry, first-come</li>
+      <li>10 relics included · +0.08 each after</li>
+      <li>gate your community on it, forever</li>
+    </ul>
+  </button>
+</section>
+<p class="tiny faint" style="margin-top:6px">Just want the free farewell badge? <a href="https://btx.best/relics">The Final Mint</a> — 10 000 cap, 1 per address, no custom engraving.</p>
+
+<!-- ── STEP 1 · DESIGN ── -->
+<section class="step">
+  <div class="step-h"><span class="step-n">1</span><h2>Design</h2><span class="hint">three ways — pick one, type, done</span></div>
+  <div class="grid2">
+    <div>
+      <div class="seg" id="tmplSeg">
+        <button type="button" class="on" data-t="word">WORD RELIC</button>
+        <button type="button" data-t="image">IMAGE FROM LINK</button>
+        <button type="button" data-t="glyph">PIXEL GLYPH</button>
+      </div>
+
+      <div id="collFields" hidden>
+        <label>Your collection tag <span class="faint">(1–8 ASCII — exclusive, first-come)</span></label>
+        <input type="text" id="collTag" maxlength="8" placeholder="MYTAG" spellcheck="false" />
+      </div>
+
+      <div id="fWord">
+        <label>Your word — a name, an ID, a message <span class="faint">(max 24 chars)</span></label>
+        <input type="text" id="word" maxlength="24" placeholder="YOUR NAME" spellcheck="false" />
+        <p class="tiny faint" style="margin-top:8px">We generate the artwork: your word, the quantum sigil and your serial,
+           digitally engraved on the plate. No picture needed.</p>
+      </div>
+
+      <div id="fImage" hidden>
+        <label>Name on the relic <span class="faint">(max 24 chars)</span></label>
+        <input type="text" id="iname" maxlength="24" placeholder="MY OG RELIC" spellcheck="false" />
+        <label>Image link — we fetch it and pin it to IPFS for you</label>
+        <input type="url" id="iurl" placeholder="https://…/picture.png" spellcheck="false" />
+        <p class="tiny faint" style="margin-top:8px">PNG · JPEG · GIF · WebP, ≤ 1 MiB. Square looks best.
+           Already have an IPFS CID? Put it under Advanced.</p>
+      </div>
+
+      <div id="fGlyph" hidden>
+        <label>16×16 glyph — these pixels ARE the on-chain art (32 bytes)</label>
+        <div class="glyph-grid" id="glyphGrid"></div>
+        <div class="row" style="margin-top:10px">
+          <button type="button" class="btn small" id="glyphDiamond">Diamond</button>
+          <button type="button" class="btn small" id="glyphInvert">Invert</button>
+          <button type="button" class="btn small" id="glyphClear">Clear</button>
+        </div>
+      </div>
+
+      <details class="fold">
+        <summary>Advanced (traits · chest value · soulbound · own CID) — optional</summary>
+        <label>Traits</label>
+        <div id="traits"></div>
+        <button type="button" class="btn small" id="addTrait" style="margin-top:8px">+ trait</button>
+        <label>Chest — bond extra BTX inside the relic <span class="faint">(max 0.01, paid on top)</span></label>
+        <input type="number" id="chest" min="0" max="0.01" step="0.00000001" value="0" style="max-width:170px" />
+        <label>Artwork IPFS CID <span class="faint">(only if you already pinned your own image)</span></label>
+        <input type="text" id="imageCid" placeholder="bafk… (leave empty to let us pin for you)" spellcheck="false" />
+        <label class="toggle" style="margin-top:13px"><input id="soulbound" type="checkbox" /> soulbound (attestation — can never be opened, chest locked to 0)</label>
+      </details>
+      <p id="specErr" class="err"></p>
+    </div>
+
+    <div class="plate-wrap">
+      <div class="plate" id="plate"></div>
+      <div class="serial-tag" id="serialTag">FORGE #···· · BTX L1 · FINAL ERA</div>
+      <div class="mono-block" id="payloadView" style="width:100%;max-width:330px"></div>
+      <div class="tiny faint" style="text-align:center">preview — serial + record hash are engraved at mint ·
+        these 52 bytes go on-chain, record + art live on IPFS, hash-locked</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── STEP 2 · QUANTITY ── -->
+<section class="step">
+  <div class="step-h"><span class="step-n">2</span><h2>How many</h2><span class="hint">numbered editions of this design</span></div>
+  <div class="row" style="gap:22px">
+    <span class="qty">
+      <button type="button" id="qtyDown">−</button>
+      <input type="number" id="qty" min="1" max="100" step="1" value="1" />
+      <button type="button" id="qtyUp">+</button>
+    </span>
+    <span class="total" id="totalLine">0.1 BTX</span>
+    <span class="tiny faint" id="priceNote">0.1 BTX each · 0.08 each from 10 up</span>
+  </div>
+</section>
+
+<!-- ── STEP 3 · WALLET ── -->
+<section class="step">
+  <div class="step-h"><span class="step-n">3</span><h2>Your wallet</h2><span class="hint">every relic in this order mints directly to this address</span></div>
+  <div class="notice">One signature covers the whole order. The challenge below is the hash of your exact design —
+    change anything and you sign again. Nobody can mint a tampered design under your signature.</div>
+  <div class="row">
+    <button class="btn primary" id="genChallenge">Generate signing challenge</button>
+    <span class="faint tiny" id="challengeHint"></span>
+  </div>
+  <div id="challengeBox" hidden>
+    <label style="margin-top:14px">Sign this in your wallet</label>
+    <div class="mono-block" id="challengeView"></div>
+    <button class="btn small copy" data-copy="challengeView" style="margin-top:8px">Copy challenge</button>
+    <ol class="guide">
+      <li>Open the <a href="https://pq-wallet.com" target="_blank" rel="noopener noreferrer">PQ Wallet</a> (or easyBTX) → <b>qID Sign-In</b> → pick the wallet the relics should live in.</li>
+      <li>Paste the challenge, sign it, copy the proof.</li>
+      <li>Paste the proof below.</li>
+    </ol>
+    <label style="margin-top:14px">Your signed proof</label>
+    <textarea id="proofIn" rows="4" placeholder='{"v":1,"alg":"ML-DSA-44","address":"btx1z…",…}' spellcheck="false"></textarea>
+    <div class="row" style="margin-top:8px">
+      <button class="btn primary" id="verifyProof">Verify proof</button>
+      <span id="proofStatus" class="tiny"></span>
+    </div>
+    <div class="row" style="margin-top:10px"><span class="addr-chip" id="addrChip" hidden></span></div>
+  </div>
+</section>
+
+<!-- ── STEP 4 · PAY & FORGE ── -->
+<section class="step">
+  <div class="step-h"><span class="step-n">4</span><h2>Pay &amp; forge</h2><span class="hint">exact amount = your order code</span></div>
+
+  <div class="prelaunch" id="prelaunch">
+    ◆ THE FORGE LIGHTS IN THE NEXT HOURS ◆<br/>
+    <span style="color:var(--text)">Design now, sign now, hold your order — payment opens here the moment the forge goes live.
+    Follow the countdown above: the fork will not wait.</span>
+  </div>
+
+  <div id="payBox" hidden>
+    <div class="row" style="gap:26px;align-items:flex-start">
+      <div style="flex:1;min-width:260px">
+        <label>Send exactly</label>
+        <div class="total" id="payAmount">—</div>
+        <label style="margin-top:12px">To the Forge treasury</label>
+        <div class="mono-block" id="payAddr">—</div>
+        <p class="tiny faint" style="margin-top:10px">The last digits of the amount are your order number — pay the exact amount
+          so the forge can match your payment. If the fork closes the chain before your relics can be minted,
+          your payment is refunded to the paying address automatically.</p>
+      </div>
+      <div style="flex:1;min-width:260px">
+        <label>Then send your order</label>
+        <textarea id="requestOut" rows="9" readonly spellcheck="false" style="font-size:11.5px"></textarea>
+        <div class="row" style="margin-top:8px">
+          <button class="btn primary copy" data-copy="requestOut">Copy order</button>
+          <button class="btn small" id="downloadReq">Download .json</button>
+        </div>
+        <p class="tiny faint" style="margin-top:8px" id="mintToLine"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  RELIC FORGE · the last mint studio on BTX L1, by qID. Every relic is a BZA-1 artifact: an 83-byte OP_RETURN slot carrying a
+  52-byte record whose hash locks an issuer-signed engraving on IPFS, plus a 0.001 BTX carrier coin sent to your address —
+  the coin <b>is</b> the relic. When fork PR #88 activates, minting and transfers end by consensus; relics freeze to their
+  wallets forever. Prices are a tool &amp; engraving fee for a service performed now — a keepsake, not an investment;
+  nothing here promises profit, and after the fork relics cannot be moved or sold on-chain. Official relics verify against
+  the qID issuer registry. Paid orders that cannot be minted before the chain seals are refunded automatically.
+  This page holds no keys and mints nothing; minting is done by the operator, whose keys never touch the web.
+</footer>
+</div>
+
+<script type="module">
+import * as S from "../mintstudio/studio-core.mjs";
+import { verifySignIn } from "../mintstudio/qid-verify.bundle.js";
+
+/* ── launch config — flip TREASURY to go live ─────────────────────────────── */
+const CFG = {
+  FORK_HEIGHT: 165000,
+  BLOCK_SECONDS: 90,
+  TIP_URL: "https://api.btxscan.io/blocks/tip/height",
+  TIP_REFRESH_MS: 30000,
+  TREASURY: "",                       // ← set the Forge treasury address to open payments
+  FORK_STATE: "OPEN",                 // OPEN | MERGED | RELEASED | ADOPTING | SEALED
+  PRICE_SINGLE: 0.1,
+  PRICE_BULK: 0.08, BULK_AT: 10,
+  PRICE_COLLECTION: 1.0, COLL_INCLUDED: 10,
+  HOUSE_TAG: "FORGE",
+};
+const RP_ORIGIN = "https://qid.dev";
+const DUST_SAT = 100000;
+const $ = (id) => document.getElementById(id);
+
+/* ── countdown: live tip → blocks left → est. time, ticking every second ── */
+let tip = null, tipAt = 0;
+async function syncTip(){
+  try{
+    const r = await fetch(CFG.TIP_URL, {cache:"no-store"});
+    if (r.ok){ tip = parseInt((await r.text()).trim(), 10); tipAt = Date.now(); }
+  }catch{ /* keep last tip; clock keeps estimating */ }
+  renderCount();
+}
+function renderCount(){
+  if (tip == null){ $("countClock").innerHTML = `— <span class="unit">syncing with the chain…</span>`; return; }
+  const left = CFG.FORK_HEIGHT - tip;
+  $("tipNow").textContent = tip.toLocaleString("en-US").replace(/,/g," ");
+  $("forkState").textContent = CFG.FORK_STATE;
+  if (left <= 0 || CFG.FORK_STATE === "SEALED"){
+    $("countKicker").textContent = "The door has closed";
+    $("countClock").innerHTML = `<span class="sealed">SEALED BY CONSENSUS</span>`;
+    $("blocksLeft").textContent = "0";
+    document.querySelectorAll(".step,.cards").forEach(e=>e.style.opacity=".45");
+    return;
+  }
+  $("blocksLeft").textContent = left.toLocaleString("en-US").replace(/,/g," ");
+  const secs = Math.max(0, left * CFG.BLOCK_SECONDS - Math.floor((Date.now()-tipAt)/1000));
+  const d = Math.floor(secs/86400), h = Math.floor(secs%86400/3600), m = Math.floor(secs%3600/60), s = secs%60;
+  const p = (n)=>String(n).padStart(2,"0");
+  $("countClock").innerHTML =
+    (d>0? `${d}<span class="unit">D</span> ` : "") +
+    `${p(h)}<span class="unit">H</span> ${p(m)}<span class="unit">M</span> ${p(s)}<span class="unit">S</span>` +
+    `<span class="unit"> · estimated</span>`;
+}
+syncTip(); setInterval(syncTip, CFG.TIP_REFRESH_MS); setInterval(renderCount, 1000);
+
+/* ── state ── */
+let mode = "single";                 // single | multi | collection
+let tmpl = "word";                   // word | image | glyph
+let glyph = new Uint8Array(32);
+let boundNonce = null, boundSpecJson = null, verified = null;
+
+/* ── shop cards ── */
+const cards = { single: $("cardSingle"), multi: $("cardMulti"), collection: $("cardColl") };
+for (const [m, el] of Object.entries(cards)) el.addEventListener("click", () => {
+  mode = m;
+  Object.values(cards).forEach(c=>c.classList.remove("on")); el.classList.add("on");
+  $("collFields").hidden = m !== "collection";
+  if (m === "single") $("qty").value = 1;
+  if (m === "multi" && +$("qty").value < 2) $("qty").value = 10;
+  if (m === "collection" && +$("qty").value < CFG.COLL_INCLUDED) $("qty").value = CFG.COLL_INCLUDED;
+  refresh();
+});
+
+/* ── qty + price ── */
+$("qtyUp").onclick = ()=>{ $("qty").value = Math.min(100, +$("qty").value+1); refresh(); };
+$("qtyDown").onclick = ()=>{ $("qty").value = Math.max(1, +$("qty").value-1); refresh(); };
+$("qty").addEventListener("input", refresh);
+function orderQty(){ return Math.max(1, Math.min(100, Math.floor(+$("qty").value || 1))); }
+function orderTotalBtx(){
+  const q = orderQty(), chest = chestSat()/1e8 * q;
+  let base;
+  if (mode === "collection"){
+    base = CFG.PRICE_COLLECTION + Math.max(0, q - CFG.COLL_INCLUDED) * CFG.PRICE_BULK;
+  } else {
+    const unit = q >= CFG.BULK_AT ? CFG.PRICE_BULK : CFG.PRICE_SINGLE;
+    base = q * unit;
+  }
+  return Math.round((base + chest) * 1e8) / 1e8;
+}
+
+/* ── glyph editor ── */
+const grid = $("glyphGrid");
+for (let i=0;i<256;i++){ const c=document.createElement("i"); c.dataset.i=i; grid.appendChild(c); }
+let painting=false, paintOn=true;
+const glyphHex = ()=>[...glyph].map(b=>b.toString(16).padStart(2,"0")).join("");
+function setBit(i,on){ const b=i>>3, m=128>>(i&7); if(on) glyph[b]|=m; else glyph[b]&=~m; grid.children[i].classList.toggle("on",on); }
+const bitOn = (i)=>(glyph[i>>3] & (128>>(i&7)))!==0;
+grid.addEventListener("mousedown",(e)=>{ if(e.target.dataset.i==null)return; painting=true; const i=+e.target.dataset.i; paintOn=!bitOn(i); setBit(i,paintOn); refresh(); });
+grid.addEventListener("mouseover",(e)=>{ if(painting&&e.target.dataset.i!=null){ setBit(+e.target.dataset.i,paintOn); refresh(); } });
+window.addEventListener("mouseup",()=>painting=false);
+$("glyphClear").onclick=()=>{ glyph=new Uint8Array(32); [...grid.children].forEach(c=>c.classList.remove("on")); refresh(); };
+$("glyphInvert").onclick=()=>{ for(let i=0;i<256;i++) setBit(i,!bitOn(i)); refresh(); };
+$("glyphDiamond").onclick=()=>{ glyph=new Uint8Array(32); for(let r=0;r<16;r++)for(let c=0;c<16;c++) setBit(r*16+c, Math.abs(c-7.5)+Math.abs(r-7.5)<=7.5); refresh(); };
+
+/* ── traits ── */
+function addTrait(k="",v=""){ const row=document.createElement("div"); row.className="trait-row";
+  row.innerHTML=`<input type="text" placeholder="trait" value="${k}"><input type="text" placeholder="value" value="${v}"><button class="btn small" type="button">×</button>`;
+  row.querySelector("button").onclick=()=>{ row.remove(); refresh(); };
+  row.querySelectorAll("input").forEach(i=>i.addEventListener("input",refresh));
+  $("traits").appendChild(row); }
+$("addTrait").onclick=()=>addTrait();
+const readTraits=()=>[...$("traits").children].map(r=>{const [k,v]=r.querySelectorAll("input");return {trait_type:k.value.trim(),value:v.value.trim()};}).filter(t=>t.trait_type);
+
+/* ── template tabs ── */
+document.querySelectorAll("#tmplSeg button").forEach(b=>b.onclick=()=>{
+  tmpl=b.dataset.t;
+  document.querySelectorAll("#tmplSeg button").forEach(x=>x.classList.toggle("on",x===b));
+  $("fWord").hidden = tmpl!=="word"; $("fImage").hidden = tmpl!=="image"; $("fGlyph").hidden = tmpl!=="glyph";
+  refresh();
+});
+["word","iname","iurl","collTag","chest","imageCid"].forEach(id=>$(id).addEventListener("input",refresh));
+$("soulbound").addEventListener("change",refresh);
+
+/* ── spec building (single source of truth: mintstudio/studio-core.mjs) ── */
+function chestSat(){ const b=Number($("chest").value)||0; return Math.max(0, Math.min(1000000, Math.round(b*1e8))); }
+function relicName(){ return (tmpl==="image" ? $("iname").value : $("word").value).trim(); }
+function collectionTag(){
+  if (mode==="collection"){ const t=$("collTag").value.trim().toUpperCase(); return t || CFG.HOUSE_TAG; }
+  return CFG.HOUSE_TAG;
+}
+function readOptions(){
+  const schema = tmpl==="glyph" ? 1 : 0;
+  return {
+    collectionSlug: collectionTag(), collectionName: collectionTag(),
+    item: null, schema, soulbound: $("soulbound").checked,
+    imageCid: schema===0 ? $("imageCid").value.trim() : "",
+    glyphHex: schema===1 ? glyphHex() : "",
+    traits: schema===0 ? readTraits() : [],
+    name: schema===0 ? relicName() : "",
+    chestSat: schema===0 ? chestSat() : 0,
+  };
+}
+/* forge-level validation: friendlier than raw spec errors, and allows "we pin for you" */
+function forgeErrors(o){
+  const errs=[];
+  if(!/^[\x20-\x7e]{1,8}$/.test(o.collectionSlug)) errs.push("collection tag: 1–8 ASCII characters");
+  if(o.schema===0){
+    if(!o.name) errs.push(tmpl==="word" ? "type your word" : "give the relic a name");
+    if(tmpl==="image" && !o.imageCid && !$("iurl").value.trim()) errs.push("paste an image link (or a CID under Advanced)");
+  } else if(!/[1-9a-f]/.test(o.glyphHex)) errs.push("draw at least one pixel");
+  if(o.soulbound && o.chestSat>0) errs.push("a soulbound relic cannot carry a chest");
+  return errs;
+}
+
+/* ── engraved preview plate ── */
+function hashN(s){let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)>>>0;}return h;}
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function plateSvg(seed, word){
+  const h=hashN(seed||"relic"), h1=h%360, h2=(h1+60+(h>>8)%140)%360;
+  let out=`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">`;
+  out+=`<rect width="100" height="100" fill="hsl(${h1} 55% 7%)"/>`;
+  for(let r=0;r<3;r++){
+    const rot=((h>>(r*5))%180), rx=30+((h>>(r*3))%14), ry=12+((h>>(r*4))%14);
+    out+=`<ellipse cx="50" cy="42" rx="${rx}" ry="${ry}" fill="none" stroke="hsl(${h1} 60% 40%)" stroke-width="1" opacity=".6" transform="rotate(${rot} 50 42)"/>`;
+    out+=`<circle cx="${(50+Math.cos(r*2.1+h%7)*rx*0.9).toFixed(1)}" cy="${(42+Math.sin(r*2.1)*ry*0.9).toFixed(1)}" r="2.2" fill="hsl(${h2} 90% 66%)"/>`;
+  }
+  out+=`<circle cx="50" cy="42" r="10" fill="hsl(${h1} 85% 60%)" opacity=".2"/><circle cx="50" cy="42" r="2.4" fill="hsl(${h1} 90% 88%)"/>`;
+  if(word){
+    const fs=word.length>14?7.5:word.length>9?9.5:12;
+    out+=`<rect x="14" y="64" width="72" height="0.6" fill="hsl(${h2} 60% 50%)" opacity=".5"/>`;
+    out+=`<text x="50" y="76" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="${fs}" font-weight="700" fill="hsl(${h2} 85% 70%)" letter-spacing=".5">${esc(word)}</text>`;
+    out+=`<text x="50" y="87" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="4" fill="hsl(${h1} 30% 62%)" letter-spacing=".6">FORGE SERIAL AT MINT · FINAL ERA</text>`;
+  }
+  return out+"</svg>";
+}
+function glyphSvg(){
+  let s=`<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated">`;
+  s+=`<rect width="16" height="16" fill="hsl(150 45% 9%)"/>`;
+  for(let i=0;i<256;i++) if(bitOn(i)) s+=`<rect x="${i%16}" y="${i>>4}" width="1" height="1" fill="hsl(150 70% 58%)"/>`;
+  return s+"</svg>";
+}
+
+/* ── live refresh ── */
+function refresh(){
+  const o = readOptions();
+  const spec = S.buildSpecCore(o);
+  const errs = forgeErrors(o);
+  $("specErr").textContent = errs.length ? errs[0] : "";
+  $("genChallenge").disabled = errs.length>0;
+
+  $("chest").disabled = $("soulbound").checked;
+  if ($("soulbound").checked) $("chest").value = "0";
+
+  const q = orderQty();
+  $("totalLine").textContent = `${orderTotalBtx()} BTX`;
+  $("priceNote").textContent = mode==="collection"
+    ? `1.0 BTX = your tag + ${CFG.COLL_INCLUDED} relics · +${CFG.PRICE_BULK} each after`
+    : `${CFG.PRICE_SINGLE} BTX each · ${CFG.PRICE_BULK} each from ${CFG.BULK_AT} up`;
+
+  const word = (relicName() || (tmpl==="glyph" ? "" : "UNNAMED")).toUpperCase().slice(0,24);
+  $("plate").innerHTML = tmpl==="glyph" ? glyphSvg() : plateSvg(S.canonicalize(spec), word);
+  $("serialTag").textContent = q>1 ? `${q} × FORGE #···· · BTX L1 · FINAL ERA` : "FORGE #···· · BTX L1 · FINAL ERA";
+
+  const collHex = spec.collection.id_hex;
+  const flags = spec.flags.soulbound?"01":"00", schemaHex = spec.schema===1?"01":"00";
+  const commit = spec.schema===1 ? `<span class="set">${o.glyphHex}</span>` : `<span class="pend">«32-byte record hash — engraved at mint»</span>`;
+  $("payloadView").innerHTML =
+    `<span class="set">425a4131 00 01</span> <span class="set">${collHex}</span> <span class="pend">«item auto»</span> <span class="set">${flags}</span> ${commit} <span class="set">${schemaHex}</span>`;
+
+  if (boundSpecJson!=null && S.canonicalize(spec)!==boundSpecJson){
+    boundNonce=null; boundSpecJson=null; verified=null;
+    $("challengeBox").hidden=true; $("payBox").hidden=true; $("addrChip").hidden=true;
+    $("prelaunch").hidden = !!CFG.TREASURY;
+    $("challengeHint").textContent="design changed — generate a fresh challenge";
+  }
+}
+
+/* ── challenge + proof (same trust path as the Mint Lab / operator worker) ── */
+$("genChallenge").onclick = async ()=>{
+  const spec = S.buildSpecCore(readOptions());
+  boundNonce = await S.nonceForSpec(spec);
+  boundSpecJson = S.canonicalize(spec);
+  $("challengeView").textContent = JSON.stringify({ nonce:boundNonce, rp_origin:RP_ORIGIN, ts:Date.now() });
+  $("challengeBox").hidden=false; $("challengeHint").textContent="";
+  $("proofStatus").textContent="";
+};
+$("verifyProof").onclick = async ()=>{
+  const status=$("proofStatus"); status.style.color="var(--neg)";
+  let proof; try{ proof=JSON.parse($("proofIn").value.trim()); }catch{ status.textContent="That is not valid JSON."; return; }
+  if(!boundNonce){ status.textContent="Generate a challenge first."; return; }
+  if(proof?.challenge?.nonce!==boundNonce){ status.textContent="This proof does not match the current design."; return; }
+  const v = verifySignIn(proof, { expectedOrigin:RP_ORIGIN, ttlMs:30*60*1000, skewMs:60*1000, now:Date.now() });
+  if(!v.ok){ status.textContent="Proof rejected: "+v.reason; return; }
+  verified = { proof, address: v.address };
+  status.style.color="var(--accent)"; status.textContent="✓ verified";
+  $("addrChip").textContent="✓ "+v.address; $("addrChip").hidden=false;
+  buildOrder();
+};
+
+/* ── order + payment ── */
+function orderCode(){ return boundNonce ? (parseInt(boundNonce.slice(0,6),16)%9000+1000) : 0; }
+function payAmountBtx(){ return (orderTotalBtx() + orderCode()/1e8).toFixed(8); }
+function buildOrder(){
+  if(!verified) return;
+  const spec = S.buildSpecCore(readOptions());
+  const req = S.buildMintRequest(spec, verified.proof);
+  req.forge_meta = {
+    v: 1, mode, template: tmpl, qty: orderQty(),
+    word: tmpl==="word" ? relicName() : "",
+    image_url: tmpl==="image" ? $("iurl").value.trim() : "",
+    order_code: orderCode(), total_btx: payAmountBtx(),
+    treasury: CFG.TREASURY || "prelaunch",
+  };
+  $("requestOut").value = JSON.stringify(req, null, 2);
+  $("mintToLine").textContent = `mints to ${verified.address.slice(0,16)}…${verified.address.slice(-6)}`;
+  if (CFG.TREASURY){
+    $("prelaunch").hidden = true; $("payBox").hidden = false;
+    $("payAmount").textContent = payAmountBtx()+" BTX";
+    $("payAddr").textContent = CFG.TREASURY;
+  } else {
+    $("prelaunch").hidden = false; $("payBox").hidden = false;
+    $("payAmount").textContent = payAmountBtx()+" BTX";
+    $("payAddr").textContent = "announced at launch — hold your signed order";
+  }
+  $("payBox").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
+/* ── copy + download ── */
+document.querySelectorAll(".copy").forEach(b=>b.addEventListener("click",()=>{
+  const el=$(b.dataset.copy); navigator.clipboard.writeText(el.value!=null?el.value:el.textContent);
+  const o=b.textContent; b.textContent="Copied"; setTimeout(()=>b.textContent=o,1200);
+}));
+$("downloadReq").onclick=()=>{ const blob=new Blob([$("requestOut").value],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="relic-forge-order.json"; a.click(); };
+
+refresh();
+</script>
+</body>
+</html>
