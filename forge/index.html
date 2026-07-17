@@ -295,6 +295,8 @@
         <button type="button" data-t="image">YOUR PICTURE</button>
         <button type="button" data-t="glyph">PIXEL GLYPH</button>
       </div>
+      <p class="tiny faint" style="margin-top:10px" id="collLine">forged into the <b style="color:var(--warn)">QID BTX OG RELICS</b> collection (QIDBTXOG).
+        Your perks engrave themselves: quality, style, color and era become traits of the relic.</p>
 
       <label style="margin-top:14px">Your color</label>
       <div class="inkrow" id="inkRow"></div>
@@ -383,6 +385,7 @@
     <button type="button" class="chipbtn" data-btx="custom">CUSTOM</button>
     <input type="number" id="chest" min="0" max="5" step="0.00000001" value="0" style="max-width:150px" hidden />
   </div>
+  <p class="tiny" id="qualityLine" style="margin-top:10px;color:var(--warn)"></p>
   <div class="notice gold">The treasure is real BTX sealed onto the relic's carrier coin and signed into your order.
     Whoever holds the relic holds the treasure. Opening the chest spends the coin: the BTX returns to the holder and the
     relic burns. That choice survives the fork, so a treasure relic stays a treasure until its holder decides. Soulbound
@@ -505,7 +508,8 @@ const CFG = {
   MAX_QTY: 1000,
   MAX_TREASURE_BTX: 5,
   MAX_IMG_BYTES: 1_048_576,
-  HOUSE_TAG: "FORGE",
+  HOUSE_TAG: "QIDBTXOG",
+  HOUSE_NAME: "QID BTX OG RELICS",
 };
 const RP_ORIGIN = "https://qid.dev";
 const $ = (id) => document.getElementById(id);
@@ -712,7 +716,7 @@ $("ifile").addEventListener("change", async (e)=>{
 });
 $("ifetch").onclick = async ()=>{
   const url = $("iurl").value.trim(); const st = $("artStatus");
-  if (!/^https:\/\//i.test(url)){ st.style.color="var(--neg)"; st.textContent="paste an https image link first."; return; }
+  if (!/^https:\/\//i.test(url) && !/^http:\/\/localhost[:/]/i.test(url)){ st.style.color="var(--neg)"; st.textContent="paste an https image link first."; return; }
   st.style.color="var(--muted)"; st.textContent="fetching…";
   try{
     const r = await fetch(url, {mode:"cors"});
@@ -747,15 +751,39 @@ function collectionTag(){
   if (mode==="collection"){ const t=$("collTag").value.trim().toUpperCase(); return t || CFG.HOUSE_TAG; }
   return CFG.HOUSE_TAG;
 }
+function collectionName(){
+  if (mode==="collection"){ const t=$("collTag").value.trim().toUpperCase(); return t || CFG.HOUSE_NAME; }
+  return CFG.HOUSE_NAME;
+}
 function effectiveCid(){ return $("imageCid").value.trim() || art.cid; }
+/* the perks you pick write themselves into the record: quality by treasure, style, color, era */
+const STYLE_WORDS = [["orbits","rings","arcs"],["atom","crystal","burst"],["lattice","ticks","clean"]];
+function styleName(t){ return `${STYLE_WORDS[0][t%3]} ${STYLE_WORDS[1][Math.floor(t/3)%3]} ${STYLE_WORDS[2][Math.floor(t/9)%3]}`; }
+function qualityName(sat){
+  if (sat >= 100_000_000) return "sovereign";
+  if (sat >= 10_000_000) return "gilded";
+  if (sat >= 1_000_000) return "loaded";
+  if (sat > 0) return "sealed";
+  return "og";
+}
+function autoTraits(){
+  const auto = [
+    { trait_type:"era", value:"final" },
+    { trait_type:"quality", value:qualityName(chestSat()) },
+    { trait_type:"color", value:BRAND[inkIdx].n },
+  ];
+  if (tmpl==="word") auto.push({ trait_type:"style", value:styleName(tplIdx) });
+  const user = readTraits(), keys = new Set(user.map(t=>t.trait_type));
+  return [...user, ...auto.filter(t=>!keys.has(t.trait_type))];
+}
 function readOptions(){
   const schema = tmpl==="glyph" ? 1 : 0;
   return {
-    collectionSlug: collectionTag(), collectionName: collectionTag(),
+    collectionSlug: collectionTag(), collectionName: collectionName(),
     item: null, schema, soulbound: $("soulbound").checked,
     imageCid: schema===0 ? effectiveCid() : "",
     glyphHex: schema===1 ? glyphHex() : "",
-    traits: schema===0 ? readTraits() : [],
+    traits: schema===0 ? autoTraits() : [],
     name: schema===0 ? relicName() : "",
     chestSat: schema===0 ? chestSat() : 0,
   };
@@ -852,6 +880,9 @@ function refresh(){
 
   renderPlate();
   $("serialTag").textContent = (q>1 ? `${q} × ` : "") + "FORGE #···· · BTX L1 · FINAL ERA" + (chestSat()>0 ? ` · ${(chestSat()/1e8)} BTX INSIDE` : "");
+  $("qualityLine").textContent = $("soulbound").checked
+    ? "auto quality: ATTESTATION · engraved as a trait"
+    : `auto quality: ${qualityName(chestSat()).toUpperCase()} · engraved as a trait${tmpl==="word" ? ` · style: ${styleName(tplIdx)}` : ""} · color: ${BRAND[inkIdx].n}`;
 
   const collHex = spec.collection.id_hex;
   const flags = spec.flags.soulbound?"01":"00", schemaHex = spec.schema===1?"01":"00";
