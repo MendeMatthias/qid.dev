@@ -195,24 +195,31 @@ const qid = createQidConnect({
 });
 export const { GET, POST } = qidNextHandlers(qid);</code></pre>
 
-<h2><span class="n">04</span> · Mount the button</h2>
-<pre><code>&lt;div id="signin"&gt;&lt;/div&gt;
+<h2><span class="n">04</span> · Mount the button — and the account chip</h2>
+<pre><code>&lt;div id="signin"&gt;&lt;/div&gt;   <span class="c">&lt;!-- the Sign in button --&gt;</span>
+&lt;div id="account"&gt;&lt;/div&gt;  <span class="c">&lt;!-- the signed-in chip (put it in your header) --&gt;</span>
 &lt;script type="module"&gt;
-  import { mountQidConnect } from "/qid-connect-widget.js";
-  mountQidConnect(document.getElementById("signin"), {
+  import { mountQidConnect, mountQidAccount } from "/qid-connect-widget.js";
+
+  <span class="c">// The signed-in state: a chip (green dot + address) that opens a dropdown</span>
+  <span class="c">// with copy-address and a two-step Log out. Renders nothing when signed out.</span>
+  const account = mountQidAccount(document.getElementById("account"), {
     api: "/qid",                        <span class="c">// "/api/qid" on Next</span>
+    onSignedOut() { location.reload(); },
+  });
+
+  mountQidConnect(document.getElementById("signin"), {
+    api: "/qid",
     appName: "Your app",
-    onSignedIn({ address, account }) {
-      location.reload();                <span class="c">// session cookie is already set</span>
-    },
+    onSignedIn() { account.refresh(); } <span class="c">// reveal the chip, no reload needed</span>
   });                                   <span class="c">// dialog opens QR-first by default</span>
 &lt;/script&gt;</code></pre>
 <p class="muted">
-  The dialog is dynamic out of the box: every sign-in request shows a
-  countdown, rotates itself before it goes stale, and the server burns the
-  superseded nonce — a screenshotted QR or copied request is worthless minutes
-  later. Nothing to configure. It opens on the QR tab (WalletConnect style);
-  users can switch to desktop copy-paste or one-click "Open in wallet".
+  That's the complete login experience: the dialog is dynamic out of the box
+  (countdown, self-rotating requests, server-side burn — a screenshotted QR is
+  worthless minutes later), and the account chip keeps the signed-in state
+  consistent on every BTX app: full address click-to-copy, extensible menu
+  items, and a deliberate two-step Log out. Nothing to configure.
 </p>
 <p class="muted">
   Prefer zero maintenance? Import the hosted widget instead of vendoring it:
