@@ -145,8 +145,8 @@
 </p>
 
 <h2><span class="n">02</span> · Get the code</h2>
-<pre><code>git clone https://github.com/MendeMatthias/qid-connect
-cd qid-connect
+<pre><code><span class="c"># download the release pack (button above), then:</span>
+unzip qid-connect-latest.zip &amp;&amp; cd qid-connect-*
 bun install
 bun test packages          <span class="c"># pins, frozen v1 vectors, e2e, QR + rotation flows</span>
 bun examples/express-demo/server.js
@@ -154,15 +154,15 @@ open http://localhost:8788 <span class="c"># a complete working login site, runn
 <p class="muted">
   Everything is MIT. Two pieces matter: <code>packages/server</code>
   (@qid/connect-server — challenge, verify, accounts, sessions, SQLite stores)
-  and <code>packages/widget</code> (@qid/connect-widget — the button and
-  dialog, one vanilla JS file, zero dependencies). Vendor them or workspace
-  them; the examples show both ends wired.
+  and <code>packages/widget</code> (@qid/connect-widget — the button, dialog,
+  and account chip, one vanilla JS file, zero dependencies). Vendor them or
+  workspace them; the examples show both ends wired.
 </p>
 <p class="muted">
-  During the private-preview window the repository is access-on-request:
-  ask through <a href="https://qid.dev">qid.dev</a> for read access, or use
-  the package zip we send integrators — its contents are identical to the
-  repo, so everything on this page applies unchanged.
+  During the private-preview window we ship the release pack as a download
+  (the button above) rather than a public repo — its contents are identical to
+  the repo, so everything on this page applies unchanged. Prefer git? Ask
+  through <a href="https://qid.dev">qid.dev</a> for read access.
 </p>
 
 <h2><span class="n">03</span> · Wire your server</h2>
