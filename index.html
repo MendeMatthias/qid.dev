@@ -54,6 +54,17 @@
       "url": "https://qid.dev/qid-paper.pdf",
       "about": "post-quantum identity, self-custody, NIST FIPS 203/204/205",
       "isPartOf": { "@id": "https://qid.dev/#website" }
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://dashboard.qid.dev/#dashboard",
+      "name": "qID Dashboard",
+      "url": "https://dashboard.qid.dev/",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "description": "Developer portal for qID Connect: sign in with qID, register your integration, generate a tailored setup kit, and verify it with outside-in health checks. No email, no password, no API keys.",
+      "isPartOf": { "@id": "https://qid.dev/#website" }
     }
   ]
 }
@@ -111,6 +122,31 @@
     border-radius: 8px; width: 34px; height: 34px; cursor: pointer; font-size: 15px; line-height: 1;
   }
   #themeToggle:hover { color: var(--text); border-color: var(--border2); }
+
+  /* ---- grouped nav: dropdowns + sign-in ---- */
+  .nav-dd { position: relative; }
+  .nav-dd-btn {
+    display: inline-flex; align-items: center; gap: 6px; background: none; border: 0;
+    color: var(--muted); font: inherit; font-size: 14.5px; cursor: pointer; padding: 6px 2px;
+  }
+  .nav-dd-btn:hover, .nav-dd-btn[aria-expanded="true"] { color: var(--text); }
+  .nav-dd-btn .chev { font-size: 10px; transition: transform .18s ease; }
+  .nav-dd-btn[aria-expanded="true"] .chev { transform: rotate(180deg); }
+  .nav-menu {
+    position: absolute; top: calc(100% + 10px); left: 50%; translate: -50% 0; min-width: 244px;
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 7px;
+    box-shadow: 0 14px 40px -12px rgba(0,0,0,.55); display: grid; gap: 1px;
+    opacity: 0; visibility: hidden; transform: translateY(-5px); transition: opacity .16s ease, transform .16s ease, visibility .16s;
+  }
+  .nav-dd:hover .nav-menu, .nav-dd.open .nav-menu { opacity: 1; visibility: visible; transform: none; }
+  .nav-menu a { display: block; padding: 9px 12px; border-radius: 8px; color: var(--text); font-size: 14px; line-height: 1.35; }
+  .nav-menu a:hover { background: var(--bg2); text-decoration: none; }
+  .nav-menu a span { display: block; color: var(--muted); font-size: 12px; margin-top: 1px; }
+  .nav-signin { padding: 8px 15px !important; font-size: 14px !important; }
+  .nav-toggle {
+    display: none; background: none; border: 1px solid var(--border); color: var(--text);
+    border-radius: 8px; width: 38px; height: 34px; cursor: pointer; font-size: 16px; line-height: 1;
+  }
 
   /* ---- hero ---- */
   .hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--border); background: var(--bg2); }
@@ -235,7 +271,28 @@
   @media (max-width: 880px) {
     .hero-inner { grid-template-columns: 1fr; padding: 56px 0 48px; }
     .grid2, .grid3, .users, .sec-list { grid-template-columns: 1fr; }
-    .nav-links a.hide-sm { display: none; }
+  }
+  @media (max-width: 760px) {
+    .nav-toggle { display: inline-flex; align-items: center; justify-content: center; margin-left: auto; }
+    .nav-links {
+      position: absolute; top: 60px; left: 0; right: 0; margin: 0; gap: 2px;
+      flex-direction: column; align-items: stretch; padding: 10px 16px 18px;
+      background: var(--bg); border-bottom: 1px solid var(--border);
+      box-shadow: 0 16px 40px -18px rgba(0,0,0,.6); max-height: calc(100vh - 60px); overflow-y: auto;
+      display: none;
+    }
+    .nav-links.open { display: flex; }
+    .nav-links > a { padding: 11px 6px; border-bottom: 1px solid var(--border); }
+    .nav-dd { border-bottom: 1px solid var(--border); }
+    .nav-dd-btn { width: 100%; justify-content: space-between; padding: 12px 6px; font-size: 15px; color: var(--text); }
+    .nav-dd-btn .chev { display: none; }
+    /* On mobile the grouped menus are always expanded inline (no hover/JS needed). */
+    .nav-menu {
+      position: static; translate: none; transform: none; opacity: 1; visibility: visible;
+      min-width: 0; border: 0; box-shadow: none; padding: 0 0 8px 10px; background: none;
+    }
+    .nav-signin { margin-top: 14px !important; text-align: center; justify-content: center; }
+    #themeToggle { margin-top: 12px; align-self: flex-start; }
   }
 </style>
 </head>
@@ -244,16 +301,34 @@
 <header>
   <div class="wrap nav">
     <a class="logo" href="#"><span><span class="q">q</span>ID</span><span class="dot" aria-hidden="true"></span></a>
-    <nav class="nav-links" aria-label="Main">
-      <a href="#layers" class="hide-sm">Overview</a>
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="primary-nav">☰</button>
+    <nav class="nav-links" id="primary-nav" aria-label="Main">
+      <a href="#layers">Overview</a>
       <a href="#security">Security</a>
-      <a href="#standard" class="hide-sm">Spec</a>
-      <a href="/qid-paper.pdf">Paper</a>
-      <a href="/connect">Demo</a>
-      <a href="https://play.qid.dev">Play</a>
-      <a href="/connect/integrate" class="hide-sm">Integrate</a>
-      <a href="/forge/" style="color:var(--warn)">Forge</a>
-      <a href="https://github.com/MendeMatthias/qid">GitHub</a>
+
+      <div class="nav-dd" data-dd>
+        <button class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Developers <span class="chev" aria-hidden="true">▾</span></button>
+        <div class="nav-menu" role="menu">
+          <a role="menuitem" href="/connect/integrate">Integrate<span>Add Sign in with qID in about an hour</span></a>
+          <a role="menuitem" href="https://dashboard.qid.dev">Dashboard<span>Register &amp; manage your integration</span></a>
+          <a role="menuitem" href="/connect/qid-connect-latest.zip" download>Download pack<span>Server SDK, widget &amp; examples</span></a>
+          <a role="menuitem" href="/connect/how">How it works</a>
+          <a role="menuitem" href="#standard">Spec</a>
+          <a role="menuitem" href="/qid-paper.pdf">Paper</a>
+          <a role="menuitem" href="https://github.com/MendeMatthias/qid">GitHub</a>
+        </div>
+      </div>
+
+      <div class="nav-dd" data-dd>
+        <button class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Try <span class="chev" aria-hidden="true">▾</span></button>
+        <div class="nav-menu" role="menu">
+          <a role="menuitem" href="/connect">Live demo<span>See the sign-in flow in your browser</span></a>
+          <a role="menuitem" href="https://play.qid.dev">Play the game<span>Quantum Reflex &mdash; a real qID login</span></a>
+          <a role="menuitem" href="/forge/">Relic Forge<span>BTX artifact mint studio</span></a>
+        </div>
+      </div>
+
+      <a class="btn btn-primary nav-signin" href="https://dashboard.qid.dev">Sign in with qID</a>
       <button id="themeToggle" aria-label="Toggle color theme" title="Toggle theme">◐</button>
     </nav>
   </div>
@@ -269,10 +344,10 @@
         login, recovery, and encryption. Pure JavaScript. Zero runtime dependencies. Byte-exact to the
         BTX chain, verified against a live node.</p>
         <div class="cta">
-          <a class="btn btn-primary" href="/connect">Try Sign in with qID</a>
-          <a class="btn btn-ghost" href="https://play.qid.dev">Play the game &rarr;</a>
+          <a class="btn btn-primary" href="https://dashboard.qid.dev">Sign in with qID</a>
+          <a class="btn btn-ghost" href="/connect">See the live demo &rarr;</a>
+          <a class="btn btn-ghost" href="https://play.qid.dev">Play the game</a>
           <a class="btn btn-ghost" href="https://github.com/MendeMatthias/qid">View on GitHub</a>
-          <a class="btn btn-ghost" href="/qid-paper.pdf">Read the paper</a>
           <span class="tag">repo opens with the independent audit</span>
         </div>
       </div>
@@ -474,6 +549,45 @@ id.<span class="c-pr">attestation</span>   <span class="c-cm">// root-signed, ca
       localStorage.setItem('qid.theme', next);
       apply(next);
     });
+  })();
+
+  // Grouped nav: hover opens on desktop (CSS); click/keyboard on top of that for
+  // touch and a11y. Only one menu open at a time; Escape and outside-click close.
+  (function () {
+    const dds = Array.from(document.querySelectorAll('[data-dd]'));
+    function closeAll(except) {
+      for (const dd of dds) {
+        if (dd === except) continue;
+        dd.classList.remove('open');
+        dd.querySelector('.nav-dd-btn').setAttribute('aria-expanded', 'false');
+      }
+    }
+    for (const dd of dds) {
+      const btn = dd.querySelector('.nav-dd-btn');
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const open = dd.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(open));
+        closeAll(dd);
+      });
+    }
+    document.addEventListener('click', () => closeAll(null));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(null); });
+
+    // Mobile hamburger.
+    const toggle = document.querySelector('.nav-toggle');
+    const nav = document.getElementById('primary-nav');
+    if (toggle && nav) {
+      toggle.addEventListener('click', () => {
+        const open = nav.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', String(open));
+      });
+      // Close the mobile panel after tapping a real link.
+      nav.querySelectorAll('a[href]').forEach((a) => a.addEventListener('click', () => {
+        nav.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      }));
+    }
   })();
 </script>
 </body>

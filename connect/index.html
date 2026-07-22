@@ -44,6 +44,9 @@
   #signin{margin:8px 0 6px}
   #signin .qidc-btn{font-size:16px;padding:.8em 1.4em}
   .hint{color:var(--muted);font-size:12px;margin-top:8px}
+  .realscan{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-top:20px;font-size:12.5px;color:var(--muted)}
+  .realscan b{color:var(--fg)}
+  .realscan-links{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px;font-size:13px;font-weight:600}
   .hint b{color:var(--mint)}
   .member{display:none}
   .member.on{display:block}
@@ -107,6 +110,16 @@
       <div id="signin"></div>
       <p class="hint">No wallet? Click the button, then use the <b>demo wallet</b> that
         appears at the top of the dialog. It signs for you like a real phone would.</p>
+
+      <div class="realscan">
+        <b>Want to scan with your real phone wallet?</b> This page is a browser demo with
+        no server, so it can only complete in-browser. To sign in for real with a wallet
+        scan, these run on real backends:
+        <span class="realscan-links">
+          <a href="https://play.qid.dev">Play the game &rarr;</a>
+          <a href="https://dashboard.qid.dev">Open the dashboard &rarr;</a>
+        </span>
+      </div>
     </div>
 
     <div class="member" id="member">
@@ -384,7 +397,13 @@
   mountQidConnect($("signin"), {
     api: "/qid",
     appName: "the qID demo",
-    transports: ["qr", "paste"], // QR first: the demo wallet completes it live
+    // This page has no server: the browser simulates it, so only the in-browser
+    // paste flow (completed by the injected demo wallet) can finish here. We do
+    // NOT show the QR tab, because a real phone scanning it would post its proof
+    // to qid.dev/qid/proof, which does not exist on this static site, and the
+    // wallet would report a bad link. For a real phone scan, the game and the
+    // dashboard have real backends — see the callout below.
+    transports: ["paste"],
     onSignedIn: (session) => { showMember(session); if (account) account.refresh(); },
   });
 
