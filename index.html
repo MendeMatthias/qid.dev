@@ -159,15 +159,19 @@
     content: ""; position: absolute; inset: 0; pointer-events: none;
     background: radial-gradient(ellipse 55% 60% at 78% 0%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 70%);
   }
-  .hero-inner { position: relative; display: grid; grid-template-columns: 1.05fr .95fr; gap: 48px; padding: 84px 0 72px; align-items: center; }
+  .hero-inner { position: relative; display: grid; grid-template-columns: 1.05fr .95fr; gap: 60px; padding: 104px 0 92px; align-items: center; }
   .hero-inner > *, .grid2 > *, .grid3 > *, .users > *, .sec-item > div { min-width: 0; } /* let code blocks scroll instead of widening the page */
   body { overflow-x: clip; }
-  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
-  .eyebrow::before { content: ""; width: 22px; height: 1px; background: var(--accent); }
-  h1 { font-size: clamp(34px, 4.6vw, 52px); line-height: 1.08; letter-spacing: -0.022em; margin: 14px 0 18px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 13.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); font-weight: 650; }
+  .eyebrow::before { content: ""; width: 28px; height: 1.5px; background: linear-gradient(90deg, var(--accent), var(--cyan)); }
+  h1 { font-size: clamp(42px, 5.6vw, 68px); line-height: 1.04; letter-spacing: -0.028em; margin: 20px 0 24px; }
+  h1 .grad {
+    background: linear-gradient(92deg, var(--text) 25%, var(--accent) 80%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
   h1 .thin { color: var(--muted); font-weight: 400; }
-  .sub { font-size: 18px; color: var(--muted); max-width: 54ch; }
-  .cta { display: flex; gap: 12px; margin-top: 30px; flex-wrap: wrap; align-items: center; }
+  .sub { font-size: 19px; line-height: 1.65; color: var(--muted); max-width: 54ch; }
+  .cta { display: flex; gap: 14px; margin-top: 38px; flex-wrap: wrap; align-items: center; }
   .btn {
     display: inline-flex; align-items: center; gap: 9px; padding: 11px 18px; border-radius: 10px;
     font-weight: 600; font-size: 15px; border: 1px solid transparent;
@@ -192,17 +196,17 @@
 
   /* ---- trust bar ---- */
   .trust { border-bottom: 1px solid var(--border); background: var(--bg); }
-  .trust-inner { display: flex; flex-wrap: wrap; gap: 10px 34px; padding: 18px 0; justify-content: center; }
-  .trust-item { display: flex; align-items: center; gap: 9px; font-size: 13.5px; color: var(--muted); }
+  .trust-inner { display: flex; flex-wrap: wrap; gap: 12px 46px; padding: 26px 0; justify-content: center; }
+  .trust-item { display: flex; align-items: center; gap: 10px; font-size: 14.5px; color: var(--muted); }
   .trust-item b { color: var(--text); font-weight: 600; }
   .tick { color: var(--accent); font-weight: 700; }
 
   /* ---- sections ---- */
-  section { padding: 76px 0; }
+  section { padding: 96px 0; }
   section + section { border-top: 1px solid var(--border); }
 
   /* ---- manifesto / founder quote ---- */
-  .manifesto { padding: 66px 0; background: var(--bg2); position: relative; overflow: hidden; }
+  .manifesto { padding: 88px 0; background: var(--bg2); position: relative; overflow: hidden; }
   .manifesto::before {
     content: ""; position: absolute; inset: 0; pointer-events: none;
     background: radial-gradient(ellipse 50% 120% at 50% 50%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 70%);
@@ -216,17 +220,17 @@
     display: block; margin-top: 20px; font-style: normal; font-size: 14px;
     letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600;
   }
-  .kicker { font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 10px; }
-  h2 { font-size: clamp(26px, 3vw, 34px); letter-spacing: -0.018em; line-height: 1.15; margin-bottom: 14px; }
-  .lede { color: var(--muted); max-width: 62ch; font-size: 16.5px; }
+  .kicker { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); font-weight: 650; margin-bottom: 12px; }
+  h2 { font-size: clamp(30px, 3.5vw, 42px); letter-spacing: -0.022em; line-height: 1.12; margin-bottom: 18px; }
+  .lede { color: var(--muted); max-width: 62ch; font-size: 17.5px; line-height: 1.65; }
 
-  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 36px; }
-  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 36px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 44px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 44px; }
   .card {
     background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 26px;
   }
   .card h3 { font-size: 17.5px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-  .card p, .card li { color: var(--muted); font-size: 14.8px; }
+  .card p, .card li { color: var(--muted); font-size: 15.2px; line-height: 1.6; }
   .card ul { padding-left: 0; list-style: none; margin-top: 12px; display: grid; gap: 9px; }
   .card li { display: flex; gap: 10px; }
   .card li::before { content: "▸"; color: var(--accent); flex-shrink: 0; }
@@ -253,7 +257,7 @@
   }
   .prov b { color: #5eeaa0; font-weight: 600; }
 
-  .users { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 36px; }
+  .users { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 44px; }
   .user { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
   .user .name { font-weight: 700; font-size: 16.5px; margin-bottom: 6px; }
   .user p { color: var(--muted); font-size: 14px; }
@@ -339,10 +343,10 @@
     <div class="wrap hero-inner">
       <div>
         <span class="eyebrow">Post-quantum identity &middot; NIST FIPS 203 / 204 / 205</span>
-        <h1>Identity that outlives<br /><span class="thin">the quantum computer.</span></h1>
-        <p class="sub">One 32-byte seed becomes a complete post-quantum identity: keys, addresses, spends,
-        login, recovery, and encryption. Pure JavaScript. Zero runtime dependencies. Byte-exact to the
-        BTX chain, verified against a live node.</p>
+        <h1><span class="grad">Identity that outlives</span><br /><span class="thin">the quantum computer.</span></h1>
+        <p class="sub">One 32-byte seed becomes a complete post-quantum identity: keys, addresses,
+        spends, login, recovery, encryption. Pure JavaScript, zero dependencies, byte-exact to the
+        BTX chain.</p>
         <div class="cta">
           <a class="btn btn-primary" href="https://dashboard.qid.dev">Sign in with qID</a>
           <a class="btn btn-ghost" href="/connect">See the live demo &rarr;</a>
