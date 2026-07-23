@@ -54,6 +54,16 @@ wallets, and a btxqid:// deep link (v0.27+).
 - Technical paper (PDF): https://qid.dev/qid-paper.pdf
 - Conformance vectors (JSON): https://qid.dev/vectors.json
 - Source repository: https://github.com/MendeMatthias/qid (private; opens with the audit)
+- qID Connect source pack (server SDK + widget + examples, MIT): https://qid.dev/connect/qid-connect-latest.zip
+
+## Live properties
+
+- https://qid.dev/connect: browser-only demo of Sign in with qID; no wallet needed, nothing leaves the page.
+- https://qid.dev/connect/integrate: the integration guide (one middleware + one widget, about an hour).
+- https://dashboard.qid.dev: developer portal. Sign in with qID itself, register an app by origin, generate a stack-tailored setup kit, run outside-in health checks. Never in any user's login path; no API keys or project IDs exist.
+- https://build.qid.dev: builder onboarding for BTX with a real qID sign-in (a bonuz wallet QR scan signs in live).
+- https://build.qid.dev/showcase: every live qID integration on one page.
+- https://play.qid.dev: Quantum Reflex, a reaction game with a leaderboard keyed by BTX address.
 
 ## Positioning
 
