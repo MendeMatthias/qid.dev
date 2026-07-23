@@ -38,7 +38,7 @@
 
 qID Connect is the app-facing SDK layer: post-quantum wallet login for BTX apps ("Sign in with
 qID"). One server middleware plus one button; the verified address IS the account. No email, no
-password, no relay server — the app's own backend is the rendezvous. Login proofs sign under the
+password, no relay server; the app's own backend is the rendezvous. Login proofs sign under the
 BTX-qID/login-v1 domain tag, transactions under TapSighash, so a login proof can never move
 funds. The connector is dynamic: requests rotate with a countdown and superseded nonces are
 burned server-side. Transports: desktop copy-paste (PQ Wallet for BTX v0.21+), QR scan for phone
@@ -55,13 +55,14 @@ wallets, and a btxqid:// deep link (v0.27+).
 - Conformance vectors (JSON): https://qid.dev/vectors.json
 - Source repository: https://github.com/MendeMatthias/qid (private; opens with the audit)
 - qID Connect source pack (server SDK + widget + examples, MIT): https://qid.dev/connect/qid-connect-latest.zip
+- Hosted widget (one-line import, auto-updating UI; version-pinned copies at widget-<version>.js): https://qid.dev/connect/widget.js
 
 ## Live properties
 
 - https://qid.dev/connect: browser-only demo of Sign in with qID; no wallet needed, nothing leaves the page.
 - https://qid.dev/connect/integrate: the integration guide (one middleware + one widget, about an hour).
 - https://dashboard.qid.dev: developer portal. Sign in with qID itself, register an app by origin, generate a stack-tailored setup kit, run outside-in health checks. Never in any user's login path; no API keys or project IDs exist.
-- https://build.qid.dev: builder onboarding for BTX with a real qID sign-in (a bonuz wallet QR scan signs in live).
+- https://build.qid.dev: builder onboarding for BTX with a real qID sign-in (a bonuz Wallet QR scan signs in live).
 - https://build.qid.dev/showcase: every live qID integration on one page.
 - https://play.qid.dev: Quantum Reflex, a reaction game with a leaderboard keyed by BTX address.
 

@@ -3,20 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Integrate Sign in with qID — wallet login for BTX apps</title>
+<title>Integrate Sign in with qID: wallet login for BTX apps</title>
 <meta name="description" content="Add post-quantum wallet login to your BTX dApp in an hour: one server middleware, one button. QR, copy-paste and deep-link sign-in, rotating requests, sessions.">
 <meta name="theme-color" content="#050c08">
-<link rel="canonical" href="https://qid.dev/connect/integrate">
+<link rel="canonical" href="https://qid.dev/connect/integrate/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='700' fill='%235eeaa0' text-anchor='middle'%3Eq%3C/text%3E%3Ccircle cx='24' cy='8' r='2.5' fill='%2367e8f9'/%3E%3C/svg%3E">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="qID Connect">
 <meta property="og:title" content="Integrate Sign in with qID">
 <meta property="og:description" content="One middleware, one button: post-quantum wallet login for your BTX dApp. The address is the account.">
-<meta property="og:url" content="https://qid.dev/connect/integrate">
+<meta property="og:url" content="https://qid.dev/connect/integrate/">
 <meta property="og:image" content="https://qid.dev/og/og-integrate.png?v=2">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="An emerald circuit-gateway rings the beam as a QR constellation streams toward a blue world — integrate Sign in with qID.">
+<meta property="og:image:alt" content="An emerald circuit-gateway rings the beam as a QR constellation streams toward a blue world. Integrate Sign in with qID.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Integrate Sign in with qID">
 <meta name="twitter:description" content="Wallet login for BTX apps: one middleware, one button. The address is the account.">
@@ -82,14 +82,14 @@
   "@id": "https://qid.dev/connect/integrate#guide",
   "headline": "Integrate Sign in with qID",
   "description": "Step-by-step integration guide: post-quantum wallet login for BTX apps with one server middleware and one button. No email, no password, no relay server.",
-  "url": "https://qid.dev/connect/integrate",
+  "url": "https://qid.dev/connect/integrate/",
   "datePublished": "2026-07-16",
-  "dateModified": "2026-07-17",
+  "dateModified": "2026-07-24",
   "author": { "@type": "Person", "name": "Mende Matthias" },
   "publisher": { "@type": "Organization", "name": "qID", "url": "https://qid.dev/" },
   "isPartOf": { "@id": "https://qid.dev/#website" },
   "proficiencyLevel": "Beginner",
-  "dependencies": "PQ Wallet for BTX v0.21+ (or the bundled test signer); bun or node 20+"
+  "dependencies": "PQ Wallet for BTX v0.21+ (or the bundled test signer); bun 1.x"
 }
 </script>
 </head>
@@ -113,7 +113,7 @@
 <p class="lede">
   Post-quantum wallet login for your BTX app in one sitting. One server
   middleware, one button. The user proves control of a BTX address and that
-  address <b>is</b> their account — no email, no password, no relay server,
+  address <b>is</b> their account: no email, no password, no relay server,
   and a login proof that <b>cannot move funds, by construction</b>.
 </p>
 <div class="cta">
@@ -125,7 +125,7 @@
     <b style="color:var(--mint)">The release pack</b> is everything you need in one
     zip: the server SDK, the widget, runnable Express / Next.js / static-site
     examples, the test signer, and an <code>INSTALL.md</code> your developer (or
-    their AI assistant) follows to wire it in — about an hour, most of it reading.
+    their AI assistant) follows to wire it in, about an hour, most of it reading.
     Prefer the terminal? Everything below works from the unzipped pack. Prefer
     zero maintenance? Skip the download and use the hosted widget in step 04.
   </p>
@@ -134,7 +134,7 @@
 <h2><span class="n">01</span> · How it works</h2>
 <ol class="steps">
   <li><b>Your server issues a one-time challenge</b> <code>{nonce, rp_origin, ts}</code> bound to your exact origin.</li>
-  <li><b>The user's wallet shows them your site and signs</b> the challenge with their post-quantum login key (ML-DSA-44) — by QR scan from a phone, copy-paste, or a <code>btxqid://</code> deep link into the installed desktop wallet.</li>
+  <li><b>The user's wallet shows them your site and signs</b> the challenge with their post-quantum login key (ML-DSA-44): by QR scan from a phone, copy-paste, or a <code>btxqid://</code> deep link into the installed desktop wallet.</li>
   <li><b>Your server verifies the proof</b> with the frozen qID Sign-In v1 verifier, rebuilds the address from the proof, and the verified address becomes (or finds) the account. Registration and login are the same action.</li>
   <li><b>A signed HttpOnly session cookie</b> keeps them signed in. Sessions, logout, and account-by-address are included.</li>
 </ol>
@@ -146,22 +146,23 @@
 </p>
 
 <h2><span class="n">02</span> · Get the code</h2>
-<pre><code><span class="c"># download the release pack (button above), then:</span>
-unzip qid-connect-latest.zip &amp;&amp; cd qid-connect-*
+<pre><code><span class="c"># prereq: bun 1.x (install at https://bun.sh)</span>
+<span class="c"># download the release pack (button above), then:</span>
+unzip qid-connect-latest.zip &amp;&amp; cd qid-connect-*/
 bun install
 bun test packages          <span class="c"># pins, frozen v1 vectors, e2e, QR + rotation flows</span>
 bun examples/express-demo/server.js
 open http://localhost:8788 <span class="c"># a complete working login site, running on your machine</span></code></pre>
 <p class="muted">
   Everything is MIT. Two pieces matter: <code>packages/server</code>
-  (@qid/connect-server — challenge, verify, accounts, sessions, SQLite stores)
-  and <code>packages/widget</code> (@qid/connect-widget — the button, dialog,
+  (@qid/connect-server: challenge, verify, accounts, sessions, SQLite stores)
+  and <code>packages/widget</code> (@qid/connect-widget: the button, dialog,
   and account chip, one vanilla JS file, zero dependencies). Vendor them or
   workspace them; the examples show both ends wired.
 </p>
 <p class="muted">
   During the private-preview window we ship the release pack as a download
-  (the button above) rather than a public repo — its contents are identical to
+  (the button above) rather than a public repo; its contents are identical to
   the repo, so everything on this page applies unchanged. Prefer git? Ask
   through <a href="https://qid.dev">qid.dev</a> for read access.
 </p>
@@ -196,11 +197,11 @@ const qid = createQidConnect({
 });
 export const { GET, POST } = qidNextHandlers(qid);</code></pre>
 
-<h2><span class="n">04</span> · Mount the button — and the account chip</h2>
+<h2><span class="n">04</span> · Mount the button and the account chip</h2>
 <pre><code>&lt;div id="signin"&gt;&lt;/div&gt;   <span class="c">&lt;!-- the Sign in button --&gt;</span>
 &lt;div id="account"&gt;&lt;/div&gt;  <span class="c">&lt;!-- the signed-in chip (put it in your header) --&gt;</span>
 &lt;script type="module"&gt;
-  import { mountQidConnect, mountQidAccount } from "/qid-connect-widget.js";
+  import { mountQidConnect, mountQidAccount } from "https://qid.dev/connect/widget.js";
 
   <span class="c">// The signed-in state: a chip (green dot + address) that opens a dropdown</span>
   <span class="c">// with copy-address and a two-step Log out. Renders nothing when signed out.</span>
@@ -216,19 +217,21 @@ export const { GET, POST } = qidNextHandlers(qid);</code></pre>
   });                                   <span class="c">// dialog opens QR-first by default</span>
 &lt;/script&gt;</code></pre>
 <p class="muted">
-  That's the complete login experience: the dialog is dynamic out of the box
-  (countdown, self-rotating requests, server-side burn — a screenshotted QR is
-  worthless minutes later), and the account chip keeps the signed-in state
-  consistent on every BTX app: full address click-to-copy, extensible menu
-  items, and a deliberate two-step Log out. Nothing to configure.
+  That's the complete login experience, one import: the dialog is dynamic out
+  of the box (countdown, self-rotating requests, server-side burn; a
+  screenshotted QR is worthless minutes later), and the account chip keeps the
+  signed-in state consistent on every BTX app: full address click-to-copy,
+  extensible menu items, and a deliberate two-step Log out. Nothing to
+  configure, nothing to update: wallet-list and UX improvements reach your
+  users automatically when we deploy, while the signed protocol underneath
+  stays frozen v1.
 </p>
 <p class="muted">
-  Prefer zero maintenance? Import the hosted widget instead of vendoring it:
-  <code>import { mountQidConnect } from "https://qid.dev/connect/widget.js"</code>
-  — wallet-list and UX updates then reach your users automatically when we
-  deploy, while the signed protocol underneath stays frozen v1. A
-  version-pinned copy (<code>widget-&lt;version&gt;.js</code>) exists for teams
-  that want to review every change first.
+  Want to review every change first? Pin a version
+  (<code>https://qid.dev/connect/widget-&lt;version&gt;.js</code>), or vendor
+  the single file from the pack (<code>packages/widget/src/qid-connect-widget.js</code>,
+  zero dependencies) and import it as <code>/qid-connect-widget.js</code> from
+  your own server. Same API either way.
 </p>
 
 <h2><span class="n">05</span> · Test without a wallet</h2>
@@ -240,7 +243,7 @@ export const { GET, POST } = qidNextHandlers(qid);</code></pre>
 <pre><code>bun tools/signer/btx-sign-ownership.mjs --random \
   --origin http://localhost:8788 --nonce &lt;nonce&gt; --ts &lt;ts&gt;</code></pre>
 <p class="muted">
-  Paste the printed proof into the dialog's desktop tab — or POST it to
+  Paste the printed proof into the dialog's desktop tab, or POST it to
   <code>/qid/proof</code> to simulate a phone scanning the QR; the open dialog
   signs itself in within a second or two. With a real
   <a href="https://pq-wallet.com">PQ Wallet for BTX</a> (v0.21+): Settings → qID
@@ -275,13 +278,13 @@ export const { GET, POST } = qidNextHandlers(qid);</code></pre>
 
 <h2><span class="n">08</span> · Wallets your users can bring</h2>
 <div class="grid">
-  <div class="cell"><b>PQ Wallet for BTX · desktop</b>available now — copy-paste since v0.21, one-click <code>btxqid://</code> connect since v0.27</div>
-  <div class="cell"><b>bonuz Wallet · mobile</b>available now — scan the qID QR with the bonuz app, pick your wallet, and you are in</div>
+  <div class="cell"><b>PQ Wallet for BTX · desktop</b>available now: copy-paste since v0.21, one-click <code>btxqid://</code> connect since v0.27</div>
+  <div class="cell"><b>bonuz Wallet · mobile</b>available now: scan the qID QR with the bonuz app, pick your wallet, and you are in</div>
 </div>
 <div class="callout">
   <b>Building a wallet?</b> The wallet-side signer SDK (request parsing, the
   normative signer rules, a reference mobile approval screen) is available to
-  wallet builders — reach out through <a href="https://qid.dev">qid.dev</a>.
+  wallet builders: reach out through <a href="https://qid.dev">qid.dev</a>.
 </div>
 
 <h2><span class="n">09</span> · The fine print</h2>
@@ -289,9 +292,9 @@ export const { GET, POST } = qidNextHandlers(qid);</code></pre>
   The v1 proof format and verifier are frozen; future capability arrives as
   new versions verified alongside v1, so a login you ship today keeps working
   forever. Phase 1 is deliberately login-only: no transaction requests, no
-  permissions, no persistent connections — that is what makes it safe to adopt
+  permissions, no persistent connections. That is what makes it safe to adopt
   now (later phases are gated behind an independent audit). The code is MIT;
-  the qID name and mark are not — forks take their own name. Keep the button
+  the qID name and mark are not; forks take their own name. Keep the button
   and dialog stock (<code>docs/DESIGN.md</code>) so "Sign in with qID" looks
   the same on every BTX app, and never proxy or rewrite the challenge.
 </p>
