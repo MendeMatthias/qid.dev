@@ -175,7 +175,7 @@ open http://localhost:8788 <span class="c"># a complete working login site, runn
   Everything is MIT. Two pieces matter: <code>packages/server</code>
   (@qid/connect-server: challenge, verify, accounts, sessions, SQLite stores)
   and <code>packages/widget</code> (@qid/connect-widget: the button, dialog,
-  and account chip, one vanilla JS file, zero dependencies). Vendor them or
+  and account chip, two files, zero external dependencies). Vendor them or
   workspace them; the examples show both ends wired.
 </p>
 <p class="muted">
@@ -247,9 +247,11 @@ export const { GET, POST } = qidNextHandlers(qid);</code></pre>
 <p class="muted">
   Want to review every change first? Pin a version
   (<code>https://qid.dev/connect/widget-&lt;version&gt;.js</code>), or vendor
-  the single file from the pack (<code>packages/widget/src/qid-connect-widget.js</code>,
-  zero dependencies) and import it as <code>/qid-connect-widget.js</code> from
-  your own server. Same API either way.
+  <code>packages/widget/src/</code> from the pack and import
+  <code>qid-connect-widget.js</code> from your own server. Copy the whole
+  directory: the widget statically imports its bundled QR encoder from
+  <code>./vendor/qrcode.mjs</code>, so taking only the one file leaves the module
+  graph unresolved and the button never renders. Same API either way.
 </p>
 
 <h2><span class="n">05</span> · Test without a wallet</h2>
