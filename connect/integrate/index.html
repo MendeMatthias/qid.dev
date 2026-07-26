@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Integrate Sign in with qID: wallet login for BTX apps</title>
-<meta name="description" content="Add post-quantum wallet login to your BTX dApp in an hour: one server middleware, one button. QR, copy-paste and deep-link sign-in, rotating requests, sessions.">
+<meta name="description" content="Add post-quantum wallet login to your BTX dApp in 15 to 30 minutes: one server middleware, one button, plus a skill that wires it for your AI assistant and a checker that verifies the result. QR, copy-paste and deep-link sign-in, sessions.">
 <meta name="theme-color" content="#050c08">
 <link rel="canonical" href="https://qid.dev/connect/integrate/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='700' fill='%235eeaa0' text-anchor='middle'%3Eq%3C/text%3E%3Ccircle cx='24' cy='8' r='2.5' fill='%2367e8f9'/%3E%3C/svg%3E">
@@ -84,7 +84,7 @@
   "description": "Step-by-step integration guide: post-quantum wallet login for BTX apps with one server middleware and one button. No email, no password, no relay server.",
   "url": "https://qid.dev/connect/integrate/",
   "datePublished": "2026-07-16",
-  "dateModified": "2026-07-24",
+  "dateModified": "2026-07-27",
   "author": { "@type": "Person", "name": "Mende Matthias" },
   "publisher": { "@type": "Organization", "name": "qID", "url": "https://qid.dev/" },
   "isPartOf": { "@id": "https://qid.dev/#website" },
@@ -121,13 +121,31 @@
   <a class="btn btn-ghost" href="/connect">Try it live first</a>
 </div>
 <div class="card" style="margin-bottom:44px">
+  <p style="margin:0 0 12px">
+    <b style="color:var(--mint)">New: the pack ships a skill for your AI assistant.</b>
+    A developer who knows their own codebase is signed in with a real
+    post-quantum signature in <b>15 to 30 minutes</b>. Drop
+    <code>skills/qid-connect/</code> into your assistant, ask for qID sign-in,
+    and it wires the server, the button and the account model, then verifies the
+    result against your running app.
+  </p>
+  <p class="muted" style="margin:0 0 12px">
+    It carries what used to cost the afternoon: the four mistakes that break
+    sign-in with <b>no error in the browser at all</b>. A wrong
+    <code>origin</code>. A <code>proof_url</code> your users' phones 404 against,
+    which leaves desktop working so it reaches production unnoticed. Per-process
+    stores on a multi-instance deploy. A strict CSP that silently blocks the
+    button. The bundled checker finds all four in seconds:
+  </p>
+  <pre style="margin:0 0 12px"><code>bun skills/qid-connect/scripts/check-integration.mjs https://yourapp.com</code></pre>
   <p class="muted" style="margin:0">
-    <b style="color:var(--mint)">The release pack</b> is everything you need in one
-    zip: the server SDK, the widget, runnable Express / Next.js / static-site
-    examples, the test signer, and an <code>INSTALL.md</code> your developer (or
-    their AI assistant) follows to wire it in, about an hour, most of it reading.
-    Prefer the terminal? Everything below works from the unzipped pack. Prefer
-    zero maintenance? Skip the download and use the hosted widget in step 04.
+    Ten checks against your live integration, no wallet and no keys, each failure
+    printing its fix. The skill is also
+    <a href="https://github.com/MendeMatthias/qid-connect-skill">open source on
+    GitHub</a>. The rest of the pack is unchanged: server SDK, widget, runnable
+    Express / Next.js / static-site examples, the test signer, and
+    <code>INSTALL.md</code>. Prefer zero maintenance? Skip the download and use
+    the hosted widget in step 04.
   </p>
 </div>
 
@@ -287,7 +305,38 @@ export const { GET, POST } = qidNextHandlers(qid);</code></pre>
   wallet builders: reach out through <a href="https://qid.dev">qid.dev</a>.
 </div>
 
-<h2><span class="n">09</span> · The fine print</h2>
+<h2><span class="n">09</span> · Ship it with your AI assistant</h2>
+<p class="muted">
+  The pack includes <code>skills/qid-connect/</code>, a skill your coding
+  assistant reads instead of guessing. It picks the right path for your stack,
+  wires the server and the button, gets the account model right, and then
+  verifies the result against your running app. Install it once:
+</p>
+<pre><code>cp -R skills/qid-connect .claude/skills/     <span class="c"># then just ask for qID sign-in</span></code></pre>
+<p class="muted">
+  Any other assistant can take <code>SKILL.md</code> as the task brief. The skill
+  is <a href="https://github.com/MendeMatthias/qid-connect-skill">open source</a>,
+  so you can read every line of what it tells your assistant to do.
+</p>
+<p class="muted">
+  The checker inside it is worth running whether or not you use an assistant. Ten
+  checks against a live integration, no wallet and no keys, each failure printing
+  its fix:
+</p>
+<pre><code>bun skills/qid-connect/scripts/check-integration.mjs https://yourapp.com
+<span class="c"># or, for routes mounted elsewhere:</span>
+bun skills/qid-connect/scripts/check-integration.mjs https://yourapp.com --api /api/qid</code></pre>
+<p class="muted">
+  It exists because the mistakes that cost integrators an afternoon produce
+  <b>no error in the browser at all</b>. The dialog just opens and never
+  completes. An <code>origin</code> that is not where users land. A
+  <code>proof_url</code> phones 404 against, which leaves desktop paste working
+  so it reaches production unnoticed. Per-process stores on a multi-instance
+  deploy, where the QR renders and then flips to expired. A strict CSP silently
+  blocking the button. Seconds to find, instead of an afternoon.
+</p>
+
+<h2><span class="n">10</span> · The fine print</h2>
 <p class="muted">
   The v1 proof format and verifier are frozen; future capability arrives as
   new versions verified alongside v1, so a login you ship today keeps working
@@ -304,6 +353,7 @@ export const { GET, POST } = qidNextHandlers(qid);</code></pre>
 <footer class="site-footer">
   <a href="/connect">Live demo</a>
   <a href="/connect/qid-connect-latest.zip" download>qID Connect source pack</a>
+  <a href="https://github.com/MendeMatthias/qid-connect-skill">Integration skill</a>
   <a href="https://qid.dev/">qid.dev</a>
   <a href="https://qid.dev/qid-paper.pdf">Technical paper</a>
 </footer>
