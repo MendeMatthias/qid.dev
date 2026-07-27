@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>How to connect with qID: scan, paste, or open in wallet</title>
 <meta name="description" content="Three ways to sign in with qID: scan the QR with your phone wallet, copy-paste with the desktop wallet, or open your installed wallet directly. Step by step.">
@@ -26,7 +27,7 @@
   *{box-sizing:border-box;margin:0}
   body{background:var(--bg);color:var(--fg);font:16px/1.7 ui-monospace,"SF Mono",Menlo,monospace;min-height:100vh;display:flex;flex-direction:column}
   a{color:var(--accent)}
-  .site-header{display:flex;align-items:center;justify-content:space-between;padding:15px 22px;border-bottom:1px solid var(--border)}
+  .site-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;row-gap:2px;padding:15px 22px;border-bottom:1px solid var(--border)}
   .brand{display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--fg);font-weight:700;font-size:17px;letter-spacing:.5px}
   .brand .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
   .nav a{color:var(--muted);text-decoration:none;font-size:13px;margin-left:16px}
@@ -68,8 +69,8 @@
 <header class="site-header">
   <a class="brand" href="https://qid.dev/"><span class="dot"></span>qID Connect</a>
   <nav class="nav">
-    <a href="/connect">Live demo</a>
-    <a href="/connect/integrate">Integrate</a>
+    <a href="/connect/">Live demo</a>
+    <a href="/connect/integrate/">Integrate</a>
     <a href="https://qid.dev/">qid.dev</a>
   </nav>
 </header>
@@ -127,14 +128,14 @@
 </section>
 
 <p class="foothelp">
-  Still stuck? The safest fallback is always <b>Desktop wallet</b> copy-and-paste; it works everywhere. Try the whole flow with no wallet at all on the <a href="/connect">live demo</a>.
+  Still stuck? The safest fallback is always <b>Desktop wallet</b> copy-and-paste; it works everywhere. Try the whole flow with no wallet at all on the <a href="/connect/">live demo</a>.
 </p>
 
 </main></div>
 
 <footer class="site-footer">
-  <a href="/connect">Live demo</a>
-  <a href="/connect/integrate">Integration guide</a>
+  <a href="/connect/">Live demo</a>
+  <a href="/connect/integrate/">Integration guide</a>
   <a href="https://qid.dev/">qid.dev</a>
   <a href="https://pq-wallet.com">Get the wallet</a>
 </footer>

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>qID: post-quantum identity, byte-exact to the chain</title>
 <meta name="description" content="One 32-byte seed becomes a complete post-quantum identity: keys, address, login, recovery, and encryption. Pure JavaScript on NIST FIPS 203/204/205, byte-exact to BTX." />
@@ -10,14 +11,14 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://qid.dev/" />
 <meta property="og:site_name" content="qID" />
-<meta property="og:image" content="https://qid.dev/og.png?v=4" />
+<meta property="og:image" content="https://qid.dev/og.png?v=5" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content="An obsidian phone beams emerald light to a blue world; midway, stars form a key and shield. qID." />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="qID: post-quantum identity" />
 <meta name="twitter:description" content="Keys, addresses, spends, login, recovery, and encryption, all from one seed. NIST FIPS 203/204/205." />
-<meta name="twitter:image" content="https://qid.dev/og.png?v=4" />
+<meta name="twitter:image" content="https://qid.dev/og.png?v=5" />
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0e12" />
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafcfd" />
 <link rel="canonical" href="https://qid.dev/" />
@@ -314,7 +315,7 @@
         <button class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Developers <span class="chev" aria-hidden="true">▾</span></button>
         <div class="nav-menu" role="menu">
           <a role="menuitem" href="https://build.qid.dev">Build on BTX<span>The infra is done. Bring your app</span></a>
-          <a role="menuitem" href="/connect/integrate">Integrate<span>Add Sign in with qID in about an hour</span></a>
+          <a role="menuitem" href="/connect/integrate/">Integrate<span>Add Sign in with qID in 15 to 30 minutes</span></a>
           <a role="menuitem" href="https://dashboard.qid.dev">Dashboard<span>Register &amp; manage your integration</span></a>
           <a role="menuitem" href="/connect/qid-connect-latest.zip" download>Download pack<span>Server SDK, widget &amp; examples</span></a>
           <a role="menuitem" href="/connect/how">How it works</a>
@@ -328,7 +329,7 @@
         <div class="nav-menu" role="menu">
           <a role="menuitem" href="https://build.qid.dev">Real wallet sign-in<span>Scan with the bonuz app, live</span></a>
           <a role="menuitem" href="https://build.qid.dev/showcase">Showcase<span>Every live integration, one page</span></a>
-          <a role="menuitem" href="/connect">Browser demo<span>No wallet needed, runs locally</span></a>
+          <a role="menuitem" href="/connect/">Browser demo<span>No wallet needed, runs locally</span></a>
           <a role="menuitem" href="https://play.qid.dev">Play the game<span>Quantum Reflex, a real qID login</span></a>
           <a role="menuitem" href="/forge/">Relic Forge<span>BTX artifact mint studio · private preview</span></a>
         </div>
@@ -351,7 +352,7 @@
         BTX chain.</p>
         <div class="cta">
           <a class="btn btn-primary" href="https://dashboard.qid.dev">Sign in with qID</a>
-          <a class="btn btn-ghost" href="/connect">See the live demo &rarr;</a>
+          <a class="btn btn-ghost" href="/connect/">See the live demo &rarr;</a>
           <a class="btn btn-ghost" href="https://play.qid.dev">Play the game</a>
           <a class="btn btn-ghost" href="/qid-paper.pdf">Read the paper</a>
           <span class="tag">source opens with the independent audit</span>
@@ -457,7 +458,7 @@ id.<span class="c-pr">attestation</span>   <span class="c-cm">// root-signed, ca
         </div></div>
         <div class="sec-item"><span class="n">06</span><div>
           <h4>Responsible disclosure</h4>
-          <p>A real security policy with response targets. Report privately via GitHub security advisories.</p>
+          <p>A real security policy with response targets. Report privately via <a href="https://github.com/MendeMatthias/qid-connect-skill/security/advisories/new">GitHub security advisories</a>, or see <a href="/.well-known/security.txt">security.txt</a>.</p>
         </div></div>
       </div>
       <div class="quote">
@@ -530,12 +531,13 @@ id.<span class="c-pr">attestation</span>   <span class="c-cm">// root-signed, ca
   <div class="wrap foot">
     <div>© 2026 qID · MIT license · <span class="mono">btx1z…</span> ready</div>
     <nav class="foot-links" aria-label="Footer">
-      <a href="/connect">Live demo</a>
-      <a href="/connect/integrate">Integration guide</a>
+      <a href="/connect/">Live demo</a>
+      <a href="/connect/integrate/">Integration guide</a>
       <a href="https://dashboard.qid.dev">Dashboard</a>
       <a href="https://build.qid.dev">Build on BTX</a>
       <a href="/qid-paper.pdf">Technical paper</a>
       <a href="/connect/qid-connect-latest.zip" download>Source pack</a>
+      <a href="/connect/changelog/">Changelog</a>
     </nav>
   </div>
 </footer>

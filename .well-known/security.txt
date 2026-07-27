@@ -1,0 +1,6 @@
+Contact: https://github.com/MendeMatthias/qid-connect-skill/security/advisories/new
+Contact: https://github.com/MendeMatthias/qid-connect-skill/issues
+Expires: 2027-07-27T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://qid.dev/.well-known/security.txt
+Policy: https://qid.dev/#security

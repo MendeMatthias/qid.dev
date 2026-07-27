@@ -47,7 +47,7 @@ wallets, and a btxqid:// deep link (v0.27+).
 - Live demo (no wallet needed): https://qid.dev/connect
 - How to connect (user help): https://qid.dev/connect/how
 - Integration guide: https://qid.dev/connect/integrate
-- Source repository: https://github.com/MendeMatthias/qid-connect (private preview; read access on request)
+- Source repository: https://github.com/MendeMatthias/qid-connect (private preview; ask via https://github.com/MendeMatthias/qid-connect-skill/issues). Public skill + checker: https://github.com/MendeMatthias/qid-connect-skill
 
 ## Documents
 
@@ -60,7 +60,8 @@ wallets, and a btxqid:// deep link (v0.27+).
 ## Live properties
 
 - https://qid.dev/connect: browser-only demo of Sign in with qID; no wallet needed, nothing leaves the page.
-- https://qid.dev/connect/integrate: the integration guide (one middleware + one widget, about an hour).
+- https://qid.dev/connect/integrate: the integration guide (one middleware + one widget, 15 to 30 minutes).
+- https://qid.dev/connect/changelog: every release, newest first; states the current pack version.
 - https://dashboard.qid.dev: developer portal. Sign in with qID itself, register an app by origin, generate a stack-tailored setup kit, run outside-in health checks. Never in any user's login path; no API keys or project IDs exist.
 - https://build.qid.dev: builder onboarding for BTX with a real qID sign-in (a bonuz Wallet QR scan signs in live).
 - https://build.qid.dev/showcase: every live qID integration on one page.

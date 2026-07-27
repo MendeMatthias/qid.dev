@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Integrate Sign in with qID: wallet login for BTX apps</title>
 <meta name="description" content="Add post-quantum wallet login to your BTX dApp in 15 to 30 minutes: one server middleware, one button, plus a skill that wires it for your AI assistant and a checker that verifies the result. QR, copy-paste and deep-link sign-in, sessions.">
@@ -13,23 +14,23 @@
 <meta property="og:title" content="Integrate Sign in with qID">
 <meta property="og:description" content="One middleware, one button: post-quantum wallet login for your BTX dApp. The address is the account.">
 <meta property="og:url" content="https://qid.dev/connect/integrate/">
-<meta property="og:image" content="https://qid.dev/og/og-integrate.png?v=2">
+<meta property="og:image" content="https://qid.dev/og/og-integrate.png?v=3">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="An emerald circuit-gateway rings the beam as a QR constellation streams toward a blue world. Integrate Sign in with qID.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Integrate Sign in with qID">
 <meta name="twitter:description" content="Wallet login for BTX apps: one middleware, one button. The address is the account.">
-<meta name="twitter:image" content="https://qid.dev/og/og-integrate.png?v=2">
+<meta name="twitter:image" content="https://qid.dev/og/og-integrate.png?v=3">
 <style>
   :root{--bg:#050c08;--panel:#0a1710;--panel2:#101613;--border:#1c3527;--fg:#e7f5ec;--muted:#7fa38e;--accent:#34d399;--mint:#6ee7b7;--warn:#fbbf24}
   *{box-sizing:border-box;margin:0}
   body{background:var(--bg);color:var(--fg);font:16px/1.6 ui-monospace,"SF Mono",Menlo,monospace;min-height:100vh;display:flex;flex-direction:column}
   a{color:var(--accent)}
-  .site-header{display:flex;align-items:center;justify-content:space-between;padding:15px 22px;border-bottom:1px solid var(--border)}
+  .site-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;row-gap:2px;padding:15px 22px;border-bottom:1px solid var(--border)}
   .brand{display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--fg);font-weight:700;font-size:17px;letter-spacing:.5px}
   .brand .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
-  .nav a{color:var(--muted);text-decoration:none;font-size:13px;margin-left:16px}
+  .nav a{color:var(--muted);text-decoration:none;font-size:13px;margin-left:6px;display:inline-block;padding:10px 8px}
   .nav a:hover{color:var(--accent)}
   .page{flex:1;display:flex;justify-content:center;padding:40px 24px 64px}
   main{max-width:760px;width:100%}
@@ -98,8 +99,8 @@
 <header class="site-header">
   <a class="brand" href="https://qid.dev/"><span class="dot"></span>qID Connect</a>
   <nav class="nav">
-    <a href="/connect">Live demo</a>
-    <a href="/connect/how">How to connect</a>
+    <a href="/connect/">Live demo</a>
+    <a href="/connect/how/">How to connect</a>
     <a href="https://dashboard.qid.dev">Dashboard</a>
     <a href="/connect/qid-connect-latest.zip" download>Download pack</a>
     <a href="https://qid.dev/">qid.dev</a>
@@ -118,8 +119,13 @@
 </p>
 <div class="cta">
   <a class="btn btn-primary" href="/connect/qid-connect-latest.zip" download>⬇ Download the release pack (.zip)</a>
-  <a class="btn btn-ghost" href="/connect">Try it live first</a>
+  <a class="btn btn-ghost" href="/connect/">Try it live first</a>
 </div>
+<p class="muted" style="margin:-32px 0 44px">
+  Current version: <b style="color:var(--mint)">1.6.6</b> ·
+  <a href="/connect/changelog/">what changed</a> ·
+  pin it: <code>/connect/qid-connect-1.6.6.zip</code>
+</p>
 <div class="card" style="margin-bottom:44px">
   <p style="margin:0 0 12px">
     <b style="color:var(--mint)">New: the pack ships a skill for your AI assistant.</b>
@@ -139,7 +145,7 @@
   </p>
   <pre style="margin:0 0 12px"><code>bun skills/qid-connect/scripts/check-integration.mjs https://yourapp.com</code></pre>
   <p class="muted" style="margin:0">
-    Ten checks against your live integration, no wallet and no keys, each failure
+    Twelve checks against your live integration, no wallet and no keys, each failure
     printing its fix. The skill is also
     <a href="https://github.com/MendeMatthias/qid-connect-skill">open source on
     GitHub</a>. The rest of the pack is unchanged: server SDK, widget, runnable
@@ -181,8 +187,9 @@ open http://localhost:8788 <span class="c"># a complete working login site, runn
 <p class="muted">
   During the private-preview window we ship the release pack as a download
   (the button above) rather than a public repo; its contents are identical to
-  the repo, so everything on this page applies unchanged. Prefer git? Ask
-  through <a href="https://qid.dev">qid.dev</a> for read access.
+  the repo, so everything on this page applies unchanged. Prefer git? Open an
+  issue on <a href="https://github.com/MendeMatthias/qid-connect-skill/issues">the
+  public skill repo</a> and ask for read access.
 </p>
 
 <h2><span class="n">03</span> · Wire your server</h2>
@@ -304,7 +311,9 @@ export const { GET, POST } = qidNextHandlers(qid);</code></pre>
 <div class="callout">
   <b>Building a wallet?</b> The wallet-side signer SDK (request parsing, the
   normative signer rules, a reference mobile approval screen) is available to
-  wallet builders: reach out through <a href="https://qid.dev">qid.dev</a>.
+  wallet builders: open an issue on
+  <a href="https://github.com/MendeMatthias/qid-connect-skill/issues">the public
+  skill repo</a>.
 </div>
 
 <h2><span class="n">09</span> · Ship it with your AI assistant</h2>
@@ -321,7 +330,7 @@ export const { GET, POST } = qidNextHandlers(qid);</code></pre>
   so you can read every line of what it tells your assistant to do.
 </p>
 <p class="muted">
-  The checker inside it is worth running whether or not you use an assistant. Ten
+  The checker inside it is worth running whether or not you use an assistant. Twelve
   checks against a live integration, no wallet and no keys, each failure printing
   its fix:
 </p>
@@ -353,7 +362,7 @@ bun skills/qid-connect/scripts/check-integration.mjs https://yourapp.com --api /
 </main></div>
 
 <footer class="site-footer">
-  <a href="/connect">Live demo</a>
+  <a href="/connect/">Live demo</a>
   <a href="/connect/qid-connect-latest.zip" download>qID Connect source pack</a>
   <a href="https://github.com/MendeMatthias/qid-connect-skill">Integration skill</a>
   <a href="https://qid.dev/">qid.dev</a>
