@@ -5,12 +5,12 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>qID Connect changelog: what changed in each release</title>
-<meta name="description" content="Every qID Connect release, newest first. Current version: 1.6.6. The same changelog ships inside the release pack.">
+<meta name="description" content="Every qID Connect release, newest first. Current version: 1.7.0. The same changelog ships inside the release pack.">
 <link rel="canonical" href="https://qid.dev/connect/changelog/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="qID Connect">
 <meta property="og:title" content="qID Connect changelog">
-<meta property="og:description" content="Every release, newest first. Current version: 1.6.6.">
+<meta property="og:description" content="Every release, newest first. Current version: 1.7.0.">
 <meta property="og:url" content="https://qid.dev/connect/changelog/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='700' fill='%235eeaa0' text-anchor='middle'%3Eq%3C/text%3E%3Ccircle cx='24' cy='8' r='2.5' fill='%2367e8f9'/%3E%3C/svg%3E">
 <style>
@@ -49,8 +49,26 @@
 </header>
 <div class="page"><main>
 <h1>qID Connect <span class="q">changelog</span></h1>
-<p class="current">Current version: <b>1.6.6</b> · <a href="/connect/qid-connect-latest.zip" download>download</a> · pinned: <code>/connect/qid-connect-1.6.6.zip</code>. This page is generated from the CHANGELOG.md that ships inside every pack.</p>
+<p class="current">Current version: <b>1.7.0</b> · <a href="/connect/qid-connect-latest.zip" download>download</a> · pinned: <code>/connect/qid-connect-1.7.0.zip</code>. This page is generated from the CHANGELOG.md that ships inside every pack.</p>
 <p>All notable changes to the qID Connect integration surface. Versions apply to <code>@qid/connect-server</code> and <code>@qid/connect-widget</code> together.</p>
+<h2 id="v1-7-0">1.7.0 — 2026-08-11</h2>
+<p><b>Breaking for QR integrators with a hand-rolled poll loop.</b> A minor bump, not a patch, because the client contract changed.</p>
+<p>Security — QR sign-in address confirmation. Nothing bound <code>POST /qid/proof</code> to the browser that requested the challenge, and nothing can: the QR must carry the whole challenge for a wallet to sign it, so a bystander who can see the screen holds exactly what the legitimate signer holds. They could submit their own valid proof against a user's nonce, and that user's browser was then silently signed in as *them* — a session-fixation path that, for a wallet, means depositing into someone else's account. It was also a guaranteed denial of the real sign-in, since the nonce is single-use. Reproduced end to end through the shipped middleware.</p>
+<p>First-writer-wins in <code>complete()</code> does <b>not</b> fix this and was tested before being written: <code>consume()</code> already makes the nonce single-use, so the attacker is the first writer.</p>
+<ul>
+<li><code>poll()</code> now returns <code>{ status: "confirm", address }</code> and mints nothing; the client calls again with <code>&amp;confirm=1</code> once the user accepts. <code>pending</code> → <code>confirm</code> → <code>done</code>.</li>
+<li><code>POST /qid/verify</code> is <b>unchanged</b> — same-device flows still mint in one call.</li>
+<li><code>confirmAddress: false</code> opts out for a deployment with its own confirmation UX.</li>
+<li>The bundled widget handles this already, and shows the address in groups with an explicit "someone else may have scanned this code" warning and a cancel.</li>
+<li><code>CLAIM_GRACE_MS</code> 30s → 120s in both stores: the grace now spans a human decision rather than a retried response. A custom store must keep a claimed record re-claimable that long.</li>
+</ul>
+<p>Also in this release:</p>
+<ul>
+<li>The account address is canonicalized to lowercase. bech32m is case-insensitive and BIP-173 permits the uppercase form (QR alphanumeric mode), so an uppercase proof previously created a <b>second account for the same wallet</b> and handed the user a cookie that <code>/session</code> immediately 401'd. Deployments that already stored an uppercase row need a one-time <code>UPDATE … SET address = lower(address)</code> with a merge for collisions.</li>
+<li><code>verify()</code> deep-clones the proof at the boundary before the frozen verifier sees it, and <code>submitProof()</code> parks the address under the nonce that was actually verified. An accounts adapter now receives the verified snapshot rather than the caller's object — equal by value, no longer identical by reference.</li>
+<li><code>IssuedNonceStore</code> no longer walks the entire live map on every unauthenticated <code>POST /challenge</code> (measured 275µs → 0.1µs per issue at 82k live nonces).</li>
+<li>Docs: the claim that "a bystander photographing the QR gets nothing" was falsified and has been corrected in <code>docs/INTEGRATION.md</code> and on the public break-it challenge page, rather than quietly dropped.</li>
+</ul>
 <h2 id="v1-6-6">1.6.6 — 2026-07-27</h2>
 <p>A docs-and-tooling release driven by a 78-agent review of the whole web estate. No SDK code change; the frozen protocol is untouched.</p>
 <ul>
