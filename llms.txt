@@ -6,7 +6,7 @@
 > cryptography and is a verified composition of the three NIST post-quantum standards finalized
 > in August 2024: ML-KEM (FIPS 203), ML-DSA (FIPS 204), and SLH-DSA (FIPS 205). Byte-exact to the
 > BTX blockchain and deployed in production wallet integrations. Status: core v0.3.x, wire
-> formats frozen, pending independent audit. qID Connect (the app-facing login SDK) is at 1.7.1.
+> formats frozen, pending independent audit. qID Connect (the app-facing login SDK) is at 1.7.2.
 > License: MIT. Everything below is free of charge and fetchable without keys or sign-up.
 
 ## What qID is
@@ -82,7 +82,7 @@ QR poll returns status confirm before done."
 - Conformance vectors (JSON): https://qid.dev/vectors.json
 - Source repository: https://github.com/MendeMatthias/qid (private; opens with the audit)
 - qID Connect source pack (server SDK + widget + examples + skill, MIT): https://qid.dev/connect/qid-connect-latest.zip
-- Version-pinned packs: https://qid.dev/connect/qid-connect-<version>.zip (current: 1.7.1)
+- Version-pinned packs: https://qid.dev/connect/qid-connect-<version>.zip (current: 1.7.2)
 - Hosted widget (one-line import, auto-updating UI; version-pinned copies at widget-<version>.js): https://qid.dev/connect/widget.js
 
 ## Live properties

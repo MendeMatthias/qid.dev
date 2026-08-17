@@ -5,21 +5,21 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>qID Connect changelog: what changed in each release</title>
-<meta name="description" content="Every qID Connect release, newest first. Current version: 1.7.1. The same changelog ships inside the release pack.">
+<meta name="description" content="Every qID Connect release, newest first. Current version: 1.7.2. The same changelog ships inside the release pack.">
 <link rel="canonical" href="https://qid.dev/connect/changelog/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="qID Connect">
 <meta property="og:title" content="qID Connect changelog">
-<meta property="og:description" content="Every release, newest first. Current version: 1.7.1.">
+<meta property="og:description" content="Every release, newest first. Current version: 1.7.2.">
 <meta property="og:url" content="https://qid.dev/connect/changelog/">
-<meta property="og:image" content="https://qid.dev/og/og-changelog.png?v=1">
+<meta property="og:image" content="https://qid.dev/og/og-changelog.png?v=2">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="An emerald release ledger of glowing version rings streams from an obsidian monolith toward a blue world. qID Connect changelog.">
+<meta property="og:image:alt" content="An obsidian qID monolith beams emerald light across deep space, glowing version rings strung along the beam like waypoints, ending in a flare on a blue world. qID Connect changelog.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="qID Connect changelog">
-<meta name="twitter:description" content="Every release, newest first. Current version: 1.7.1.">
-<meta name="twitter:image" content="https://qid.dev/og/og-changelog.png?v=1">
+<meta name="twitter:description" content="Every release, newest first. Current version: 1.7.2.">
+<meta name="twitter:image" content="https://qid.dev/og/og-changelog.png?v=2">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <script type="application/ld+json">
 {
@@ -28,7 +28,7 @@
   "@id": "https://qid.dev/connect/changelog/",
   "name": "qID Connect changelog",
   "url": "https://qid.dev/connect/changelog/",
-  "description": "Every qID Connect release, newest first. Current version: 1.7.1.",
+  "description": "Every qID Connect release, newest first. Current version: 1.7.2.",
   "isPartOf": { "@id": "https://qid.dev/#website" }
 }
 </script>
@@ -70,21 +70,27 @@
 </header>
 <div class="page"><main>
 <h1>qID Connect <span class="q">changelog</span></h1>
-<p class="current">Current version: <b>1.7.1</b> · <a href="/connect/qid-connect-latest.zip" download>download</a> · pinned: <code>/connect/qid-connect-1.7.1.zip</code>. This page is generated from the CHANGELOG.md that ships inside every pack.</p>
+<p class="current">Current version: <b>1.7.2</b> · <a href="/connect/qid-connect-latest.zip" download>download</a> · pinned: <code>/connect/qid-connect-1.7.2.zip</code>. This page is generated from the CHANGELOG.md that ships inside every pack.</p>
 <p>All notable changes to the qID Connect integration surface. Versions apply to <code>@qid/connect-server</code> and <code>@qid/connect-widget</code> together.</p>
-<h2 id="v1-7-1">1.7.1 — 2026-08-17</h2>
-<p>Docs only; no server or widget source change — a vendored 1.7.0 whose files hash-match 1.7.1 is not drift, and redeploying it to fix the label is churn.</p>
+<h2 id="v1-7-2">1.7.2 · 2026-08-18</h2>
+<p>A copy pass. The protocol, the wire formats and every signed byte are untouched, so a 1.7.x server and a 1.7.x widget interoperate in any combination.</p>
+<ul>
+<li><b>The address-confirmation dialog reads cleaner.</b> The warning under the address is now two sentences instead of one long one, and the retry state of the confirm button says "Try again" rather than repeating the whole label. This is the panel that stands between a user and a stranger's account, so it should read at a glance.</li>
+<li><b>This changelog lost its dashes.</b> Sixty-three em-dashes across the release history became sentences, colons and commas. The generated web changelog is a public page, and it now reads like the rest of the site.</li>
+</ul>
+<h2 id="v1-7-1">1.7.1 · 2026-08-17</h2>
+<p>Docs only; no server or widget source change. A vendored 1.7.0 whose files hash-match 1.7.1 is not drift, and redeploying it to fix the label is churn.</p>
 <ul>
 <li>The skill's route table still described the pre-1.7.0 poll contract ("claims the session once the proof lands"). It now teaches the confirm stage, so an assistant following the skill wires a hand-rolled poll loop correctly.</li>
 <li>Troubleshooting gained the one new symptom 1.7.0 can produce: a pre-1.7.0 widget against a 1.7.0+ server polls a confirm-stage nonce forever with no visible error (the server warns after 8 such polls; the fix is updating the widget, not <code>confirmAddress: false</code>).</li>
 </ul>
-<h2 id="v1-7-0">1.7.0 — 2026-08-11</h2>
+<h2 id="v1-7-0">1.7.0 · 2026-08-11</h2>
 <p><b>Breaking for QR integrators with a hand-rolled poll loop.</b> A minor bump, not a patch, because the client contract changed.</p>
-<p>Security — QR sign-in address confirmation. Nothing bound <code>POST /qid/proof</code> to the browser that requested the challenge, and nothing can: the QR must carry the whole challenge for a wallet to sign it, so a bystander who can see the screen holds exactly what the legitimate signer holds. They could submit their own valid proof against a user's nonce, and that user's browser was then silently signed in as *them* — a session-fixation path that, for a wallet, means depositing into someone else's account. It was also a guaranteed denial of the real sign-in, since the nonce is single-use. Reproduced end to end through the shipped middleware.</p>
+<p>Security: QR sign-in address confirmation. Nothing bound <code>POST /qid/proof</code> to the browser that requested the challenge, and nothing can: the QR must carry the whole challenge for a wallet to sign it, so a bystander who can see the screen holds exactly what the legitimate signer holds. They could submit their own valid proof against a user's nonce, and that user's browser was then silently signed in as *them*, a session-fixation path that, for a wallet, means depositing into someone else's account. It was also a guaranteed denial of the real sign-in, since the nonce is single-use. Reproduced end to end through the shipped middleware.</p>
 <p>First-writer-wins in <code>complete()</code> does <b>not</b> fix this and was tested before being written: <code>consume()</code> already makes the nonce single-use, so the attacker is the first writer.</p>
 <ul>
 <li><code>poll()</code> now returns <code>{ status: "confirm", address }</code> and mints nothing; the client calls again with <code>&amp;confirm=1</code> once the user accepts. <code>pending</code> → <code>confirm</code> → <code>done</code>.</li>
-<li><code>POST /qid/verify</code> is <b>unchanged</b> — same-device flows still mint in one call.</li>
+<li><code>POST /qid/verify</code> is <b>unchanged</b>: same-device flows still mint in one call.</li>
 <li><code>confirmAddress: false</code> opts out for a deployment with its own confirmation UX.</li>
 <li>The bundled widget handles this already, and shows the address in groups with an explicit "someone else may have scanned this code" warning and a cancel.</li>
 <li><code>CLAIM_GRACE_MS</code> 30s → 120s in both stores: the grace now spans a human decision rather than a retried response. A custom store must keep a claimed record re-claimable that long.</li>
@@ -92,11 +98,11 @@
 <p>Also in this release:</p>
 <ul>
 <li>The account address is canonicalized to lowercase. bech32m is case-insensitive and BIP-173 permits the uppercase form (QR alphanumeric mode), so an uppercase proof previously created a <b>second account for the same wallet</b> and handed the user a cookie that <code>/session</code> immediately 401'd. Deployments that already stored an uppercase row need a one-time <code>UPDATE … SET address = lower(address)</code> with a merge for collisions.</li>
-<li><code>verify()</code> deep-clones the proof at the boundary before the frozen verifier sees it, and <code>submitProof()</code> parks the address under the nonce that was actually verified. An accounts adapter now receives the verified snapshot rather than the caller's object — equal by value, no longer identical by reference.</li>
+<li><code>verify()</code> deep-clones the proof at the boundary before the frozen verifier sees it, and <code>submitProof()</code> parks the address under the nonce that was actually verified. An accounts adapter now receives the verified snapshot rather than the caller's object, equal by value, no longer identical by reference.</li>
 <li><code>IssuedNonceStore</code> no longer walks the entire live map on every unauthenticated <code>POST /challenge</code> (measured 275µs → 0.1µs per issue at 82k live nonces).</li>
 <li>Docs: the claim that "a bystander photographing the QR gets nothing" was falsified and has been corrected in <code>docs/INTEGRATION.md</code> and on the public break-it challenge page, rather than quietly dropped.</li>
 </ul>
-<h2 id="v1-6-6">1.6.6 — 2026-07-27</h2>
+<h2 id="v1-6-6">1.6.6 · 2026-07-27</h2>
 <p>A docs-and-tooling release driven by a 78-agent review of the whole web estate. No SDK code change; the frozen protocol is untouched.</p>
 <ul>
 <li><b><code>verify-all.sh</code> no longer fails every pack user.</b> The dashboard <code>WIDGET_LATEST</code> probe reads a sibling repo that exists only on the lab machine, so from an unzipped pack the script always exited 1 with "VERSION MISMATCH" on a perfectly healthy release. The probe is now skipped (and says so) when the path is absent, and the mismatch message explains the chain inline instead of pointing at a file the pack does not ship.</li>
@@ -105,20 +111,20 @@
 <li><b>Every "reach out through qid.dev" dead end now names a real channel.</b> The integrate guide's git-access and wallet-builder notes and <code>INSTALL.md</code>'s feedback line all pointed at a site with no contact surface; they now link the public qid-connect-skill repo's issues.</li>
 <li><b>One time-to-integrate claim everywhere.</b> Guide said 15 to 30 minutes, <code>INSTALL.md</code> about an hour; it is 15 to 30 minutes in both places now.</li>
 </ul>
-<h2 id="v1-6-5">1.6.5 — 2026-07-27</h2>
+<h2 id="v1-6-5">1.6.5 · 2026-07-27</h2>
 <ul>
 <li><b>The checker now verifies <code>style-src</code>, not just <code>script-src</code>.</b> A live site shipped <code>style-src 'self'</code> plus a hash of its own inline style. Every check passed, and the sign-in dialog rendered as raw unstyled HTML on mobile and desktop, because the widget injects its stylesheet at runtime and nothing looked at that directive. The check understands the real cascade (<code>style-src-elem</code>, then <code>style-src</code>, then <code>default-src</code>) and knows that a nonce or hash source makes browsers ignore <code>'unsafe-inline'</code>, so the two cannot be combined. Verified against the exact policy that caused the incident.</li>
 <li><b><code>verify-all.sh</code></b>: one command that re-confirms every live surface and that all versions agree. A handoff claiming "all green" is only true the day it was written; this makes the claim checkable in about forty seconds.</li>
 <li><b>The skill documents the <code>style-src</code> rule</b> next to the <code>script-src</code> one, so an integrator with a strict policy gets both halves before they debug.</li>
 </ul>
-<h2 id="v1-6-4">1.6.4 — 2026-07-27</h2>
+<h2 id="v1-6-4">1.6.4 · 2026-07-27</h2>
 <p>Pack contents only; no code change.</p>
 <ul>
 <li><b>The private-preview Challenge page no longer ships.</b> <code>site/challenge/index.html</code> closes with "This is a private preview. What you see and what you find stays between us until release", and the pack is a public download, so every downloader was receiving it. Its source (<code>docs/AUDIT-BRIEF.md</code>) was already on the forbidden list, so the allowlist and the forbidden list disagreed about the same content. The page is now forbidden too, which means a rename cannot leak it either. Neither it nor <code>site/intro</code> is deployed on qid.dev, so the pack was the only place either was public.</li>
 <li><b><code>site/README.md</code> no longer ships.</b> It is an internal deploy note whose build-gate instructions the publish script strips, so they could not be followed from inside an unzipped pack. Kept in the lab and corrected: the <code>__HERO__</code> placeholder it described is long inlined, <code>how/</code> was undocumented, and it now says plainly that it is lab-only.</li>
 <li><b><code>site/intro</code> linked to the Challenge page</b>, which would have 404'd inside the pack once that page stopped shipping. It points at the integrate guide now.</li>
 </ul>
-<h2 id="v1-6-3">1.6.3 — 2026-07-27</h2>
+<h2 id="v1-6-3">1.6.3 · 2026-07-27</h2>
 <p>The checker gets a test suite, which is the fix for why it kept needing fixes.</p>
 <p>It was rewritten in 1.6.0, 1.6.1 and 1.6.2, every serious audit finding landed in it, and it was the only code here without tests: 476 lines verified by hand each round, with the verification thrown away afterwards. That is the whole explanation for the churn, and it is now closed.</p>
 <ul>
@@ -127,7 +133,7 @@
 <li><b>One test was toothless and was rewritten.</b> The first WAF test asserted only that the run failed. Reintroducing the bug still left it green, because a different check happened to fail. Tests now assert that a *named* check failed, so passing for the wrong reason is not possible.</li>
 </ul>
 <p>No behaviour change to the checker or the SDK in this release.</p>
-<h2 id="v1-6-2">1.6.2 — 2026-07-27</h2>
+<h2 id="v1-6-2">1.6.2 · 2026-07-27</h2>
 <p>A multi-agent adversarial audit of 1.6.1, with every finding put to a skeptic whose job was to refute it. Twelve survived. The SDK came back clean; the damage was in the checker and in guidance written from memory rather than from source.</p>
 <ul>
 <li><b>The checker could pass a deployment where sign-in is dead.</b> Checks asserted on the absence of a bad answer instead of the presence of the SDK's. A WAF answering <code>403 text/html</code> on <code>/verify</code> scored 10/10 "the surface is wired correctly" while browser sign-in was impossible. Every check now asserts on the SDK's own reason vocabulary. Reproduced before and after.</li>
@@ -140,7 +146,7 @@
 <li><b>Docs corrected against the source.</b> <code>express.json()</code> is *not* required and its position does not matter (the middleware parses the body itself); <code>sessionSecret</code> is mandatory and throws rather than being auto-derived; <code>node:sqlite</code> needs Node 22.5+, not 20; Edge runtime fails on <code>node:crypto</code> regardless of store; <code>address_mismatch</code> is unreachable through <code>/verify</code>; and the <code>poll</code> step calls <code>getOrCreate</code> with no context, which silently blanks a proof-derived column for mobile users only.</li>
 <li><b>Website: vendoring one file produced a dead button.</b> The widget statically imports <code>./vendor/qrcode.mjs</code>, so the guide's "vendor the single file" left the module graph unresolved and nothing rendered. It now says copy the directory.</li>
 </ul>
-<h2 id="v1-6-1">1.6.1 — 2026-07-27</h2>
+<h2 id="v1-6-1">1.6.1 · 2026-07-27</h2>
 <p>Audit of yesterday's skill against the actual source, which caught two pieces of guidance that would have failed on contact.</p>
 <ul>
 <li><b>The SQLite store docs were wrong twice.</b> They imported from <code>@qid/connect-server/sqlite</code>, which is not in the exports map and throws <code>ERR_MODULE_NOT_FOUND</code>, and they constructed the stores with <code>{ path }</code> when both take a database handle. Corrected to the pattern <code>examples/static-rewrite-demo</code> actually uses, and verified by running two instances behind a round-robin proxy against one shared SQLite file.</li>
@@ -148,66 +154,66 @@
 <li><b>CSP was undocumented.</b> The hosted widget is a cross-origin module, so a site with a strict policy gets no button and only a console warning. Both of qID's own sites run <code>script-src 'self' https://qid.dev</code>; now the skill says so.</li>
 <li><b>Checker hardening.</b> <code>--api</code> with a missing or relative value printed a stack trace; a runtime without <code>fetch</code> failed obscurely. Both now exit with a clear message. The shared-store check samples four issue-then-use round trips instead of one, since a single round trip can land back on the issuing instance by luck and pass while the deployment is broken. Verified against a deliberately unshared two-instance cluster: 0/4 kept, correctly failed; with the documented shared store, 4/4 kept, 10/10 passed.</li>
 </ul>
-<h2 id="v1-6-0">1.6.0 — 2026-07-27</h2>
+<h2 id="v1-6-0">1.6.0 · 2026-07-27</h2>
 <ul>
 <li><b>A skill ships with the pack: <code>skills/qid-connect/</code>.</b> An Agent Skill that teaches an AI coding assistant to wire qID sign-in properly: the four steps, the framework-specific traps, the account model, and how to verify the result. <code>INSTALL.md</code> used to say "paste this file into your assistant", which left the assistant to rediscover the same handful of mistakes every time. Also published standalone and open source so it can be installed without the pack.</li>
 <li><b><code>scripts/check-integration.mjs</code>: a live checker, zero dependencies.</b> Ten checks against a running integration, no wallet and no keys. It covers the failures that produce no error in the browser at all, where the dialog simply never completes: an <code>origin</code> that is not where users land, a <code>proof_url</code> that phones would 404 against (the Next.js <code>apiPath</code> mistake, which leaves desktop paste working so it reaches production unnoticed), per-process stores on a multi-instance deployment, a stripped login-CSRF guard, and a <code>/session</code> route answering 200 to anonymous callers. Each failure prints the fix.</li>
 </ul>
-<h2 id="v1-5-9">1.5.9 — 2026-07-26</h2>
+<h2 id="v1-5-9">1.5.9 · 2026-07-26</h2>
 <ul>
 <li><b><code>recovery_leaf_hash</code> is not an identity key, and the guide no longer says it is.</b> <code>INTEGRATION.md</code> called it "already authenticated by the verifier" and "the right identity key for one-per-wallet rules"; <code>core.js</code> said "a wrong hash cannot have verified". All three overstate what a v1 proof establishes, which is control of the <b>login key</b> only. The leaf hash is signer-chosen, not signer-proven: anyone can pair a leaf hash they saw with a login key they generated and produce a valid proof for a different address carrying that same hash. It is public by design too, since a P2MR spend reveals the sibling hash in its control block. An RP that looked accounts up by it, merged on it, or gated one-per-wallet rules on it was exposed to account takeover. Corrected in <code>INTEGRATION.md</code>, <code>core.js</code> and <code>stores.js</code>, and pinned by <code>packages/server/test/identity-key.test.js</code>, which reproduces the takeover through the full <code>createQidConnect</code> path. No behavior change: the field is still passed to <code>getOrCreate</code> and both built-in adapters still ignore it.</li>
 <li><b>In-memory stores warn in production.</b> <code>createQidConnect</code> silently defaulted to <code>MemoryNonceStore</code> / <code>MemoryAccounts</code>. They are per-process, so a multi-instance or serverless deployment loses shared replay protection and drops accounts on restart, and it presents as flaky sign-ins rather than as a security problem. It now warns loudly under <code>NODE_ENV=production</code>, naming which store is in memory and what to pass instead. <code>QID_ALLOW_MEMORY_STORES=1</code> silences it for a deliberate single-process deployment.</li>
 <li><b><code>bun.lock</code> is committed.</b> Installs now resolve to pinned transitive versions instead of re-resolving <code>^</code> ranges on every run, which is what makes the <code>--frozen-lockfile</code> CI step meaningful. Matches qid, qid-dashboard and qid-build.</li>
 </ul>
-<h2 id="v1-5-8">1.5.8 — 2026-07-24</h2>
+<h2 id="v1-5-8">1.5.8 · 2026-07-24</h2>
 <ul>
 <li><b>Release pack: the static-rewrite example now boots.</b> The pack's root <code>package.json</code> workspaces list was missing <code>examples/static-rewrite-demo</code>, so <code>bun install</code> never linked <code>@qid/connect-server</code> for it and the documented static-site path failed with "Cannot find module". The pack's root <code>test</code> script now also runs the full <code>bun test packages</code> suite (it previously skipped the widget tests).</li>
 <li><b>Dialog copy polish.</b> Four status strings reworded without em-dash asides ("A sign-in only proves ownership. It can never move funds.", "Trouble reaching the server, still trying", "Can't reach the site. Tap to retry", and the cookies-blocked notice). No behavior change.</li>
 <li><b>Guide + docs.</b> The integrate guide's mount step now leads with the hosted one-line import (auto-updating) and demotes pin/vendor to the follow-up; the quickstart <code>cd</code> works in zsh (<code>cd qid-connect-*/</code>); bun is named as a prerequisite with an install link; the test signer prints usage on <code>--help</code>. Server SDK remains byte-identical to 1.5.5.</li>
 </ul>
-<h2 id="v1-5-7">1.5.7 — 2026-07-23</h2>
+<h2 id="v1-5-7">1.5.7 · 2026-07-23</h2>
 <ul>
-<li><b>Device-appropriate deep-link button.</b> The "Open in wallet" tab now shows only the wallet that can resolve on the current device: on a phone (coarse pointer) the <b>bonuz Wallet</b> button; on desktop the <b>PQ Wallet for BTX</b> button. Previously both buttons appeared on both device types, so tapping the desktop wallet on a phone dead-ended at the OS "cannot open page / invalid address" dialog (and vice versa). Each wallet is single-platform — PQ Wallet is desktop, bonuz is mobile — so only one scheme can ever launch on a given device; the not-installed fallback and Desktop-wallet paste tab remain the escape hatch. QR and paste transports, the verifier, and the server SDK are byte-identical to 1.5.6.</li>
+<li><b>Device-appropriate deep-link button.</b> The "Open in wallet" tab now shows only the wallet that can resolve on the current device: on a phone (coarse pointer) the <b>bonuz Wallet</b> button; on desktop the <b>PQ Wallet for BTX</b> button. Previously both buttons appeared on both device types, so tapping the desktop wallet on a phone dead-ended at the OS "cannot open page / invalid address" dialog (and vice versa). Each wallet is single-platform (PQ Wallet is desktop, bonuz is mobile), so only one scheme can ever launch on a given device; the not-installed fallback and Desktop-wallet paste tab remain the escape hatch. QR and paste transports, the verifier, and the server SDK are byte-identical to 1.5.6.</li>
 </ul>
-<h2 id="v1-5-6">1.5.6 — 2026-07-23</h2>
+<h2 id="v1-5-6">1.5.6 · 2026-07-23</h2>
 <ul>
-<li><b>Same-device "Open in bonuz Wallet".</b> On a phone, qid.dev and the wallet are on one screen, so the QR is unscannable. The "Open in wallet" tab now offers a one-tap <b>bonuz Wallet</b> button alongside PQ Wallet for BTX: it launches the installed bonuz app via <code>bonuzapp://qid?req=&lt;url-encoded envelope&gt;</code>, carrying the <b>exact same</b> sign-in envelope the QR encodes — the app re-runs its full scan-path validation (bare https <code>rp_origin</code>, same-origin <code>proof_url</code>, type <code>signin</code>) and opens the approval sheet; completion flows through the same poll loop. On touch devices bonuz leads; on desktop PQ Wallet leads. Same not-installed fallback (per-wallet download + copy request) as the desktop button. QR and paste transports unchanged. Server SDK byte-identical to 1.5.5.</li>
+<li><b>Same-device "Open in bonuz Wallet".</b> On a phone, qid.dev and the wallet are on one screen, so the QR is unscannable. The "Open in wallet" tab now offers a one-tap <b>bonuz Wallet</b> button alongside PQ Wallet for BTX: it launches the installed bonuz app via <code>bonuzapp://qid?req=&lt;url-encoded envelope&gt;</code>, carrying the <b>exact same</b> sign-in envelope the QR encodes, and the app re-runs its full scan-path validation (bare https <code>rp_origin</code>, same-origin <code>proof_url</code>, type <code>signin</code>) and opens the approval sheet; completion flows through the same poll loop. On touch devices bonuz leads; on desktop PQ Wallet leads. Same not-installed fallback (per-wallet download + copy request) as the desktop button. QR and paste transports unchanged. Server SDK byte-identical to 1.5.5.</li>
 </ul>
-<h2 id="v1-5-5">1.5.5 — 2026-07-22</h2>
+<h2 id="v1-5-5">1.5.5 · 2026-07-22</h2>
 <ul>
-<li><b>Works-with rows can link to the wallet.</b> A wallet entry can now carry a <code>url</code>; the row becomes a link — clicking the name or the status badge opens the wallet's page in a new tab, the intuitive move for someone who does not have it yet. The defaults now link <b>PQ Wallet for BTX → pq-wallet.com</b> and <b>bonuz Wallet → bonuz.xyz/btx-wallet</b>. Server SDK byte-identical.</li>
+<li><b>Works-with rows can link to the wallet.</b> A wallet entry can now carry a <code>url</code>; the row becomes a link, so clicking the name or the status badge opens the wallet's page in a new tab, the intuitive move for someone who does not have it yet. The defaults now link <b>PQ Wallet for BTX → pq-wallet.com</b> and <b>bonuz Wallet → bonuz.xyz/btx-wallet</b>. Server SDK byte-identical.</li>
 </ul>
-<h2 id="v1-5-4">1.5.4 — 2026-07-22</h2>
+<h2 id="v1-5-4">1.5.4 · 2026-07-22</h2>
 <p>Naming: the desktop wallet is now shown as <b>PQ Wallet for BTX</b> everywhere in the dialog, docs, and site (was "BTX PQ Wallet"). The works-with list, the deep-link button, the paste instructions, and the captions all updated; server SDK byte-identical to 1.5.2, carries all the 1.5.3 fixes.</p>
-<h2 id="v1-5-3">1.5.3 — 2026-07-22</h2>
+<h2 id="v1-5-3">1.5.3 · 2026-07-22</h2>
 <p>Widget-only (server SDK byte-identical to 1.5.2). Two dead-feeling controls in the "Open in wallet" transport now react, surfaced by a live btc2btx integration.</p>
 <ul>
-<li><b>The deep-link button gave no feedback on click.</b> It fired the <code>btxqid://</code> scheme and then changed nothing for ~5s — and when the OS has no handler registered (the common "nothing happened" case) nothing ever changed, so the button read as broken. It now acknowledges the click immediately (briefly disabled with an "Opening…" label, then re-enabled with an "…again" label), and the download/copy fallback affordances now appear in ~2.5s instead of 5s so there is always a fast next step.</li>
-<li><b>The "i" help affordance did nothing in embedded webviews.</b> It was a bare <code>target="_blank"</code> link — it navigated away from the sign-in flow in a browser and was a complete no-op inside in-app webviews (the bonuz app, embedded browsers), where the help is most needed. It now toggles a one-line inline hint in-flow (a guaranteed reaction everywhere) that still links out to the full guide.</li>
+<li><b>The deep-link button gave no feedback on click.</b> It fired the <code>btxqid://</code> scheme and then changed nothing for ~5s, and when the OS has no handler registered (the common "nothing happened" case) nothing ever changed, so the button read as broken. It now acknowledges the click immediately (briefly disabled with an "Opening…" label, then re-enabled with an "…again" label), and the download/copy fallback affordances now appear in ~2.5s instead of 5s so there is always a fast next step.</li>
+<li><b>The "i" help affordance did nothing in embedded webviews.</b> It was a bare <code>target="_blank"</code> link, so it navigated away from the sign-in flow in a browser and was a complete no-op inside in-app webviews (the bonuz app, embedded browsers), where the help is most needed. It now toggles a one-line inline hint in-flow (a guaranteed reaction everywhere) that still links out to the full guide.</li>
 </ul>
-<h2 id="v1-5-2">1.5.2 — 2026-07-21</h2>
+<h2 id="v1-5-2">1.5.2 · 2026-07-21</h2>
 <ul>
-<li><b>bonuz Wallet is live.</b> The dialog's "works with" list now shows <b>bonuz Wallet — Available now</b> (mobile): scan the qID QR with the bonuz app, pick your wallet, and you are in. Hosted-widget integrators get the change automatically; vendored copies pick it up on the next pull.</li>
+<li><b>bonuz Wallet is live.</b> The dialog's "works with" list now shows <b>bonuz Wallet: Available now</b> (mobile): scan the qID QR with the bonuz app, pick your wallet, and you are in. Hosted-widget integrators get the change automatically; vendored copies pick it up on the next pull.</li>
 </ul>
-<p>A fresh-eyes review from a different model family (8 lenses over the whole surface, every finding independently refuted) found five real medium defects the prior rounds missed — all in async-race discipline and adapter unhappy-path parity, none in the crypto core. All fixed and live-verified; the frozen protocol is untouched.</p>
+<p>A fresh-eyes review from a different model family (8 lenses over the whole surface, every finding independently refuted) found five real medium defects the prior rounds missed, all in async-race discipline and adapter unhappy-path parity, none in the crypto core. All fixed and live-verified; the frozen protocol is untouched.</p>
 <ul>
 <li><b>Rotation could orphan an accepted QR sign-in (medium).</b> A proof accepted in the ~1.5s before a ~105s rotation was parked under the old nonce, but after rotating the widget only ever polled the new one: the wallet said "signed in" while the browser showed a fresh QR forever. <code>renewSession</code> now does one last-chance poll of the old nonce (with its poll secret) before discarding it, and finishes the sign-in if a proof landed. Covered by a new server test.</li>
-<li><b>Log out reported success on failure (medium).</b> <code>doLogout</code> swallowed a failed request and never checked <code>res.ok</code>, then cleared the chip and fired <code>onSignedOut</code> — a shared-machine hazard, since the server session was still valid. It now keeps the chip and shows an inline "Couldn't log out — retry" on failure, only signs out on a confirmed 200, and bounds the request with a 15s timeout so a hung POST can't freeze the account widget.</li>
+<li><b>Log out reported success on failure (medium).</b> <code>doLogout</code> swallowed a failed request and never checked <code>res.ok</code>, then cleared the chip and fired <code>onSignedOut</code>, a shared-machine hazard, since the server session was still valid. It now keeps the chip and shows an inline "Couldn't log out, retry" on failure, only signs out on a confirmed 200, and bounds the request with a 15s timeout so a hung POST can't freeze the account widget.</li>
 <li><b>A close-and-reopen could let a stale rotation hijack the new dialog (medium).</b> <code>renewSession</code>, the paste-verify continuation, <code>startPolling</code>, and the soft-retry timer now all guard on the <code>open()</code> generation, so an in-flight rotation from a closed dialog can't clear the live dialog's poll timer or poll the wrong nonce.</li>
-<li><b><code>requireQidSession</code> could crash the process (medium).</b> A throwing accounts adapter (a transient DB outage) escaped as an unhandled rejection — a hung request plus a process crash on Express 4 / Node ≥15. It now mirrors the middleware's try/catch and returns 500 <code>server_error</code>. New test.</li>
+<li><b><code>requireQidSession</code> could crash the process (medium).</b> A throwing accounts adapter (a transient DB outage) escaped as an unhandled rejection, a hung request plus a process crash on Express 4 / Node ≥15. It now mirrors the middleware's try/catch and returns 500 <code>server_error</code>. New test.</li>
 <li><b>The Next adapter had no body-size cap (medium).</b> Express rejects bodies over 64 KB; Next buffered <code>request.json()</code> unbounded, a memory-exhaustion DoS on the cross-origin-reachable <code>/proof</code> for any self-hosted runtime without a fronting proxy limit. Next now enforces the same 64 KB cap (and an empty POST body now matches Express's 401, not a parse 400). New test.</li>
 </ul>
 <p>Also hardened (non-blocking, from the same review):</p>
 <ul>
-<li><b>Origin is canonicalized</b> (lowercase host, default port dropped), so a mixed-case <code>origin</code> config no longer 403s every browser sign-in while QR keeps working — the worst kind of asymmetric failure.</li>
+<li><b>Origin is canonicalized</b> (lowercase host, default port dropped), so a mixed-case <code>origin</code> config no longer 403s every browser sign-in while QR keeps working, the worst kind of asymmetric failure.</li>
 <li><b>Nonce retirement is secret-bound.</b> The rotating widget sends the retired nonce's poll secret; a bystander who only saw the QR can no longer burn a victim's in-flight sign-in.</li>
 <li><b>A lost <code>done</code> response is survivable.</b> A poll claim is now idempotent for the matching secret within a 30s grace, so a dropped response on a flaky mobile hop can be re-claimed instead of losing the sign-in.</li>
 <li>Cookies-blocked browsers get an honest "allow cookies and try again" instead of a "Signed in" screen the next page load contradicts; <code>verify</code>/<code>poll</code> fetches time out like <code>challenge</code>; the poll cap is anchored to open time so an abandoned tab stops polling; the account chip survives a no-op repaint without dropping keyboard focus; a deeplink handoff gets a rotation grace; an unknown poll status surfaces via <code>onError</code>; a trailing slash in <code>api</code> is normalized; SQLite <code>_row</code> can't be shadowed by a profile key and <code>patch</code> strips reserved keys; <code>buttonText</code>/<code>pollIntervalMs</code> and the SQLite TTL rule are documented; the no-wallet dev flow in INSTALL.md now says to use the Desktop-wallet tab first.</li>
 </ul>
-<h2 id="v1-5-1">1.5.1 — 2026-07-21</h2>
+<h2 id="v1-5-1">1.5.1 · 2026-07-21</h2>
 <p>Fixes from an exhaustive adversarial audit of the whole v1.5.0 surface (7 lenses, every finding independently verified). All confirmed items fixed.</p>
 <ul>
-<li><b>Next.js: <code>apiPath</code> was missing (HIGH, builder-breaking).</b> The next-demo route and the INTEGRATION.md Next snippet omitted <code>apiPath: "/api/qid"</code>, so the proof URL baked into the QR and deep link pointed at <code>/qid/proof</code> and 404'd — QR and deep-link sign-in (the default transports) silently failed on Next; only copy-paste worked. Added everywhere, with a loud comment.</li>
+<li><b>Next.js: <code>apiPath</code> was missing (HIGH, builder-breaking).</b> The next-demo route and the INTEGRATION.md Next snippet omitted <code>apiPath: "/api/qid"</code>, so the proof URL baked into the QR and deep link pointed at <code>/qid/proof</code> and 404'd, so QR and deep-link sign-in (the default transports) silently failed on Next; only copy-paste worked. Added everywhere, with a loud comment.</li>
 <li><b>The account-chip doc snippet threw (MEDIUM).</b> The chip block in INTEGRATION.md and INSTALL.md referenced <code>#signin</code> but only showed <code>#account</code>, so a verbatim copy threw. Both now include both divs.</li>
 <li><b>Forced-logout CSRF (LOW).</b> <code>POST /qid/logout</code> now carries the same login-CSRF (Origin) guard as <code>/verify</code> and <code>/poll</code>, so a cross-site page can't force-log-out a visitor. Covered by a new test.</li>
 <li>The signed-in chip's status dot no longer borrows the "connecting" pulse (it's a settled state); <code>bad_origin</code> now has a helpful user-facing message (was falling back to "server had a problem"); the logout race guard gains a belt-and-suspenders <code>loggingOut</code> check in <code>refresh()</code>; Escape no longer double-dismisses when both widgets are open; <code>onSignedIn</code> on the account chip documents that it fires on restore.</li>
@@ -215,41 +221,41 @@
 <li>Account dropdown a11y: focus moves into the menu on open and returns to the chip on close; the chip survives a transient <code>/session</code> blip (only a real 401 clears it) instead of flapping.</li>
 <li>Doc/version tidy: DESIGN.md updated for three transports + the account chip; next-demo README endpoint count; conformance-suite path; the integrate page's "Get the code" uses the release-pack download (not a git clone of a preview-private repo); CHANGELOG bonuz wording kept to "coming soon"; root package.json version aligned to 1.5.1.</li>
 </ul>
-<h2 id="v1-5-0">1.5.0 — 2026-07-21</h2>
+<h2 id="v1-5-0">1.5.0 · 2026-07-21</h2>
 <ul>
-<li><b>New: the signed-in account chip + dropdown (<code>mountQidAccount</code>).</b> The counterpart to the "Sign in" button — a compact chip (green dot + short address) that opens a dropdown with the full address (click to copy), an optional explorer link, extensible integrator menu items, and Log out. Log out is now a deliberate two-step (open the menu, then Log out) instead of a single accidental click. Same <code>--qidc-*</code> theming as the dialog, so the signed-in state looks identical on every BTX app. Renders nothing when signed out; call <code>refresh()</code> after sign-in to show it without a reload. The <code>menuItems</code> slot is the extension point for future Bonuz ID / social data. - Hardened via an adversarial review before release: a request-generation guard so an in-flight <code>/session</code> response can't resurrect the chip after Log out, <code>destroyed</code> re-checked after every await, explorer link closes the menu, logout is double-click-guarded, and keyboard-focusable copy.</li>
+<li><b>New: the signed-in account chip + dropdown (<code>mountQidAccount</code>).</b> The counterpart to the "Sign in" button: a compact chip (green dot + short address) that opens a dropdown with the full address (click to copy), an optional explorer link, extensible integrator menu items, and Log out. Log out is now a deliberate two-step (open the menu, then Log out) instead of a single accidental click. Same <code>--qidc-*</code> theming as the dialog, so the signed-in state looks identical on every BTX app. Renders nothing when signed out; call <code>refresh()</code> after sign-in to show it without a reload. The <code>menuItems</code> slot is the extension point for future Bonuz ID / social data. - Hardened via an adversarial review before release: a request-generation guard so an in-flight <code>/session</code> response can't resurrect the chip after Log out, <code>destroyed</code> re-checked after every await, explorer link closes the menu, logout is double-click-guarded, and keyboard-focusable copy.</li>
 </ul>
-<h2 id="v1-4-2">1.4.2 — 2026-07-17</h2>
+<h2 id="v1-4-2">1.4.2 · 2026-07-17</h2>
 <p>Fast-follows from a second adversarial review (of the v1.4.1 fixes). Verdict was SHIP CLEAN; these close the two residual low/nit edges so the release has none.</p>
 <ul>
-<li><code>fetchChallenge</code> now has a 20s AbortController timeout, so a hung request (black-holed TCP, captive portal) rejects instead of hanging — a never-settling fetch can no longer latch the renew re-entrancy guard and block further renews.</li>
+<li><code>fetchChallenge</code> now has a 20s AbortController timeout, so a hung request (black-holed TCP, captive portal) rejects instead of hanging. A never-settling fetch can no longer latch the renew re-entrancy guard and block further renews.</li>
 <li>Focus restore on a re-open (the "Try again" retry path) now returns focus to the original trigger instead of falling to <code>&lt;body&gt;</code>.</li>
 </ul>
-<h2 id="v1-4-1">1.4.1 — 2026-07-17</h2>
+<h2 id="v1-4-1">1.4.1 · 2026-07-17</h2>
 <p>Fixes from an adversarial multi-agent code review of v1.4.0 (3 blocking + polish).</p>
 <ul>
-<li><b>Orphaned retry timer could burn a live nonce (HIGH regression).</b> After a failed background rotation armed a soft-retry, a subsequent successful renew did not cancel it, so ~15s later it retired the *current* nonce — silently breaking an in-flight sign-in. renewSession now cancels the pending retry on entry and is re-entrancy guarded.</li>
+<li><b>Orphaned retry timer could burn a live nonce (HIGH regression).</b> After a failed background rotation armed a soft-retry, a subsequent successful renew did not cancel it, so ~15s later it retired the *current* nonce, silently breaking an in-flight sign-in. renewSession now cancels the pending retry on entry and is re-entrancy guarded.</li>
 <li><b>Focus trap could escape the modal (HIGH regression).</b> The focusable set included disabled and hidden controls (the disabled Verify button, the hidden deep-link fallback), so Tab could walk out of an aria-modal dialog. The set is now filtered to genuinely tabbable elements.</li>
 <li><b>onSignedIn could fire for a superseded dialog (HIGH).</b> The open() generation token is now also checked in the poll loop, so an abandoned generation's in-flight poll can't drive success after the user moved on.</li>
 <li>Re-opening the dialog no longer emits a spurious onClose; unmount() is final (open() no-ops after it); the deep-link fallback timer is cleared on tab switch; the signed-in address renders via textContent.</li>
 </ul>
-<h2 id="v1-4-0">1.4.0 — 2026-07-17</h2>
+<h2 id="v1-4-0">1.4.0 · 2026-07-17</h2>
 <p>Field-driven release: everything below came from taking qID Connect all the way to production on a real static site (btc2btx.com) plus a UX review.</p>
-<p>### Widget — reliability</p>
+<p>### Widget reliability</p>
 <ul>
 <li><b>Paste flow is exempt from proactive rotation.</b> Copy → wallet → sign → paste realistically outlasts the ~2-minute display life; rotation used to wipe the textarea and retire the request the user had just signed. The paste tab no longer rotates (and drops the confusing "Refreshes in Ns" line); the server TTL still bounds it. Switching to a QR/deeplink tab with a stale request renews first.</li>
 <li><b>A failed background rotation keeps the dialog open</b> and soft-retries with backoff (plus a manual "tap to retry") instead of closing the dialog out from under the user.</li>
 <li><b>An unreachable backend at open shows an in-dialog error</b> ("Sign-in is temporarily unavailable" + Try again) instead of flash-opening then vanishing.</li>
-<li><b>A real server outage no longer looks like "waiting for wallet"</b> — after a few failed polls the wait line says "Trouble reaching the server — still trying" and recovers on success.</li>
+<li><b>A real server outage no longer looks like "waiting for wallet"</b>. After a few failed polls the wait line says "Trouble reaching the server, still trying" and recovers on success.</li>
 <li>Terminal-state guards: rotation can't wipe the "Signed in" screen; a double-clicked open can't corrupt timer state (generation token).</li>
 </ul>
-<p>### Widget — API</p>
+<p>### Widget API</p>
 <ul>
 <li>Returns <code>{ open, close, unmount }</code>; <code>trigger: false</code> renders no button so you can open the dialog from your own UI.</li>
-<li><code>onClose(reason)</code> — <code>'backdrop' | 'escape' | 'x' | 'signedin' | 'programmatic'</code>.</li>
-<li><code>onError(err)</code> is now structured: <code>{ stage: 'challenge'|'verify'|'poll', code?, httpStatus?, cause? }</code>, and verify verdicts (<code>bad_signature</code>, <code>nonce_used</code>, …) reach it too — real telemetry on why sign-ins fail.</li>
+<li><code>onClose(reason)</code>: <code>'backdrop' | 'escape' | 'x' | 'signedin' | 'programmatic'</code>.</li>
+<li><code>onError(err)</code> is now structured: <code>{ stage: 'challenge'|'verify'|'poll', code?, httpStatus?, cause? }</code>, and verify verdicts (<code>bad_signature</code>, <code>nonce_used</code>, …) reach it too, real telemetry on why sign-ins fail.</li>
 </ul>
-<p>### Widget — UX &amp; a11y</p>
+<p>### Widget UX &amp; a11y</p>
 <ul>
 <li>The <b>Copy</b> button is framed and gently pulses so it reads as the action.</li>
 <li>A round <b>ⓘ info button</b> on every transport links to the new https://qid.dev/connect/how (per-transport how-to, incl. the honest notarization note for "Open in wallet").</li>
@@ -262,43 +268,43 @@
 <li>INTEGRATION.md: the apex/www (and http↔https) <b>origin trap</b> callout; the "do not proxy" rule reworded into ❌ BAD / ✅ GOOD (a same-origin <code>/qid/*</code> rewrite is fine and is <b>required</b> for the first-party session cookie when your server is on another host); <code>unzip</code>/Node-SQLite prerequisite note.</li>
 <li>DESIGN.md: theming and the portaled dialog explained.</li>
 </ul>
-<h2 id="v1-3-3">1.3.3 — 2026-07-17</h2>
+<h2 id="v1-3-3">1.3.3 · 2026-07-17</h2>
 <ul>
-<li><b>Field hardening from the first real integrations.</b> - The QR no longer dies on "server amnesia": if the server reports a request expired seconds after issuing it (a restart, or multiple instances without a shared store), the widget auto-recovers once with a fresh challenge and reports the exact diagnosis through <code>onError</code>. - A failed rotation no longer closes the dialog — it offers "Can't reach the site — tap to retry". - The deep-link tab reveals its fallback options after 5s regardless of focus changes (a failed <code>btxqid://</code> launch also blurs the page, so blur never proved the wallet opened). - The QR itself is now click-to-copy.</li>
+<li><b>Field hardening from the first real integrations.</b> - The QR no longer dies on "server amnesia": if the server reports a request expired seconds after issuing it (a restart, or multiple instances without a shared store), the widget auto-recovers once with a fresh challenge and reports the exact diagnosis through <code>onError</code>. - A failed rotation no longer closes the dialog. It offers "Can't reach the site, tap to retry". - The deep-link tab reveals its fallback options after 5s regardless of focus changes (a failed <code>btxqid://</code> launch also blurs the page, so blur never proved the wallet opened). - The QR itself is now click-to-copy.</li>
 <li>Production checklist: explicit multi-instance / shared-store requirement.</li>
 </ul>
-<h2 id="v1-3-2">1.3.2 — 2026-07-17</h2>
+<h2 id="v1-3-2">1.3.2 · 2026-07-17</h2>
 <ul>
-<li>The dialog's "works with" list carries <b>bonuz Wallet (coming soon)</b> for the mobile signer. When it ships, hosted-widget integrators flip to "available now" automatically on our deploy — no dApp changes needed.</li>
+<li>The dialog's "works with" list carries <b>bonuz Wallet (coming soon)</b> for the mobile signer. When it ships, hosted-widget integrators flip to "available now" automatically on our deploy, no dApp changes needed.</li>
 </ul>
-<h2 id="v1-3-1">1.3.1 — 2026-07-16</h2>
+<h2 id="v1-3-1">1.3.1 · 2026-07-16</h2>
 <ul>
-<li>Fix: the 1.3.0 copy trim dropped <code>appName</code> from the dialog — the option did nothing. The subtitle now reads "Sign in to &lt;appName&gt; with your BTX address. No email, no password." Also corrects the hosted build's provenance header (it cited a commit that predated its content).</li>
+<li>Fix: the 1.3.0 copy trim dropped <code>appName</code> from the dialog, so the option did nothing. The subtitle now reads "Sign in to &lt;appName&gt; with your BTX address. No email, no password." Also corrects the hosted build's provenance header (it cited a commit that predated its content).</li>
 </ul>
-<h2 id="v1-3-0">1.3.0 — 2026-07-16</h2>
+<h2 id="v1-3-0">1.3.0 · 2026-07-16</h2>
 <ul>
 <li><b>QR-first dialog.</b> The default transports are now <code>["qr", "paste", "deeplink"]</code>: the dialog opens on a visible QR code, WalletConnect style, with desktop copy-paste and one-click "Open in wallet" one tap away.</li>
 <li><b>Hosted widget channel.</b> The widget is now also served from https://qid.dev/connect/widget.js (latest) and <code>widget-&lt;version&gt;.js</code> (pinned). Importing the hosted file means wallet-list and UX updates reach your users automatically on our deploys; the signed protocol stays frozen v1 either way.</li>
 <li>Calmer dialog copy: shorter subtitle, captions, and safety line.</li>
 <li>Brand casing: <b>bonuz Wallet</b> in the "works with" list.</li>
 </ul>
-<h2 id="v1-2-0">1.2.0 — 2026-07-16</h2>
+<h2 id="v1-2-0">1.2.0 · 2026-07-16</h2>
 <ul>
 <li><b>Dynamic connector.</b> Every sign-in request now has a short display lifetime with a visible countdown, rotates itself proactively before it goes stale, and on rotation the server burns the superseded nonce (<code>challenge()</code> accepts <code>{ retire }</code>; the Express and Next adapters parse the optional body). A screenshotted or stale QR, paste request, or deep link stops being acceptable the moment it leaves the screen.</li>
 <li><b><code>btxqid://</code> deep-link transport.</b> One-click connect into the installed desktop PQ Wallet for BTX (v0.27+): <code>transports: ["paste", "qr", "deeplink"]</code>. New exported <code>buildBtxqidSignUrl</code> with unit tests.</li>
-<li>Unified "expired — get a new one" affordance on every transport (previously the paste tab had none); poll jitter plus a hard max-duration cap so an abandoned dialog stops polling.</li>
-<li><code>SECURITY.md</code> — private vulnerability reporting policy.</li>
+<li>Unified "expired, get a new one" affordance on every transport (previously the paste tab had none); poll jitter plus a hard max-duration cap so an abandoned dialog stops polling.</li>
+<li><code>SECURITY.md</code>: private vulnerability reporting policy.</li>
 <li>Integration guide published: https://qid.dev/connect/integrate</li>
 <li>Tests: rotation covered at the core and over both HTTP adapters.</li>
 </ul>
-<h2 id="v1-1-0">1.1.0 — 2026-07-15</h2>
+<h2 id="v1-1-0">1.1.0 · 2026-07-15</h2>
 <ul>
 <li><b>Login-CSRF guards</b> on <code>/verify</code> and <code>/poll</code> (a cross-site page cannot plant a session in a visitor's browser).</li>
 <li>Atomic async replay consume in the nonce store; widget timer cleanup.</li>
 <li>Dialog wallet list ("works with"), signing animation, accounts context for adapters.</li>
 <li>Live browser demo (the qid.dev/connect page) and OG cards.</li>
 </ul>
-<h2 id="v1-0-0">1.0.0 — 2026-07-11</h2>
+<h2 id="v1-0-0">1.0.0 · 2026-07-11</h2>
 <ul>
 <li>Phase 1: connect, prove, sign in. Server SDK (challenge, verify with the frozen qID Sign-In v1 verifier, account by address, sessions, SQLite stores), the "Sign in with qID" widget (paste + QR transports, no relay server), Express and Next.js adapters, two example apps, the reference test signer CLI, integration/migration/design docs.</li>
 </ul>
