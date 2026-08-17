@@ -5,7 +5,7 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>qID timeline: day one to today</title>
-<meta name="description" content="Every major step in qID since day one, dated from the commits: the library, the paper, qID Connect, the live integrations, and the security rounds." />
+<meta name="description" content="Every major step in qID since day one, dated from the commits: the library, the paper, qID Connect, the live integrations, the wallet's road to the app stores, the research, and the security rounds." />
 <meta property="og:title" content="qID timeline" />
 <meta property="og:description" content="Every major step since day one, dated from the commits." />
 <meta property="og:type" content="website" />
@@ -30,6 +30,7 @@
   "url": "https://qid.dev/history/",
   "description": "Every major step in qID since day one, dated from the commits.",
   "datePublished": "2026-08-18",
+  "dateModified": "2026-08-18",
   "isPartOf": { "@id": "https://qid.dev/#website" }
 }
 </script>
@@ -41,6 +42,7 @@
     --accent: #5eeaa0; --accent-dim: #2d5e44; --accent-ink: #052e1c;
     --cyan: #67e8f9; --warn: #e8c468;
     --code-bg: #0b1117; --shadow: 0 12px 40px rgba(0,0,0,.4);
+    --body: color-mix(in srgb, #e6edf3 74%, #8b99a6);
     color-scheme: dark;
   }
   :root[data-theme="light"] {
@@ -49,6 +51,7 @@
     --accent: #0c8f5f; --accent-dim: #bfe8d4; --accent-ink: #ffffff;
     --cyan: #0e7490; --warn: #9a6b00;
     --code-bg: #0d1319; --shadow: 0 12px 40px rgba(23,43,58,.10);
+    --body: color-mix(in srgb, #16212b 78%, #55656f);
     color-scheme: light;
   }
   * { box-sizing: border-box; margin: 0; }
@@ -60,14 +63,14 @@
   code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; text-underline-offset: 3px; }
-  .wrap { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
 
   header {
     position: sticky; top: 0; z-index: 10;
     background: color-mix(in srgb, var(--bg) 82%, transparent);
     backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
   }
-  .nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; max-width: 860px; margin: 0 auto; }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; max-width: 880px; margin: 0 auto; }
   .logo { display: flex; align-items: center; gap: 8px; color: var(--text); font-weight: 700; font-size: 18px; letter-spacing: .3px; }
   .logo .q { color: var(--accent); }
   .logo .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
@@ -81,35 +84,38 @@
   .flag { display: inline-block; border: 1px solid var(--border); border-radius: 999px; color: var(--accent); font-size: 12px; padding: 4px 13px; margin-bottom: 16px; }
   h1 { font-size: clamp(28px, 5vw, 38px); line-height: 1.2; letter-spacing: -.3px; margin-bottom: 10px; }
   h1 .q { color: var(--accent); }
-  .lede { color: var(--muted); font-size: 15.5px; max-width: 58ch; margin-bottom: 8px; }
+  .lede { color: var(--body); font-size: 16px; max-width: 60ch; margin-bottom: 8px; }
   .lede b { color: var(--text); }
-  .src-note { color: var(--faint); font-size: 13px; margin-bottom: 40px; }
+  .src-note { color: var(--faint); font-size: 13px; margin-bottom: 34px; }
 
-  .month { margin: 38px 0 6px; }
+  .month { margin: 54px 0 6px; }
   .month h2 {
-    font-size: 13px; text-transform: uppercase; letter-spacing: 2.5px;
-    color: var(--faint); font-weight: 600; padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
+    font-size: clamp(34px, 7vw, 52px);
+    font-weight: 800; letter-spacing: -.5px; line-height: 1.1;
+    color: var(--text); padding-bottom: 12px;
+    border-bottom: 2px solid var(--border);
   }
-  .ev { display: grid; grid-template-columns: 92px 1fr; gap: 18px; padding: 16px 0; border-bottom: 1px solid color-mix(in srgb, var(--border) 55%, transparent); }
+  .month h2 .yr { color: var(--accent); font-weight: 800; }
+  .ev { display: grid; grid-template-columns: 96px 1fr; gap: 18px; padding: 18px 0; border-bottom: 1px solid color-mix(in srgb, var(--border) 55%, transparent); }
   .ev:last-child { border-bottom: 0; }
-  .ev time { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; color: var(--accent); padding-top: 3px; white-space: nowrap; }
-  .ev .t { font-weight: 650; margin-bottom: 3px; }
-  .ev p { color: var(--muted); font-size: 14.5px; line-height: 1.6; }
+  .ev time { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13.5px; color: var(--accent); padding-top: 4px; white-space: nowrap; }
+  .ev .t { font-weight: 700; font-size: 17px; margin-bottom: 4px; }
+  .ev p { color: var(--body); font-size: 15px; line-height: 1.65; }
   .ev p a { color: var(--accent); }
   .tag { display: inline-block; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11px; color: var(--cyan); border: 1px solid var(--border); border-radius: 6px; padding: 1px 7px; margin-left: 8px; vertical-align: 2px; }
   .sec { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 35%, var(--border)); }
+  .res { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 35%, var(--border)); }
 
-  .outro { margin-top: 44px; padding: 18px 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 14px; color: var(--muted); font-size: 14px; }
+  .outro { margin-top: 48px; padding: 18px 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 14px; color: var(--body); font-size: 14px; }
   .outro b { color: var(--text); }
 
   footer { border-top: 1px solid var(--border); padding: 22px 24px; }
-  .foot { max-width: 860px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 14px 22px; justify-content: space-between; color: var(--faint); font-size: 13px; }
+  .foot { max-width: 880px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 14px 22px; justify-content: space-between; color: var(--faint); font-size: 13px; }
   .foot-links { display: flex; flex-wrap: wrap; gap: 4px 16px; }
   .foot-links a { color: var(--muted); }
 
   @media (max-width: 560px) {
-    .ev { grid-template-columns: 1fr; gap: 4px; padding: 14px 0; }
+    .ev { grid-template-columns: 1fr; gap: 4px; padding: 15px 0; }
     .nav-links a { padding: 8px 6px; }
   }
 </style>
@@ -133,11 +139,11 @@
 
 <span class="flag">the whole story, dated</span>
 <h1>The <span class="q">qID</span> timeline</h1>
-<p class="lede">Every major step since day one: the library, the paper, <b>qID Connect</b>, the live integrations, and the security rounds that hardened all of it.</p>
+<p class="lede">Every major step since day one: the library, the paper, <b>qID Connect</b>, the live integrations, the wallet's road to the app stores, the research, and the security rounds that hardened all of it.</p>
 <p class="src-note">Dates come from the commit history and the release changelog, not from memory.</p>
 
 <section class="month" aria-label="May 2026">
-  <h2>May 2026</h2>
+  <h2>May <span class="yr">2026</span></h2>
   <div class="ev"><time datetime="2026-05-30">May 30</time><div>
     <div class="t">Day one <span class="tag">v0.1.0</span></div>
     <p>qID begins as a spike: one 32-byte seed becomes a complete post-quantum identity for BTX. Keys, address, login, recovery, encryption. MIT-licensed from the first commit.</p>
@@ -146,10 +152,14 @@
     <div class="t">The spend core, node-verified</div>
     <p>Multi-input P2MR signing, post-quantum fee sizing, coin selection and sweep. Verified against a real node from the very first version.</p>
   </div></div>
+  <div class="ev"><time datetime="2026-05-31">May 31</time><div>
+    <div class="t">qID meets its first wallet</div>
+    <p>The BTX desktop wallet ships passkey unlock built on the qID WebAuthn seal, one day after day one. The library is already inside a product.</p>
+  </div></div>
 </section>
 
 <section class="month" aria-label="June 2026">
-  <h2>June 2026</h2>
+  <h2>June <span class="yr">2026</span></h2>
   <div class="ev"><time datetime="2026-06-02">Jun 2</time><div>
     <div class="t">First hardening round <span class="tag sec">security</span></div>
     <p>NIST KAT vectors pinned offline, key-derivation buffers zeroized, fuzz tests on address round-trips, and a CI gate that rebuilds the bundle from source and fails on any byte of drift.</p>
@@ -165,10 +175,22 @@
 </section>
 
 <section class="month" aria-label="July 2026">
-  <h2>July 2026</h2>
+  <h2>July <span class="yr">2026</span></h2>
+  <div class="ev"><time datetime="2026-07-05">Jul 5</time><div>
+    <div class="t">The research desk opens <span class="tag res">research</span></div>
+    <p>easybtx.com publishes its first study, Can BTX Be Faked?, an authenticity deep-dive with FAQ. The <a href="https://easybtx.com/research/">research section</a> is born.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-07-06">Jul 6</time><div>
+    <div class="t">The economics series <span class="tag res">research</span></div>
+    <p>Three studies in two days: Hard-Money Asymmetry, BTX mining economics, and The Occupancy Gap on why the same GPU mines BTX faster.</p>
+  </div></div>
   <div class="ev"><time datetime="2026-07-06">Jul 6</time><div>
     <div class="t">v0.3.0 and provenance-attested releases <span class="tag">v0.3.0</span></div>
     <p>Audit source-hardening lands and the standard track begins. From here, releases carry a build-provenance record.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-07-07">Jul 7</time><div>
+    <div class="t">The first wallet with qID Sign-In built in</div>
+    <p>PQ Wallet for BTX v0.20.2 ships in-wallet qID Sign-In. Four days later it gains the signing-wallet picker: sign with exactly the wallet you choose.</p>
   </div></div>
   <div class="ev"><time datetime="2026-07-08">Jul 8</time><div>
     <div class="t">Recovery spends confirmed on mainnet</div>
@@ -185,6 +207,10 @@
   <div class="ev"><time datetime="2026-07-11">Jul 11</time><div>
     <div class="t">Connect 1.0.0 and the two-repo pipeline <span class="tag">1.0.0</span></div>
     <p>A private lab and a curated public surface: everything public arrives through a scripted export, so what ships always equals a lab commit.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-07-12">Jul 12</time><div>
+    <div class="t">Research goes academic <span class="tag res">research</span></div>
+    <p>Every article becomes a clean print PDF with an in-page reader. The same week brings Who Holds BTX? (an on-chain holder census), Why Run a BTX Node? with <a href="https://easybtx.com/research/btx-node-power">measured costs</a>, a study on whether the matrix proof-of-work does anything useful, and the reusable-hardware paper on BTX's compute base and the EVX finance layer.</p>
   </div></div>
   <div class="ev"><time datetime="2026-07-15">Jul 15</time><div>
     <div class="t">The first security-fix release <span class="tag sec">1.1.0</span></div>
@@ -214,10 +240,18 @@
     <div class="t">Seven releases in one day <span class="tag">1.6.0 to 1.6.6</span></div>
     <p>The pack now ships an Agent Skill that teaches an AI coding assistant to wire sign-in correctly, plus a zero-dependency checker that verifies a live integration end to end. Docs pinned to reality.</p>
   </div></div>
+  <div class="ev"><time datetime="2026-07-28">Jul 28</time><div>
+    <div class="t">The wallet heads to the stores</div>
+    <p>PQ Wallet for BTX, carrying qID inside, is submitted to the Microsoft Store as a Store-signed MSIX, with the Snap Store submission a day earlier. The first store shelf for a qID wallet.</p>
+  </div></div>
 </section>
 
 <section class="month" aria-label="August 2026">
-  <h2>August 2026</h2>
+  <h2>August <span class="yr">2026</span></h2>
+  <div class="ev"><time datetime="2026-08-09">Aug 9</time><div>
+    <div class="t">The proof-of-work paper <span class="tag res">research</span></div>
+    <p>easybtx.com publishes BTX Changes Its Proof-of-Work at Block 185,000, the day before the MatMul activation reached mainnet.</p>
+  </div></div>
   <div class="ev"><time datetime="2026-08-10">Aug 10</time><div>
     <div class="t">Core hardening, round one <span class="tag sec">security</span></div>
     <p>TOCTOU, silent key reuse and challenge-downgrade classes closed in the core. The paper gets an errata pass. The Sign-In v3 envelope is drafted for external review.</p>
@@ -231,13 +265,21 @@
     <p>A second core hardening round merges, and all five regtest suites pass against a live BTX node, closing the node-acceptance gap. 1.7.0 reaches every surface: the pack, the hosted widget, btc2btx.com, dashboard, build and play, each verified with a real confirm-flow sign-in over production HTTP. That discipline also caught and fixed a silent three-day sign-in outage on one production proxy.</p>
   </div></div>
   <div class="ev"><time datetime="2026-08-17">Aug 17</time><div>
+    <div class="t">The wallet reaches Apple</div>
+    <p>PQ Wallet for BTX v1.1.0, carrying the hardened qID core, is submitted to the Mac App Store. Microsoft Store, Snap Store, direct download, and now Cupertino.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-08-17">Aug 17</time><div>
     <div class="t">1.7.1 and the v3 draft, same evening <span class="tag">1.7.1</span></div>
     <p>The Agent Skill now teaches the confirm contract so an assistant wires the new flow correctly, and troubleshooting learns the one new symptom. The Sign-In v3 envelope specification merges as a draft, open for co-authorship. Nothing in v3 has shipped.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-08-17">Aug 17</time><div>
+    <div class="t">The halt, written up the same day <span class="tag res">research</span></div>
+    <p>The network wedged for half a day on a chain-selection bug and recovered the same evening. easybtx.com published the story while it was still warm: The Day BTX Halted, a MacBook Kept the Chain's Memory.</p>
   </div></div>
 </section>
 
 <div class="outro">
-  <b>How this page is made.</b> Curated by hand from the commit history and the release changelog. It records what shipped and when, in the same voice as everything else here: resistant to quantum attacks, built on NIST-standardized post-quantum cryptography, pending independent audit. Never "unhackable". For every Connect release in detail, see the <a href="/connect/changelog/">changelog</a>.
+  <b>How this page is made.</b> Curated by hand from the commit history and the release changelog. It records what shipped and when, in the same voice as everything else here: resistant to quantum attacks, built on NIST-standardized post-quantum cryptography, pending independent audit. Never "unhackable". For every Connect release in detail, see the <a href="/connect/changelog/">changelog</a>. For the research series, see <a href="https://easybtx.com/research/">easybtx.com/research</a>.
 </div>
 
 </div>
@@ -252,6 +294,7 @@
       <a href="/connect/integrate/">Integrate</a>
       <a href="/connect/changelog/">Changelog</a>
       <a href="/qid-paper.pdf">Paper</a>
+      <a href="https://easybtx.com/research/">Research</a>
     </nav>
   </div>
 </footer>
