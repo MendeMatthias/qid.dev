@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>qID for AI agents</title>
+<meta name="description" content="Make your AI coding agent a BTX app builder: an open-source Agent Skill, a zero-dependency integration checker, a machine-readable llms.txt, and one bootstrap prompt that teaches any agent to add post-quantum Sign in with qID." />
+<meta property="og:title" content="qID for AI agents" />
+<meta property="og:description" content="One prompt makes your agent a BTX app builder: skill, checker, llms.txt, pack. Free, MIT." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://qid.dev/ai/" />
+<meta property="og:site_name" content="qID" />
+<meta property="og:image" content="https://qid.dev/og.png?v=5" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="qID for AI agents" />
+<meta name="twitter:description" content="One prompt makes your agent a BTX app builder. Free, MIT." />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0e12" />
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafcfd" />
+<link rel="canonical" href="https://qid.dev/ai/" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://qid.dev/ai/",
+  "name": "qID for AI agents",
+  "url": "https://qid.dev/ai/",
+  "description": "An open-source Agent Skill, a zero-dependency checker, a machine-readable llms.txt, and one bootstrap prompt that teaches any AI coding agent to add post-quantum Sign in with qID to a BTX app.",
+  "datePublished": "2026-08-18",
+  "isPartOf": { "@id": "https://qid.dev/#website" }
+}
+</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='700' fill='%235eeaa0' text-anchor='middle'%3Eq%3C/text%3E%3Ccircle cx='24' cy='8' r='2.5' fill='%2367e8f9'/%3E%3C/svg%3E" />
+<style>
+  :root {
+    --bg: #0a0e12; --bg2: #0d1319; --panel: #10161d; --border: #1e2a35; --border2: #2a3947;
+    --text: #e6edf3; --muted: #8b99a6; --faint: #5c6b78;
+    --accent: #5eeaa0; --accent-dim: #2d5e44; --accent-ink: #052e1c;
+    --cyan: #67e8f9; --warn: #e8c468;
+    --code-bg: #0b1117; --shadow: 0 12px 40px rgba(0,0,0,.4);
+    --body: color-mix(in srgb, #e6edf3 74%, #8b99a6);
+    color-scheme: dark;
+  }
+  :root[data-theme="light"] {
+    --bg: #fafcfd; --bg2: #f2f6f9; --panel: #ffffff; --border: #e1e8ef; --border2: #cbd7e1;
+    --text: #16212b; --muted: #55656f; --faint: #8395a1;
+    --accent: #0c8f5f; --accent-dim: #bfe8d4; --accent-ink: #ffffff;
+    --cyan: #0e7490; --warn: #9a6b00;
+    --code-bg: #0d1319; --shadow: 0 12px 40px rgba(23,43,58,.10);
+    --body: color-mix(in srgb, #16212b 78%, #55656f);
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  code, pre, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; max-width: 880px; margin: 0 auto; }
+  .logo { display: flex; align-items: center; gap: 8px; color: var(--text); font-weight: 700; font-size: 18px; letter-spacing: .3px; }
+  .logo .q { color: var(--accent); }
+  .logo .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  .nav-links { display: flex; align-items: center; gap: 4px; }
+  .nav-links a { color: var(--muted); font-size: 13.5px; padding: 8px 10px; }
+  .nav-links a:hover { color: var(--accent); text-decoration: none; }
+  #themeToggle { background: none; border: 1px solid var(--border); border-radius: 8px; color: var(--muted); cursor: pointer; font-size: 13px; padding: 6px 10px; }
+  #themeToggle:hover { border-color: var(--border2); color: var(--text); }
+
+  main { padding: 48px 0 72px; }
+  .flag { display: inline-block; border: 1px solid var(--border); border-radius: 999px; color: var(--accent); font-size: 12px; padding: 4px 13px; margin-bottom: 16px; }
+  h1 { font-size: clamp(30px, 5.5vw, 44px); line-height: 1.15; letter-spacing: -.4px; margin-bottom: 12px; }
+  h1 .q { color: var(--accent); }
+  .lede { color: var(--body); font-size: 16.5px; max-width: 62ch; margin-bottom: 34px; }
+  .lede b { color: var(--text); }
+
+  h2 { font-size: 20px; margin: 40px 0 12px; letter-spacing: .2px; }
+  p { color: var(--body); margin-bottom: 12px; }
+
+  .promptbox { position: relative; background: var(--code-bg); border: 1px solid var(--border2); border-radius: 14px; padding: 20px 22px; margin: 16px 0 8px; box-shadow: var(--shadow); }
+  .promptbox pre { white-space: pre-wrap; word-break: break-word; color: #d7e6dd; font-size: 13.5px; line-height: 1.7; }
+  .copybtn { position: absolute; top: 12px; right: 12px; background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 8px; font-weight: 700; font-size: 12.5px; padding: 7px 14px; cursor: pointer; }
+  .copybtn:hover { filter: brightness(1.08); }
+  .copynote { color: var(--faint); font-size: 12.5px; margin-bottom: 8px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin: 16px 0; }
+  .cell { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px 17px; font-size: 14px; color: var(--body); }
+  .cell b { display: block; color: var(--text); margin-bottom: 5px; font-size: 15px; }
+  .cell a { display: inline-block; margin-top: 6px; font-size: 13.5px; }
+
+  pre.snippet { background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px; padding: 13px 16px; overflow-x: auto; font-size: 13px; color: #d7e6dd; margin: 10px 0; }
+
+  ul.props { margin: 8px 0; padding-left: 0; list-style: none; }
+  ul.props li { padding: 5px 0 5px 26px; position: relative; color: var(--body); font-size: 14.5px; }
+  ul.props li::before { content: "✓"; position: absolute; left: 2px; color: var(--accent); font-weight: 700; }
+  ul.props b { color: var(--text); }
+
+  .outro { margin-top: 44px; padding: 18px 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 14px; color: var(--body); font-size: 14px; }
+  .outro b { color: var(--text); }
+
+  footer { border-top: 1px solid var(--border); padding: 22px 24px; }
+  .foot { max-width: 880px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 14px 22px; justify-content: space-between; color: var(--faint); font-size: 13px; }
+  .foot-links { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+  .foot-links a { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="logo" href="/"><span><span class="q">q</span>ID</span><span class="dot" aria-hidden="true"></span></a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/connect/integrate/">Integrate</a>
+      <a href="/history/">Timeline</a>
+      <button id="themeToggle" aria-label="Toggle theme">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+<span class="flag">for the agents, and the humans who run them</span>
+<h1>Make your agent a <span class="q">BTX</span> app builder</h1>
+<p class="lede">Hand any AI coding assistant one prompt and it knows qID: the post-quantum login, the account model where <b>the address is the account</b>, the framework traps that produce no error in the browser, and how to verify the result against your running app. Free of charge, MIT, no API keys, nothing to sign up for.</p>
+
+<h2>The prompt</h2>
+<p class="copynote">Paste this into your agent. It works in Claude Code, Cursor, or anything that can fetch a URL.</p>
+<div class="promptbox">
+  <button class="copybtn" id="copyPrompt">Copy</button>
+  <pre id="promptText">Read https://qid.dev/llms.txt and follow its links. Then add Sign in with qID to my app: download https://qid.dev/connect/qid-connect-latest.zip, follow docs/INTEGRATION.md and skills/qid-connect/SKILL.md from the pack for my stack, and verify the result with skills/qid-connect/scripts/check-integration.mjs against my running dev server. Remember: the address is the account, a login proof can never move funds, and since 1.7.0 the QR poll returns status "confirm" before "done".</pre>
+</div>
+
+<h2>What your agent gets</h2>
+<div class="grid">
+  <div class="cell"><b>The Agent Skill</b>The four integration steps, the account model, the framework-specific traps, and how to verify. Ships in every pack and standalone, open source.<br /><a href="https://github.com/MendeMatthias/qid-connect-skill">qid-connect-skill on GitHub</a></div>
+  <div class="cell"><b>The checker</b>Zero dependencies, runs against your live integration, catches the failures that show nothing in the browser. Each failure prints its fix.<br /><a href="https://raw.githubusercontent.com/MendeMatthias/qid-connect-skill/main/scripts/check-integration.mjs">check-integration.mjs</a></div>
+  <div class="cell"><b>llms.txt</b>The whole estate, machine-readable: protocol facts, endpoints, the 1.7.0 confirm contract, every fetchable link.<br /><a href="/llms.txt">qid.dev/llms.txt</a></div>
+  <div class="cell"><b>The pack</b>Server SDK, widget, examples, docs and the skill in one MIT zip. What an integrator gets, whether human or agent.<br /><a href="/connect/qid-connect-latest.zip" download>qid-connect-latest.zip</a></div>
+</div>
+
+<h2>Install the skill directly</h2>
+<p>For Claude Code, from a clone or the unzipped pack:</p>
+<pre class="snippet">git clone https://github.com/MendeMatthias/qid-connect-skill
+mkdir -p .claude/skills &amp;&amp; cp -R qid-connect-skill .claude/skills/qid-connect</pre>
+<p>For every other assistant: point it at the folder, or have it fetch <a href="https://raw.githubusercontent.com/MendeMatthias/qid-connect-skill/main/SKILL.md">SKILL.md</a> and the <a href="https://github.com/MendeMatthias/qid-connect-skill/tree/main/references">references</a> directly. The skill is plain markdown plus one script; nothing to build.</p>
+
+<h2>Why this works</h2>
+<ul class="props">
+  <li><b>Everything is fetchable.</b> Site, docs, pack, skill, checker, changelog, timeline: public URLs, no keys, no accounts.</li>
+  <li><b>The integration is small.</b> One server middleware plus one button. A developer lands a real post-quantum sign-in in 15 to 30 minutes; an agent with the skill does the same.</li>
+  <li><b>Verification is built in.</b> The checker proves the integration outside-in, so "it looks done" becomes "it is done".</li>
+  <li><b>Safe by construction.</b> Login proofs sign under a dedicated domain tag and can never move funds. Since 1.7.0, QR sign-in requires the user to confirm the address before any session exists.</li>
+  <li><b>Built for what comes next.</b> The same login works for any BTX app today and is designed to carry forward: post-quantum from day one, so the apps you build now do not need rescuing later.</li>
+</ul>
+
+<div class="outro">
+  <b>The honest line, as always.</b> Resistant to quantum attacks, built on NIST-standardized post-quantum cryptography, pending independent audit. Never "unhackable". The qID Connect pack and the skill are MIT and free; the core library opens with the audit. Questions from an agent's human: <a href="https://github.com/MendeMatthias/qid-connect-skill/issues">open an issue</a>.
+</div>
+
+</div>
+</main>
+
+<footer>
+  <div class="foot">
+    <div>© 2026 qID · MIT license</div>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="/">qid.dev</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/connect/">Live demo</a>
+      <a href="/connect/integrate/">Integrate</a>
+      <a href="/history/">Timeline</a>
+      <a href="/connect/changelog/">Changelog</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const stored = localStorage.getItem('qid.theme');
+  const systemLight = window.matchMedia('(prefers-color-scheme: light)');
+  function apply(theme) { theme === 'light' ? root.setAttribute('data-theme', 'light') : root.removeAttribute('data-theme'); }
+  apply(stored || (systemLight.matches ? 'light' : 'dark'));
+  systemLight.addEventListener('change', (e) => { if (!localStorage.getItem('qid.theme')) apply(e.matches ? 'light' : 'dark'); });
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const next = root.hasAttribute('data-theme') ? 'dark' : 'light';
+    localStorage.setItem('qid.theme', next);
+    apply(next);
+  });
+  document.getElementById('copyPrompt').addEventListener('click', async () => {
+    const btn = document.getElementById('copyPrompt');
+    try {
+      await navigator.clipboard.writeText(document.getElementById('promptText').textContent);
+      btn.textContent = 'Copied';
+    } catch {
+      const r = document.createRange(); r.selectNodeContents(document.getElementById('promptText'));
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = 'Select + copy';
+    }
+    setTimeout(() => { btn.textContent = 'Copy'; }, 1800);
+  });
+})();
+</script>
+
+</body>
+</html>

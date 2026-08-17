@@ -5,8 +5,9 @@
 > login/authentication, cold recovery, and public-key encryption. It introduces no new
 > cryptography and is a verified composition of the three NIST post-quantum standards finalized
 > in August 2024: ML-KEM (FIPS 203), ML-DSA (FIPS 204), and SLH-DSA (FIPS 205). Byte-exact to the
-> BTX blockchain and deployed in three production wallet integrations. Status: v0.3.0, wire
-> formats frozen, pending independent audit. License: MIT.
+> BTX blockchain and deployed in production wallet integrations. Status: core v0.3.x, wire
+> formats frozen, pending independent audit. qID Connect (the app-facing login SDK) is at 1.7.1.
+> License: MIT. Everything below is free of charge and fetchable without keys or sign-up.
 
 ## What qID is
 
@@ -30,9 +31,9 @@
   milliseconds via a native crypto engine (about 1000x faster), byte-identical output.
 - BTX's C-002 consensus migration to FIPS-205 SLH-DSA is live on mainnet (activation height
   123,000); qID cross-verified compatibility bidirectionally against the chain's own signer.
-- Verification: 73 tests / 993 assertions; NIST ACVP known-answer tests; property-based fuzzing;
-  reproducible builds with published (sha256, commit) provenance; negative-space tests that fail
-  if hedged randomness or transaction commitments are ever silently degraded.
+- Verification: 100 tests / 1,290 assertions on the core, including NIST ACVP known-answer
+  tests; all five regtest suites pass against a live BTX node (node-acceptance verified);
+  property-based fuzzing; reproducible builds with published (sha256, commit) provenance.
 
 ## qID Connect (Sign in with qID)
 
@@ -44,17 +45,44 @@ funds. The connector is dynamic: requests rotate with a countdown and superseded
 burned server-side. Transports: desktop copy-paste (PQ Wallet for BTX v0.21+), QR scan for phone
 wallets, and a btxqid:// deep link (v0.27+).
 
+IMPORTANT protocol note for implementers (1.7.0+): after a remote proof lands, GET /qid/poll
+answers { "status": "confirm", "address": "btx1..." } and mints NO session until the browser
+calls again with &confirm=1 (the user explicitly accepts the address first; this closes a QR
+session-fixation class). Statuses: pending -> confirm -> done, or expired. A hand-rolled poll
+loop that only waits for "done" will hang forever. The shipped widget handles all of this.
+
 - Live demo (no wallet needed): https://qid.dev/connect
 - How to connect (user help): https://qid.dev/connect/how
 - Integration guide: https://qid.dev/connect/integrate
+- Changelog (every release, dated): https://qid.dev/connect/changelog
+- Project timeline (every milestone since day one, dated): https://qid.dev/history
 - Source repository: https://github.com/MendeMatthias/qid-connect (private preview; ask via https://github.com/MendeMatthias/qid-connect-skill/issues). Public skill + checker: https://github.com/MendeMatthias/qid-connect-skill
+
+## For AI agents
+
+There is an open-source Agent Skill that teaches a coding assistant to wire qID sign-in
+correctly for its stack, plus a zero-dependency checker that verifies a live integration.
+Human-readable page: https://qid.dev/ai
+
+- Skill repository (MIT, standalone install): https://github.com/MendeMatthias/qid-connect-skill
+- Skill entry point (fetchable): https://raw.githubusercontent.com/MendeMatthias/qid-connect-skill/main/SKILL.md
+- Live-integration checker: https://raw.githubusercontent.com/MendeMatthias/qid-connect-skill/main/scripts/check-integration.mjs
+- The same skill ships inside every release pack at skills/qid-connect/.
+
+Bootstrap prompt for any agent: "Read https://qid.dev/llms.txt and follow its links. Add Sign
+in with qID to my app: download https://qid.dev/connect/qid-connect-latest.zip, follow
+docs/INTEGRATION.md and skills/qid-connect/SKILL.md from the pack for my stack, then verify the
+result with skills/qid-connect/scripts/check-integration.mjs against my running dev server.
+Remember: the address is the account, a login proof can never move funds, and since 1.7.0 the
+QR poll returns status confirm before done."
 
 ## Documents
 
 - Technical paper (PDF): https://qid.dev/qid-paper.pdf
 - Conformance vectors (JSON): https://qid.dev/vectors.json
 - Source repository: https://github.com/MendeMatthias/qid (private; opens with the audit)
-- qID Connect source pack (server SDK + widget + examples, MIT): https://qid.dev/connect/qid-connect-latest.zip
+- qID Connect source pack (server SDK + widget + examples + skill, MIT): https://qid.dev/connect/qid-connect-latest.zip
+- Version-pinned packs: https://qid.dev/connect/qid-connect-<version>.zip (current: 1.7.1)
 - Hosted widget (one-line import, auto-updating UI; version-pinned copies at widget-<version>.js): https://qid.dev/connect/widget.js
 
 ## Live properties
@@ -62,10 +90,21 @@ wallets, and a btxqid:// deep link (v0.27+).
 - https://qid.dev/connect: browser-only demo of Sign in with qID; no wallet needed, nothing leaves the page.
 - https://qid.dev/connect/integrate: the integration guide (one middleware + one widget, 15 to 30 minutes).
 - https://qid.dev/connect/changelog: every release, newest first; states the current pack version.
+- https://qid.dev/history: the full project timeline, dated from the commits.
+- https://qid.dev/ai: qID for AI agents (skill, checker, bootstrap prompt).
 - https://dashboard.qid.dev: developer portal. Sign in with qID itself, register an app by origin, generate a stack-tailored setup kit, run outside-in health checks. Never in any user's login path; no API keys or project IDs exist.
 - https://build.qid.dev: builder onboarding for BTX with a real qID sign-in (a bonuz Wallet QR scan signs in live).
 - https://build.qid.dev/showcase: every live qID integration on one page.
 - https://play.qid.dev: Quantum Reflex, a reaction game with a leaderboard keyed by BTX address.
+
+## Research (BTX ecosystem)
+
+Peer context for the chain qID is byte-exact to, published at https://easybtx.com/research/ as
+readable articles with print PDFs: authenticity (Can BTX Be Faked?), hard-money asymmetry,
+mining economics, the GPU occupancy gap, an on-chain holder census, measured node costs
+(https://easybtx.com/research/btx-node-power), whether the matrix proof-of-work does useful
+work, the reusable-hardware compute base and the EVX finance layer, the block 185,000
+proof-of-work change, and the day the network halted and recovered.
 
 ## Positioning
 
