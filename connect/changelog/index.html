@@ -5,12 +5,12 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>qID Connect changelog: what changed in each release</title>
-<meta name="description" content="Every qID Connect release, newest first. Current version: 1.7.0. The same changelog ships inside the release pack.">
+<meta name="description" content="Every qID Connect release, newest first. Current version: 1.7.1. The same changelog ships inside the release pack.">
 <link rel="canonical" href="https://qid.dev/connect/changelog/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="qID Connect">
 <meta property="og:title" content="qID Connect changelog">
-<meta property="og:description" content="Every release, newest first. Current version: 1.7.0.">
+<meta property="og:description" content="Every release, newest first. Current version: 1.7.1.">
 <meta property="og:url" content="https://qid.dev/connect/changelog/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='700' fill='%235eeaa0' text-anchor='middle'%3Eq%3C/text%3E%3Ccircle cx='24' cy='8' r='2.5' fill='%2367e8f9'/%3E%3C/svg%3E">
 <style>
@@ -49,8 +49,14 @@
 </header>
 <div class="page"><main>
 <h1>qID Connect <span class="q">changelog</span></h1>
-<p class="current">Current version: <b>1.7.0</b> · <a href="/connect/qid-connect-latest.zip" download>download</a> · pinned: <code>/connect/qid-connect-1.7.0.zip</code>. This page is generated from the CHANGELOG.md that ships inside every pack.</p>
+<p class="current">Current version: <b>1.7.1</b> · <a href="/connect/qid-connect-latest.zip" download>download</a> · pinned: <code>/connect/qid-connect-1.7.1.zip</code>. This page is generated from the CHANGELOG.md that ships inside every pack.</p>
 <p>All notable changes to the qID Connect integration surface. Versions apply to <code>@qid/connect-server</code> and <code>@qid/connect-widget</code> together.</p>
+<h2 id="v1-7-1">1.7.1 — 2026-08-17</h2>
+<p>Docs only; no server or widget source change — a vendored 1.7.0 whose files hash-match 1.7.1 is not drift, and redeploying it to fix the label is churn.</p>
+<ul>
+<li>The skill's route table still described the pre-1.7.0 poll contract ("claims the session once the proof lands"). It now teaches the confirm stage, so an assistant following the skill wires a hand-rolled poll loop correctly.</li>
+<li>Troubleshooting gained the one new symptom 1.7.0 can produce: a pre-1.7.0 widget against a 1.7.0+ server polls a confirm-stage nonce forever with no visible error (the server warns after 8 such polls; the fix is updating the widget, not <code>confirmAddress: false</code>).</li>
+</ul>
 <h2 id="v1-7-0">1.7.0 — 2026-08-11</h2>
 <p><b>Breaking for QR integrators with a hand-rolled poll loop.</b> A minor bump, not a patch, because the client contract changed.</p>
 <p>Security — QR sign-in address confirmation. Nothing bound <code>POST /qid/proof</code> to the browser that requested the challenge, and nothing can: the QR must carry the whole challenge for a wallet to sign it, so a bystander who can see the screen holds exactly what the legitimate signer holds. They could submit their own valid proof against a user's nonce, and that user's browser was then silently signed in as *them* — a session-fixation path that, for a wallet, means depositing into someone else's account. It was also a guaranteed denial of the real sign-in, since the nonce is single-use. Reproduced end to end through the shipped middleware.</p>
