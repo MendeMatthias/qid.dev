@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>qID timeline: day one to today</title>
+<meta name="description" content="Every major step in qID since day one, dated from the commits: the library, the paper, qID Connect, the live integrations, and the security rounds." />
+<meta property="og:title" content="qID timeline" />
+<meta property="og:description" content="Every major step since day one, dated from the commits." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://qid.dev/history/" />
+<meta property="og:site_name" content="qID" />
+<meta property="og:image" content="https://qid.dev/og.png?v=5" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="qID timeline" />
+<meta name="twitter:description" content="Every major step since day one, dated from the commits." />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0e12" />
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafcfd" />
+<link rel="canonical" href="https://qid.dev/history/" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://qid.dev/history/",
+  "name": "qID timeline",
+  "url": "https://qid.dev/history/",
+  "description": "Every major step in qID since day one, dated from the commits.",
+  "datePublished": "2026-08-18",
+  "isPartOf": { "@id": "https://qid.dev/#website" }
+}
+</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='700' fill='%235eeaa0' text-anchor='middle'%3Eq%3C/text%3E%3Ccircle cx='24' cy='8' r='2.5' fill='%2367e8f9'/%3E%3C/svg%3E" />
+<style>
+  :root {
+    --bg: #0a0e12; --bg2: #0d1319; --panel: #10161d; --border: #1e2a35; --border2: #2a3947;
+    --text: #e6edf3; --muted: #8b99a6; --faint: #5c6b78;
+    --accent: #5eeaa0; --accent-dim: #2d5e44; --accent-ink: #052e1c;
+    --cyan: #67e8f9; --warn: #e8c468;
+    --code-bg: #0b1117; --shadow: 0 12px 40px rgba(0,0,0,.4);
+    color-scheme: dark;
+  }
+  :root[data-theme="light"] {
+    --bg: #fafcfd; --bg2: #f2f6f9; --panel: #ffffff; --border: #e1e8ef; --border2: #cbd7e1;
+    --text: #16212b; --muted: #55656f; --faint: #8395a1;
+    --accent: #0c8f5f; --accent-dim: #bfe8d4; --accent-ink: #ffffff;
+    --cyan: #0e7490; --warn: #9a6b00;
+    --code-bg: #0d1319; --shadow: 0 12px 40px rgba(23,43,58,.10);
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; max-width: 860px; margin: 0 auto; }
+  .logo { display: flex; align-items: center; gap: 8px; color: var(--text); font-weight: 700; font-size: 18px; letter-spacing: .3px; }
+  .logo .q { color: var(--accent); }
+  .logo .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  .nav-links { display: flex; align-items: center; gap: 4px; }
+  .nav-links a { color: var(--muted); font-size: 13.5px; padding: 8px 10px; }
+  .nav-links a:hover { color: var(--accent); text-decoration: none; }
+  #themeToggle { background: none; border: 1px solid var(--border); border-radius: 8px; color: var(--muted); cursor: pointer; font-size: 13px; padding: 6px 10px; }
+  #themeToggle:hover { border-color: var(--border2); color: var(--text); }
+
+  main { padding: 48px 0 72px; }
+  .flag { display: inline-block; border: 1px solid var(--border); border-radius: 999px; color: var(--accent); font-size: 12px; padding: 4px 13px; margin-bottom: 16px; }
+  h1 { font-size: clamp(28px, 5vw, 38px); line-height: 1.2; letter-spacing: -.3px; margin-bottom: 10px; }
+  h1 .q { color: var(--accent); }
+  .lede { color: var(--muted); font-size: 15.5px; max-width: 58ch; margin-bottom: 8px; }
+  .lede b { color: var(--text); }
+  .src-note { color: var(--faint); font-size: 13px; margin-bottom: 40px; }
+
+  .month { margin: 38px 0 6px; }
+  .month h2 {
+    font-size: 13px; text-transform: uppercase; letter-spacing: 2.5px;
+    color: var(--faint); font-weight: 600; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .ev { display: grid; grid-template-columns: 92px 1fr; gap: 18px; padding: 16px 0; border-bottom: 1px solid color-mix(in srgb, var(--border) 55%, transparent); }
+  .ev:last-child { border-bottom: 0; }
+  .ev time { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; color: var(--accent); padding-top: 3px; white-space: nowrap; }
+  .ev .t { font-weight: 650; margin-bottom: 3px; }
+  .ev p { color: var(--muted); font-size: 14.5px; line-height: 1.6; }
+  .ev p a { color: var(--accent); }
+  .tag { display: inline-block; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11px; color: var(--cyan); border: 1px solid var(--border); border-radius: 6px; padding: 1px 7px; margin-left: 8px; vertical-align: 2px; }
+  .sec { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 35%, var(--border)); }
+
+  .outro { margin-top: 44px; padding: 18px 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 14px; color: var(--muted); font-size: 14px; }
+  .outro b { color: var(--text); }
+
+  footer { border-top: 1px solid var(--border); padding: 22px 24px; }
+  .foot { max-width: 860px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 14px 22px; justify-content: space-between; color: var(--faint); font-size: 13px; }
+  .foot-links { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+  .foot-links a { color: var(--muted); }
+
+  @media (max-width: 560px) {
+    .ev { grid-template-columns: 1fr; gap: 4px; padding: 14px 0; }
+    .nav-links a { padding: 8px 6px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="logo" href="/"><span><span class="q">q</span>ID</span><span class="dot" aria-hidden="true"></span></a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="/connect/changelog/">Changelog</a>
+      <a href="/qid-paper.pdf">Paper</a>
+      <a href="/connect/">Live demo</a>
+      <button id="themeToggle" aria-label="Toggle theme">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+<span class="flag">the whole story, dated</span>
+<h1>The <span class="q">qID</span> timeline</h1>
+<p class="lede">Every major step since day one: the library, the paper, <b>qID Connect</b>, the live integrations, and the security rounds that hardened all of it.</p>
+<p class="src-note">Dates come from the commit history and the release changelog, not from memory.</p>
+
+<section class="month" aria-label="May 2026">
+  <h2>May 2026</h2>
+  <div class="ev"><time datetime="2026-05-30">May 30</time><div>
+    <div class="t">Day one <span class="tag">v0.1.0</span></div>
+    <p>qID begins as a spike: one 32-byte seed becomes a complete post-quantum identity for BTX. Keys, address, login, recovery, encryption. MIT-licensed from the first commit.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-05-31">May 31</time><div>
+    <div class="t">The spend core, node-verified</div>
+    <p>Multi-input P2MR signing, post-quantum fee sizing, coin selection and sweep. Verified against a real node from the very first version.</p>
+  </div></div>
+</section>
+
+<section class="month" aria-label="June 2026">
+  <h2>June 2026</h2>
+  <div class="ev"><time datetime="2026-06-02">Jun 2</time><div>
+    <div class="t">First hardening round <span class="tag sec">security</span></div>
+    <p>NIST KAT vectors pinned offline, key-derivation buffers zeroized, fuzz tests on address round-trips, and a CI gate that rebuilds the bundle from source and fails on any byte of drift.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-06-12">Jun 12</time><div>
+    <div class="t">Supply chain locked <span class="tag sec">security</span></div>
+    <p>CI actions SHA-pinned, Dependabot enabled, and the attestation envelope hardened in a seven-question audit round.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-06-13">Jun 13</time><div>
+    <div class="t">Attestation caps and serial-pinned login keys <span class="tag sec">security</span></div>
+    <p>Attestation limits enforced and each login key pinned to its serial, closing a rotation-replay class.</p>
+  </div></div>
+</section>
+
+<section class="month" aria-label="July 2026">
+  <h2>July 2026</h2>
+  <div class="ev"><time datetime="2026-07-06">Jul 6</time><div>
+    <div class="t">v0.3.0 and provenance-attested releases <span class="tag">v0.3.0</span></div>
+    <p>Audit source-hardening lands and the standard track begins. From here, releases carry a build-provenance record.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-07-08">Jul 8</time><div>
+    <div class="t">Recovery spends confirmed on mainnet</div>
+    <p>FIPS-205 recovery spending retested and confirmed live against the BTX chain.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-07-09">Jul 9</time><div>
+    <div class="t">qid.dev goes live, with the paper</div>
+    <p>This site launches together with the technical paper: a post-quantum identity construction from NIST FIPS 203, 204 and 205. <a href="/qid-paper.pdf">Read the paper</a>.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-07-10">Jul 10</time><div>
+    <div class="t">qID Connect is born</div>
+    <p>Sign in with qID, both sides in one day: the server SDK that verifies proofs and mints sessions, and the widget that renders the dialog. The address is the account. No email, no password.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-07-11">Jul 11</time><div>
+    <div class="t">Connect 1.0.0 and the two-repo pipeline <span class="tag">1.0.0</span></div>
+    <p>A private lab and a curated public surface: everything public arrives through a scripted export, so what ships always equals a lab commit.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-07-15">Jul 15</time><div>
+    <div class="t">The first security-fix release <span class="tag sec">1.1.0</span></div>
+    <p>Poll CSRF closed, replay consume made async-safe, widget timer fixed. Six days old and already patching itself honestly.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-07-16">Jul 16</time><div>
+    <div class="t">The one-link milestone <span class="tag">1.2 to 1.3</span></div>
+    <p>The full integrator guide ships at <a href="/connect/integrate/">/connect/integrate</a>, and QR plus deep-link transports arrive the same day. One link is now enough to add wallet login to a BTX app.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-07-17">Jul 17</time><div>
+    <div class="t">First production sign-in: btc2btx.com <span class="tag">1.4.x</span></div>
+    <p>The first real site ships Sign in with qID: real wallets, real sessions, a durable backend. The 1.4 line makes the copy-paste flow survive QR rotation the same day.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-07-21">Jul 21</time><div>
+    <div class="t">The 1.5 hardening run begins <span class="tag sec">1.5.x</span></div>
+    <p>Origin canonicalization, secret-bound nonce retire so a bystander cannot grief a sign-in, the poll-claim grace window for flaky mobile hops, and session-guard hardening. Eleven releases in six days.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-07-22">Jul 22</time><div>
+    <div class="t">Dashboard and the game, same day</div>
+    <p><a href="https://dashboard.qid.dev">qID Dashboard</a> ships with a dogfooded qID login, a project registry and outside-in health checks. <a href="https://play.qid.dev">Quantum Reflex</a> ships too: sign in with your address, play, make the leaderboard.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-07-23">Jul 23</time><div>
+    <div class="t">build.qid.dev and the showcase</div>
+    <p><a href="https://build.qid.dev">Builder onboarding</a> with a real qID sign-in, and a <a href="https://build.qid.dev/showcase">showcase</a> listing every live integration in one place.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-07-27">Jul 27</time><div>
+    <div class="t">Seven releases in one day <span class="tag">1.6.0 to 1.6.6</span></div>
+    <p>The pack now ships an Agent Skill that teaches an AI coding assistant to wire sign-in correctly, plus a zero-dependency checker that verifies a live integration end to end. Docs pinned to reality.</p>
+  </div></div>
+</section>
+
+<section class="month" aria-label="August 2026">
+  <h2>August 2026</h2>
+  <div class="ev"><time datetime="2026-08-10">Aug 10</time><div>
+    <div class="t">Core hardening, round one <span class="tag sec">security</span></div>
+    <p>TOCTOU, silent key reuse and challenge-downgrade classes closed in the core. The paper gets an errata pass. The Sign-In v3 envelope is drafted for external review.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-08-11">Aug 11</time><div>
+    <div class="t">1.7.0: QR address confirmation <span class="tag sec">1.7.0</span></div>
+    <p>The fix for a QR session-fixation class: a bystander who could read the QR off the screen could complete a sign-in as themselves in the victim's browser. Now the user confirms the address before any session exists. Breaking for hand-rolled poll loops, on purpose. <a href="/connect/changelog/">Full details in the changelog</a>.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-08-17">Aug 17</time><div>
+    <div class="t">The ship day <span class="tag sec">1.7.0 → live</span></div>
+    <p>A second core hardening round merges, and all five regtest suites pass against a live BTX node, closing the node-acceptance gap. 1.7.0 reaches every surface: the pack, the hosted widget, btc2btx.com, dashboard, build and play, each verified with a real confirm-flow sign-in over production HTTP. That discipline also caught and fixed a silent three-day sign-in outage on one production proxy.</p>
+  </div></div>
+  <div class="ev"><time datetime="2026-08-17">Aug 17</time><div>
+    <div class="t">1.7.1 and the v3 draft, same evening <span class="tag">1.7.1</span></div>
+    <p>The Agent Skill now teaches the confirm contract so an assistant wires the new flow correctly, and troubleshooting learns the one new symptom. The Sign-In v3 envelope specification merges as a draft, open for co-authorship. Nothing in v3 has shipped.</p>
+  </div></div>
+</section>
+
+<div class="outro">
+  <b>How this page is made.</b> Curated by hand from the commit history and the release changelog. It records what shipped and when, in the same voice as everything else here: resistant to quantum attacks, built on NIST-standardized post-quantum cryptography, pending independent audit. Never "unhackable". For every Connect release in detail, see the <a href="/connect/changelog/">changelog</a>.
+</div>
+
+</div>
+</main>
+
+<footer>
+  <div class="foot">
+    <div>© 2026 qID · MIT license</div>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="/">qid.dev</a>
+      <a href="/connect/">Live demo</a>
+      <a href="/connect/integrate/">Integrate</a>
+      <a href="/connect/changelog/">Changelog</a>
+      <a href="/qid-paper.pdf">Paper</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const stored = localStorage.getItem('qid.theme');
+  const systemLight = window.matchMedia('(prefers-color-scheme: light)');
+  function apply(theme) { theme === 'light' ? root.setAttribute('data-theme', 'light') : root.removeAttribute('data-theme'); }
+  apply(stored || (systemLight.matches ? 'light' : 'dark'));
+  systemLight.addEventListener('change', (e) => { if (!localStorage.getItem('qid.theme')) apply(e.matches ? 'light' : 'dark'); });
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const next = root.hasAttribute('data-theme') ? 'dark' : 'light';
+    localStorage.setItem('qid.theme', next);
+    apply(next);
+  });
+})();
+</script>
+
+</body>
+</html>
