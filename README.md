@@ -11,7 +11,7 @@ to `main` rebuilds Pages in about a minute; verify with `curl -sI https://qid.de
 
 Paths:
 - `/` the landing page (`index.html`).
-- `/connect` the live "Sign in with qID" demo (`connect/index.html`): a self-contained
+- `/connect` the live qID Connect demo (`connect/index.html`): a self-contained
   build of qID Connect that runs the real widget, verifier, and signer in the browser, so
   anyone can try the flow with no wallet and no backend. Canonical source lives in the
   qID Connect repo at `examples/browser-demo/`.

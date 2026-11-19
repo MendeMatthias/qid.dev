@@ -63,7 +63,7 @@
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "Web",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-      "description": "Developer portal for qID Connect: sign in with qID, register your integration, generate a tailored setup kit, and verify it with outside-in health checks. No email, no password, no API keys.",
+      "description": "Developer portal for qID Connect: sign in with qID Connect, register your integration, generate a tailored setup kit, and verify it with outside-in health checks. No email, no password, no API keys.",
       "isPartOf": { "@id": "https://qid.dev/#website" }
     }
   ]
@@ -315,7 +315,7 @@
         <button class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Developers <span class="chev" aria-hidden="true">▾</span></button>
         <div class="nav-menu" role="menu">
           <a role="menuitem" href="https://build.qid.dev">Build on BTX<span>The infra is done. Bring your app</span></a>
-          <a role="menuitem" href="/connect/integrate/">Integrate<span>Add Sign in with qID in 15 to 30 minutes</span></a>
+          <a role="menuitem" href="/connect/integrate/">Integrate<span>Add qID Connect in 15 to 30 minutes</span></a>
           <a role="menuitem" href="https://dashboard.qid.dev">Dashboard<span>Register &amp; manage your integration</span></a>
           <a role="menuitem" href="/connect/qid-connect-latest.zip" download>Download pack<span>Server SDK, widget &amp; examples</span></a>
           <a role="menuitem" href="/connect/how">How it works</a>
@@ -330,7 +330,7 @@
           <a role="menuitem" href="https://build.qid.dev">Real wallet sign-in<span>Scan with the bonuz app, live</span></a>
           <a role="menuitem" href="https://build.qid.dev/showcase">Showcase<span>Every live integration, one page</span></a>
           <a role="menuitem" href="/connect/">Browser demo<span>No wallet needed, runs locally</span></a>
-          <a role="menuitem" href="https://play.qid.dev">Play the game<span>Quantum Reflex, a real qID login</span></a>
+          <a role="menuitem" href="https://play.qid.dev">Play the game<span>Quantum Reflex, a real qID Connect sign-in</span></a>
           <a role="menuitem" href="/forge/">Relic Forge<span>BTX artifact mint studio · private preview</span></a>
         </div>
       </div>
@@ -418,7 +418,7 @@ id.<span class="c-pr">attestation</span>   <span class="c-cm">// root-signed, ca
           <h3>The identity layer <span class="pill pill-any">chain-agnostic</span></h3>
           <p>A cold root that vouches for hot keys, CA-style: self-custodial, no third party in the trust path.</p>
           <ul>
-            <li>Login with qID: origin-bound, replay-proof challenge signing (WebAuthn-style)</li>
+            <li>qID Sign-In: origin-bound, replay-proof challenge signing (WebAuthn-style), the protocol under qID Connect</li>
             <li>Key rotation with monotonic serials + root-signed revocation floors</li>
             <li>Hybrid encryption: ML-KEM-768 + X25519, secure if either primitive holds</li>
             <li>Canonical signing preimages, so nothing signed is ever JSON</li>
