@@ -1,0 +1,17 @@
+name: check
+# Free on a public repository. Fails a push or pull request whose AI prompt does not match the
+# qID Connect pack the site serves: see tools/check-ai-prompt.mjs.
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  ai-prompt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node tools/check-ai-prompt.mjs

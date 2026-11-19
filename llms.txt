@@ -17,8 +17,8 @@
 - A money core (byte-exact to the BTX chain): key derivation on the m/87' HKDF path, P2MR
   pay-to-Merkle-root addresses (bech32m, witness v2), a multi-input spend builder with node-exact
   post-quantum fees, and a recovery-leaf rescue path.
-- A chain-agnostic identity layer: "Login with qID" (origin-bound, replay-proof challenge
-  signing), root-signed attestations binding hot keys to the identity, key rotation with
+- A chain-agnostic identity layer: qID Sign-In, the protocol under qID Connect (origin-bound,
+  replay-proof challenge signing), root-signed attestations binding hot keys to the identity, key rotation with
   monotonic serials, root-signed revocation floors, and hybrid ML-KEM-768 + X25519 encryption
   (secure if either primitive holds).
 
@@ -37,10 +37,10 @@
 
 ## qID Connect (Sign in with qID)
 
-qID Connect is the app-facing SDK layer: post-quantum wallet login for BTX apps ("Sign in with
+qID Connect is the app-facing SDK layer: post-quantum wallet sign-in for BTX apps (its button reads "Sign in with
 qID"). One server middleware plus one button; the verified address IS the account. No email, no
-password, no relay server; the app's own backend is the rendezvous. Login proofs sign under the
-BTX-qID/login-v1 domain tag, transactions under TapSighash, so a login proof can never move
+password, no relay server; the app's own backend is the rendezvous. Sign-in proofs sign under the
+BTX-qID/login-v1 domain tag, transactions under TapSighash, so a sign-in proof can never move
 funds. The connector is dynamic: requests rotate with a countdown and superseded nonces are
 burned server-side. Transports: desktop copy-paste (PQ Wallet for BTX v0.21+), QR scan for phone
 wallets, and a btxqid:// deep link (v0.27+).
@@ -60,7 +60,7 @@ loop that only waits for "done" will hang forever. The shipped widget handles al
 
 ## For AI agents
 
-There is an open-source Agent Skill that teaches a coding assistant to wire qID sign-in
+There is an open-source Agent Skill that teaches a coding assistant to wire qID Connect
 correctly for its stack, plus a zero-dependency checker that verifies a live integration.
 Human-readable page: https://qid.dev/ai
 
@@ -87,14 +87,14 @@ QR poll returns status confirm before done."
 
 ## Live properties
 
-- https://qid.dev/connect: browser-only demo of Sign in with qID; no wallet needed, nothing leaves the page.
+- https://qid.dev/connect: browser-only demo of qID Connect; no wallet needed, nothing leaves the page.
 - https://qid.dev/connect/integrate: the integration guide (one middleware + one widget, 15 to 30 minutes).
 - https://qid.dev/connect/changelog: every release, newest first; states the current pack version.
 - https://qid.dev/history: the full project timeline, dated from the commits.
 - https://qid.dev/ai: qID for AI agents (skill, checker, bootstrap prompt).
-- https://dashboard.qid.dev: developer portal. Sign in with qID itself, register an app by origin, generate a stack-tailored setup kit, run outside-in health checks. Never in any user's login path; no API keys or project IDs exist.
-- https://build.qid.dev: builder onboarding for BTX with a real qID sign-in (a bonuz Wallet QR scan signs in live).
-- https://build.qid.dev/showcase: every live qID integration on one page.
+- https://dashboard.qid.dev: developer portal. Sign in with qID Connect itself, register an app by origin, generate a stack-tailored setup kit, run outside-in health checks. Never in any user's login path; no API keys or project IDs exist.
+- https://build.qid.dev: builder onboarding for BTX with a real qID Connect sign-in (a bonuz Wallet QR scan signs in live).
+- https://build.qid.dev/showcase: every live qID Connect integration on one page.
 - https://play.qid.dev: Quantum Reflex, a reaction game with a leaderboard keyed by BTX address.
 
 ## Research (BTX ecosystem)

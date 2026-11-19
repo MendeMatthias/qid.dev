@@ -5,7 +5,7 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>qID for AI agents</title>
-<meta name="description" content="Make your AI coding agent a BTX app builder: an open-source Agent Skill, a checker, and one prompt that teaches any agent to add post-quantum Sign in with qID." />
+<meta name="description" content="Make your AI coding agent a BTX app builder: an open-source Agent Skill, a checker, and one prompt that teaches any agent to add qID Connect, the post-quantum wallet sign-in." />
 <meta property="og:title" content="qID for AI agents" />
 <meta property="og:description" content="One prompt makes your agent a BTX app builder: skill, checker, llms.txt, pack. Free, MIT." />
 <meta property="og:type" content="website" />
@@ -30,7 +30,7 @@
   "@id": "https://qid.dev/ai/",
   "name": "qID for AI agents",
   "url": "https://qid.dev/ai/",
-  "description": "An open-source Agent Skill, a zero-dependency checker, a machine-readable llms.txt, and one bootstrap prompt that teaches any AI coding agent to add post-quantum Sign in with qID to a BTX app.",
+  "description": "An open-source Agent Skill, a zero-dependency checker, a machine-readable llms.txt, and one bootstrap prompt that teaches any AI coding agent to add qID Connect, the post-quantum wallet sign-in, to a BTX app.",
   "datePublished": "2026-08-18",
   "isPartOf": { "@id": "https://qid.dev/#website" }
 }
@@ -137,13 +137,13 @@
 
 <p class="kicker">For the agents, and the humans who run them</p>
 <h1>Make your agent a <span class="q">BTX</span> app builder</h1>
-<p class="lede">Hand any AI coding assistant one prompt and it knows qID: the post-quantum login, the account model where <b>the address is the account</b>, the framework traps that produce no error in the browser, and how to verify the result against your running app. Free of charge, MIT, no API keys, nothing to sign up for.</p>
+<p class="lede">Hand any AI coding assistant one prompt and it knows qID Connect: the post-quantum wallet sign-in, the account model where <b>the address is the account</b>, the framework traps that produce no error in the browser, and how to verify the result against your running app. Free of charge, MIT, no API keys, nothing to sign up for.</p>
 
 <h2>The prompt</h2>
-<p class="copynote">Paste this into your agent. It works in Claude Code, Cursor, or anything that can fetch a URL.</p>
-<div class="promptbox">
-  <button class="copybtn" id="copyPrompt">Copy</button>
-  <pre id="promptText">Read https://qid.dev/llms.txt and follow its links. Then add Sign in with qID to my app: download https://qid.dev/connect/qid-connect-latest.zip, follow docs/INTEGRATION.md and skills/qid-connect/SKILL.md from the pack for my stack, and verify the result with skills/qid-connect/scripts/check-integration.mjs against my running dev server. Remember: the address is the account, a login proof can never move funds, and since 1.7.0 the QR poll returns status "confirm" before "done".</pre>
+<p class="copynote">Paste this into your agent. It works in Claude Code, Cursor, or anything that can fetch a URL. Copy also offers to open it in Claude, ChatGPT, Gemini or Grok.</p>
+<div class="promptbox" data-qid-ai-prompt>
+  <button class="copybtn" id="copyPrompt" type="button">Copy</button>
+  <pre id="promptText">Read https://qid.dev/llms.txt and follow its links. Then add qID Connect 1.7.2 to my app. qID Connect is the post-quantum wallet sign-in for BTX apps: the user proves a BTX address with their wallet, and the address is the account. Download https://qid.dev/connect/qid-connect-1.7.2.zip, follow docs/INTEGRATION.md and skills/qid-connect/SKILL.md from the pack for my stack, and verify the result with skills/qid-connect/scripts/check-integration.mjs against my running dev server. Remember: a sign-in proof can never move funds, and since 1.7.0 the QR poll returns status "confirm" before "done".</pre>
 </div>
 
 <h2>What your agent gets</h2>
@@ -165,8 +165,8 @@ mkdir -p .claude/skills &amp;&amp; cp -R qid-connect-skill .claude/skills/qid-co
   <li><b>Everything is fetchable.</b> Site, docs, pack, skill, checker, changelog, timeline: public URLs, no keys, no accounts.</li>
   <li><b>The integration is small.</b> One server middleware plus one button. A developer lands a real post-quantum sign-in in 15 to 30 minutes; an agent with the skill does the same.</li>
   <li><b>Verification is built in.</b> The checker proves the integration outside-in, so "it looks done" becomes "it is done".</li>
-  <li><b>Safe by construction.</b> Login proofs sign under a dedicated domain tag and can never move funds. Since 1.7.0, QR sign-in requires the user to confirm the address before any session exists.</li>
-  <li><b>Built for what comes next.</b> The same login works for any BTX app today and is designed to carry forward: post-quantum from day one, so the apps you build now do not need rescuing later.</li>
+  <li><b>Safe by construction.</b> Sign-in proofs sign under a dedicated domain tag and can never move funds. Since 1.7.0, QR sign-in requires the user to confirm the address before any session exists.</li>
+  <li><b>Built for what comes next.</b> The same sign-in works for any BTX app today and is designed to carry forward: post-quantum from day one, so the apps you build now do not need rescuing later.</li>
 </ul>
 
 <div class="outro">
@@ -203,20 +203,9 @@ mkdir -p .claude/skills &amp;&amp; cp -R qid-connect-skill .claude/skills/qid-co
     localStorage.setItem('qid.theme', next);
     apply(next);
   });
-  document.getElementById('copyPrompt').addEventListener('click', async () => {
-    const btn = document.getElementById('copyPrompt');
-    try {
-      await navigator.clipboard.writeText(document.getElementById('promptText').textContent);
-      btn.textContent = 'Copied';
-    } catch {
-      const r = document.createRange(); r.selectNodeContents(document.getElementById('promptText'));
-      const s = getSelection(); s.removeAllRanges(); s.addRange(r);
-      btn.textContent = 'Select + copy';
-    }
-    setTimeout(() => { btn.textContent = 'Copy'; }, 1800);
-  });
 })();
 </script>
+<script src="/ai/ai-prompt.js" defer></script>
 
 </body>
 </html>
